@@ -6,7 +6,7 @@ The project runs on Amazon Web Services (AWS) in a SageMaker instance. The scrip
 ## 2	Software Dependencies
 *	Python 3.6 (libraries boto3, bs4, textract-trp)
 
-## 3	Files
+## 3	File Structure
 ### 3.1 	Resource Files
 `secRegisteredDealers.txt` stores data downloaded from the [SEC](https://www.sec.gov/help/foiadocsbdfoiahtm.html). This ascii text file contains the Central Index Key (CIK) numbers, company names, SEC reporting file numbers, and addresses (business addresses are provided when mailing addresses are not available) of active broker-dealers who are registered with the SEC.
 
