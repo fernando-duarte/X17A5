@@ -6,7 +6,7 @@ EMPLOYEE LOANS,Other assets
 Cash and securities segregated in compliance with federal and other regulations,Cash and cash equivalents
 "Furniture, equipment and leasehold improvements, (net of accumulated depreciation and amortization of $1,464,902)","Property, plant and equipment"
 "Furniture and fixtures (cost of $2,226,634, net of $752,753 accumulated depreciation)","Property, plant and equipment"
-"Securities purchased under agreements to resell (includes $31,580 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $31,580 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Employee loan advances - net of reserves of $609,Loan advances to employee
 "Cash and securities segregated for regulatory and other purposes (includes $63,394 at fair value)",Cash and securities segregated for benefit of customers
 "Other assets (included $86 at fair value at December 31, 2009)",Other assets
@@ -33,8 +33,8 @@ Deferred tax assets,Deferred tax asset
 "Memberships in exchanges, at cost (market value $2,010)",Exchange memberships
 Due from broker-dealer (Notes 1 and 11),Receivable from broker-dealers
 Other assets (included $23 at fair value),Other assets
-"Securities purchased under agreements to resell (including $53,427 at fair value)",Reverse Repurchase Argreements (reverse-repo)
-"Securities purchased under agreements to resell (including $54,241 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (including $53,427 at fair value)",Reverse Repurchase Agreements (reverse-repo)
+"Securities purchased under agreements to resell (including $54,241 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Affiliate,Other assets
 "Securities received as collateral, at fair value (included assets pledged of $1,975)",Securities received as collateral
 Other assets (Notes 8 and 9),Other assets
@@ -42,7 +42,7 @@ Other (including $447 at fair value),Other assets
 Forgivable loans to registered representatives,Other assets
 Deposit with clearing organization,Deposits with clearing organizations
 Other Assets,Other assets
-"Securities borrowed or purchased under agreements to resell (including $105,173 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities borrowed or purchased under agreements to resell (including $105,173 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Receivable from clients - net of allowance for doubtful accounts of,Account receivable
 Due from customer,Due from counterparties
 Receivable from noncustomer,Other receivables
@@ -102,12 +102,12 @@ Commissions receivable - net of reserves of $414,Other receivables
 "Financial instruments, at fair value","Financial instruments owned, at fair value"
 ACCOUNTS RECEIVABLE - Net of allowance for doubtful accounts of $574,Account receivable
 Pledged as collateral,Securities received as collateral
-"Securities purchased under agreements to resell (includes $55,945 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $55,945 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Interest and dividends,Other assets
 Due from clearing broker,Due from counterparties
-"Securities financing transactions: Securities purchased under agreements to resell (includes securities at fair value of $39,736,430) Securities borrowed (includes securities at fair value of $31,178,771)",Reverse Repurchase Argreements (reverse-repo)
+"Securities financing transactions: Securities purchased under agreements to resell (includes securities at fair value of $39,736,430) Securities borrowed (includes securities at fair value of $31,178,771)",Reverse Repurchase Agreements (reverse-repo)
 Non - marketable securities owned at cost,"Financial instruments owned, at fair value"
-Prepayments to and advances to related parties,"Financial instruments owned, at fair value"
+Prepayments to and advances to related parties,Loan advances to employee
 "Not readily marketable, at estimated far value","Financial instruments owned, at fair value"
 Advances to Employees and Members,Loan advances to employee
 "and equipment, at cost (net of accumulated depreciation of $96,830)","Property, plant and equipment"
@@ -164,16 +164,16 @@ Income taxes recoverable,Other assets
 Investment (note 3),Other assets
 Leasehold improvements,"Property, plant and equipment"
 Investments (Note 5),Other assets
-"Securities purchased under agreements to resell (includes $1,052,053 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $1,052,053 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Property and equipment, net of accumulated depreciation of $119,404","Property, plant and equipment"
 "(net of accumulated amortization and depreciation of $229,702)",Accumulated depreciation and amortization
 Securities owned- at market value,"Financial instruments owned, at fair value"
 Receivable from brokers,Other receivables
-"Securities purchased under agreements to resell (includes fair value of $12,247)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes fair value of $12,247)",Reverse Repurchase Agreements (reverse-repo)
 "$61,938 at fair value)",Other assets
 Cash and securities segregated for benefit of customers,Cash and securities segregated for benefit of customers
 "Cash and securities segregated for regulatory and other purposes (includes $81,619,815 at fair value)",Cash and securities segregated for benefit of customers
-"Securities purchased under agreements to resell (includes $1,429,579 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $1,429,579 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Less: accumulated depreciation and amortization,Accumulated depreciation and amortization
 "Financial instruments owned, at fair value (includes $56,632 pledged as collateral)","Financial instruments owned, at fair value"
 "Premises, equipment and software (net of accumulated depreciation and amortization of $947,163)",Accumulated depreciation and amortization
@@ -238,12 +238,12 @@ Accounts receivable from brokers and customers,Account receivable
 Corporate obligations pledged as collateral,Securities received as collateral
 "Securities owned, at estimated fair value","Financial instruments owned, at fair value"
 Receivable from affiliates (Note 6),Other receivables
-"Securities purchased under agreements to resell (includes $1,079,073 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $1,079,073 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Cash and securities segregated pursuant to federal and other regulations (Note 3),Cash and cash equivalents
 Cash segregated (note 3),Cash and cash equivalents
 Receivables from customers and counterparties (includes $440 at fair value),Receivables from customers and counterparties
 BROKER OR DEALER: BLACKHAWK FINANCIAL L.LC.,Receivable from broker-dealers
-"Securities financing transactions: Securities purchased under agreements to resell (includes securities at fair value of $40,529,352)",Reverse Repurchase Argreements (reverse-repo)
+"Securities financing transactions: Securities purchased under agreements to resell (includes securities at fair value of $40,529,352)",Reverse Repurchase Agreements (reverse-repo)
 "Furniture, equipment and leasehold improvements, net of accumulated depreciation and amortization of $58,589","Property, plant and equipment"
 "PROPERTY AND EQUIPMENT, less accumulated depreciation of $41,465","Property, plant and equipment"
 Commissions and fees receivable,Other receivables
@@ -310,7 +310,7 @@ Accounts receivable - related party,Account receivable
 "Corporate and other debt ($67,283 related to consolidated variable interest entities, generally not available to the Company)","Financial instruments owned, at fair value"
 DEPOSIT WITH CLEARING BROKER - Restricted,Deposits with clearing organizations
 "(Net of accumulated depreciation and amortization of $475,741)",Accumulated depreciation and amortization
-- Cash,Cash and cash equivalents
+#NAME?,Cash and cash equivalents
 "Trading assets ($375,841 were pledged to various parties)","Financial instruments owned, at fair value"
 Note 2. Significant accounting policies,Other assets
 Other assets,Other assets
@@ -321,7 +321,7 @@ Deposit with clearing organization and depository (Note 8),Deposits with clearin
 Mortgage loans and collateralized mortgage obligations,Other assets
 "Financial instruments owned, at fair value (includes $58,154 pledged as collateral)","Financial instruments owned, at fair value"
 Securities owned at fair value,"Financial instruments owned, at fair value"
-"Securities purchased under agreements to resell (includes $28,221 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $28,221 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Note 1. Organization,Other assets
 Cash segregated in compliance with regulations,Cash and cash equivalents
 "accumulated depreciation and amortization of $66,090)",Accumulated depreciation and amortization
@@ -341,7 +341,7 @@ Cash in banks,Other assets
 Derivative contracts,Other assets
 "Property, plant, and equipment (net of accumulated depreciation of $557)","Property, plant and equipment"
 "ACCOUNTS RECEIVABLE - Net of allowance for doubtful accounts of $26,224",Account receivable
-Securities purchased under agreements to resell (includes $866 at fair value),Reverse Repurchase Argreements (reverse-repo)
+Securities purchased under agreements to resell (includes $866 at fair value),Reverse Repurchase Agreements (reverse-repo)
 Commissions Receivable - Clearing Corp.,Other receivables
 Cash and securities segregated under federal and other regulations,Cash and cash equivalents
 Deposit with Clearing Broker,Deposits with clearing organizations
@@ -364,7 +364,7 @@ Due from Weiss Group,Due from counterparties
 Customers and counterparties (includes $112 at fair value),Receivables from customers and counterparties
 "Property and equipment, net of accumulated depreciation and amortization of $320,740","Property, plant and equipment"
 Deferred Tax Asset Federal,Deferred tax asset
-"Securities purchased under resale agreements (included $16,157 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under resale agreements (included $16,157 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Property, plant, and equipment (net of accumulated depreciation of $640)","Property, plant and equipment"
 "Receivable from brokers, dealers, clearing organizations and customers (Note 5)",Receivable from broker-dealers
 in compliance with federal regulations,Cash and cash equivalents
@@ -407,7 +407,7 @@ Note 1. Description of Business,Other assets
 "Financial instruments owned, at fair value (includes $29,329 pledged as collateral)","Financial instruments owned, at fair value"
 "Trading assets ($13,756,436 were pledged to various parties)","Financial instruments owned, at fair value"
 "Premises and equipment - net of accumulated depreciation $1,278","Property, plant and equipment"
-Debt securities purchased under agreements to resell,Reverse Repurchase Argreements (reverse-repo)
+Debt securities purchased under agreements to resell,Reverse Repurchase Agreements (reverse-repo)
 "Trading inventory, at market value (Note 4)","Financial instruments owned, at fair value"
 Due from Parent,Due from counterparties
 Rent Deposit,Deposits with clearing organizations
@@ -426,16 +426,16 @@ Debt securities,Other assets
 Accounts receivable - related parties,Account receivable
 Deposits with clearing organizations,Deposits with clearing organizations
 Receivable from Non-Customer,Other receivables
-"Securities purchased under resale agreements (included $14,887 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under resale agreements (included $14,887 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Fixed assets (net of accumulated depreciation of $331),Fixed assets
 Exchange memberships,Exchange memberships
-"Securities borrowed or purchased under agreements to resell (including $94,612 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities borrowed or purchased under agreements to resell (including $94,612 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Unbilled fees and accrued commissions,Other assets
 Trading assets (note 3),"Financial instruments owned, at fair value"
 "Property and equipment, net of accumulated depreciation of $144,225","Property, plant and equipment"
-"Financial instruments purchased under agreements to resell, at fair value",Reverse Repurchase Argreements (reverse-repo)
+"Financial instruments purchased under agreements to resell, at fair value",Reverse Repurchase Agreements (reverse-repo)
 investments (note 6),Other assets
-"Securities purchased under agreements to resell (including $46,791 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (including $46,791 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Non-marketable securities owned, at cost","Financial instruments owned, at fair value"
 "Furniture, equipment and leasehold improvements, net of accumulated depreciation and amortization of $66,355","Property, plant and equipment"
 Prepaid rent,Prepaid expenses and other assets
@@ -507,7 +507,7 @@ Investment advisory fees receivable,Other receivables
 DUE FROM WEISS GROUP,Due from counterparties
 "Furniture, equipment and leasehold improvements, net of accumulated depreciation and amortization of $40,523","Property, plant and equipment"
 "Exchange memberships - at cost (market value $10,687)",Exchange memberships
-"Securities purchased under resale agreements (included $13,686 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under resale agreements (included $13,686 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Accounts Receivable from broker-dealer,Receivable from broker-dealers
 Furniture and Equipment,"Property, plant and equipment"
 Mortgage-backed securities,Other assets
@@ -532,9 +532,9 @@ Due from clearing firm,Due from counterparties
 Fixed assets (net of accumulated depreciation of $340) Goodwill,Fixed assets
 Receivable from related parties (Note 3),Other receivables
 "net of accumulated amortization of 2017 $190,500",Accumulated depreciation and amortization
-Collateralized short-term financing agreements: Securities purchased under agreements to resell,Reverse Repurchase Argreements (reverse-repo)
+Collateralized short-term financing agreements: Securities purchased under agreements to resell,Reverse Repurchase Agreements (reverse-repo)
 "Financial instruments owned, at fair value (includes securities pledged as collateral of $34,409)","Financial instruments owned, at fair value"
-"Securities purchased under resale agreements (included $14,133 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under resale agreements (included $14,133 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Furniture, equipment and leasehold improvements, (net of accumulated depreciation and amortization of $3,116,958)","Property, plant and equipment"
 "Furniture, equipment and leasehold improvements, (net of accumulated depreciation and amortization of $2,066,104)","Property, plant and equipment"
 "at Cost, Less Accumulated Depreciation and Amortization of $217,090",Accumulated depreciation and amortization
@@ -546,7 +546,7 @@ Collateralized short-term financing agreements: Securities purchased under agree
 "Equipment (net of accumulated depreciation of $75,385 and $72,613)",Accumulated depreciation and amortization
 Prepaid expenses and other assets (Note 4),Prepaid expenses and other assets
 "Property, equipment and leasehold improvements, net of accumulated depreciation and amortization of $870","Property, plant and equipment"
-"Securities purchased under agreements to resell (includes $418,809 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $418,809 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 U.S. government and government agency securities,U.S. government and government agency
 Due from Broker Dealer,Receivable from broker-dealers
 Deposit-clearing organization (Note 2),Deposits with clearing organizations
@@ -569,10 +569,10 @@ Marketable Securities Prepaid Rent,Prepaid expenses and other assets
 "Financial instruments owned, at fair value (includes securities pledged as collateral of $31,184)","Financial instruments owned, at fair value"
 Due from broker-dealers (Note 1),Due from counterparties
 "Deposits paid for securities borrowed (including $50,553 at fair value)",Deposits with clearing organizations
-Securities purchased under agreements to,Reverse Repurchase Argreements (reverse-repo)
+Securities purchased under agreements to,Reverse Repurchase Agreements (reverse-repo)
 Receivables from customers,Receivables from customers and counterparties
 Company clearing accounts,Account receivable
-"Securities purchased under agreements to resell, at fair value",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell, at fair value",Reverse Repurchase Agreements (reverse-repo)
 at estimated fair value,"Financial instruments owned, at fair value"
 "depreciation of $16,283","Property, plant and equipment"
 U.S. government and agency securities,U.S. government and government agency
@@ -588,7 +588,7 @@ Trading deposit,"Financial instruments owned, at fair value"
 "Property and equipment - Net of accumulated depreciation of $555,197","Property, plant and equipment"
 "Property and equipment, net of accumulated depreciation of $206,964","Property, plant and equipment"
 Cash and securities segregated pursuant to federal regulations,Cash and cash equivalents
-"Securities purchased under agreements to resell (includes fair value of $10,534)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes fair value of $10,534)",Reverse Repurchase Agreements (reverse-repo)
 "Cash and securities deposited with clearing organizations or segregated under federal and other regulations (securities at fair value of $26,335,087)",Cash and cash equivalents
 Equipment and improvements,"Property, plant and equipment"
 Due from brokers and clearing organizations,Receivable from broker-dealers
@@ -606,7 +606,7 @@ Accounts receivable-employee,Account receivable
 "Securities received as collateral (includes $15,104 pledged as collateral)",Securities received as collateral
 Note 2. Basis of Presentation,Other assets
 "Exchange memberships - at cost (market value $3,988)",Exchange memberships
-"Securities purchased under agreements to resell (includes $1,329 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $1,329 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Other assets (included $36 at fair value at December 31, 2012)",Other assets
 Receivable from Affiliate,Other receivables
 Refundable Income Tax State,Other assets
@@ -623,12 +623,12 @@ Cash and securities segregated for regulatory and other purposes,Cash and securi
 Restricted certificate of deposit,Deposits with clearing organizations
 Operating Lease Assets,Other assets
 "Other (includes $317,372 at fair value)",Other assets
-"Securities sold under agreements to repurchase (including $82,775 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities sold under agreements to repurchase (including $82,775 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 ESCROW ACCOUNT BALANCES-Restricte,Escrow account balances
 Cash and investments segregated in compliance with federal regulations,Cash and cash equivalents
 Deferred tax asset (Note 8),Deferred tax asset
 "Furniture and equipment, net of accumulated depreciation of $183,206","Property, plant and equipment"
-"Securities purchased under agreements to resell (includes $20,850 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $20,850 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Securities owned at market value,"Financial instruments owned, at fair value"
 Receivable from broker-dealer,Receivable from broker-dealers
 "Property, equipment and leasehold improvements, net of","Property, plant and equipment"
@@ -644,7 +644,7 @@ Securities owned at fair value (Note 3),"Financial instruments owned, at fair va
 "Due from registered representatives, net",Due from counterparties
 (Decrease) Increase in Taxes Payable,Other assets
 "Financial instruments owned, at fair value (includes $20,567 pledged as collateral)","Financial instruments owned, at fair value"
-"Securities borrowed or purchased under agreements to resell (including $93,975 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities borrowed or purchased under agreements to resell (including $93,975 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Furniture, fixtures and equipment","Property, plant and equipment"
 "Exchange memberships - at cost (market value $8,424)",Exchange memberships
 Net Equipment and Furniture,"Property, plant and equipment"
@@ -661,7 +661,7 @@ Cash and cash equivalents (includes cash equivalents at fair value of $183),Cash
 "Premises, equipment and software costs, at cost (net of accumulated depreciation and amortization of $1,018,104)",Accumulated depreciation and amortization
 Cash segregated under federal and other regulations,Cash and cash equivalents
 Unrealized gain on investment,Other assets
-Securities purchased under agreements to resell (includes $524 at fair value),Reverse Repurchase Argreements (reverse-repo)
+Securities purchased under agreements to resell (includes $524 at fair value),Reverse Repurchase Agreements (reverse-repo)
 "Memberships in exchanges, at cost (market value $2,752)",Exchange memberships
 Cash deposited with clearing organizations or segregated under federal and other regulations or requirements,Cash and cash equivalents
 "Property, plant, and equipment (net of accumulated depreciation of $241,569)","Property, plant and equipment"
@@ -684,11 +684,11 @@ Due from related parties,Due from counterparties
 "Financial instruments owned, at fair value (includes $41,755 pledged as collateral)","Financial instruments owned, at fair value"
 "net of accumulated amortization of 2018 $458,822",Accumulated depreciation and amortization
 "Furniture & office equipment (net of accumulated depreciation of $88,021)","Property, plant and equipment"
-"Collateralized short-term financing agreements: Securities purchased under agreements to resell (includes $55,547 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Collateralized short-term financing agreements: Securities purchased under agreements to resell (includes $55,547 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Receivable from Customer,Other receivables
 Accrued income tax,Other assets
 "Amortization of $296,022",Accumulated depreciation and amortization
-Securities purchased under resale agreements,Reverse Repurchase Argreements (reverse-repo)
+Securities purchased under resale agreements,Reverse Repurchase Agreements (reverse-repo)
 "Property, equipment and leasehold improvements, net of accumulated depreciation and amortization of $1,164","Property, plant and equipment"
 Deposit with clearing organization (Note 6),Deposits with clearing organizations
 Deposit With Clearing Organization Accounts Receivable - Trade,Deposits with clearing organizations
@@ -755,12 +755,12 @@ Other current assets,Other assets
 Due from employees,Due from counterparties
 "Memberships in exchanges, at cost (market value $1,303)",Exchange memberships
 Prepaid Rent,Prepaid expenses and other assets
-"Securities purchased under agreements to resell (includes $1,113 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $1,113 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Furniture and equipment, at cost, net of accumulated depreciation of $112,176","Property, plant and equipment"
 "Furniture and equipment (net of accumulated depreciation of $57,137 and $47,485 for 2004 and 2003, respectively)","Property, plant and equipment"
 "Property and equipment, net of accumulated depreciation of $198,744","Property, plant and equipment"
 "Financial instruments owned, at fair value ($22,823,937 pledged as collateral)","Financial instruments owned, at fair value"
-"Securities purchased under agreements to resell (including $56,021 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (including $56,021 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Investment in securities,Other assets
 "depreciation of $75,268 and $74,399",Accumulated depreciation and amortization
 "Securities received as collateral, at fair value (includes $42,447 pledged as collateral)",Securities received as collateral
@@ -783,11 +783,11 @@ Due from an affiliate,Due from counterparties
 "Furniture and Equipment, at Cost, Less Accumulated Depreciation of $29,031 in 2003 and $22,427 in 2002",Other assets
 "of $50,559 and $57,137 in 2005 and 2004, respectively)",Other assets
 "Property, plant, and equipment, net of accumulated depreciation of $398,131","Property, plant and equipment"
-"Securities purchased under agreements to resell (includes $2,368,281 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $2,368,281 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Other Other assets assets,Other assets
 "Furniture, equipment and leasehold improvements, net of accumulated depreciation and amortization of $88,343 Other assets","Property, plant and equipment"
 "Redemption receivable, net",Other receivables
-"Securities borrowed and purchased under agreements to resell (including $104,939 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities borrowed and purchased under agreements to resell (including $104,939 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Unsecured short-term borrowings,Other assets
 "For the years ended December, 31",Other assets
 Receivables from brokers or dealers,Receivable from broker-dealers
@@ -803,7 +803,7 @@ Net increase in cash,Other assets
 "and equipment at cost (net of accumulated depreciation of $91,203)","Property, plant and equipment"
 Derivative assets,Other assets
 Property and equipment; net,"Property, plant and equipment"
-"Securities purchased under agreements to resell (includes $15,999 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $15,999 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Note 11. Variable Interest Entities,"Financial instruments owned, at fair value"
 Marketable debt securities,"Financial instruments owned, at fair value"
 Options,Other assets
@@ -822,7 +822,7 @@ Accounts receivable-other,Account receivable
 "$39,004 in 2007 and $38,007 in 2006",Other assets
 Prepaid Federal Income Tax,Other assets
 "accumulated depreciation and amortization of $3,500,095)",Accumulated depreciation and amortization
-"Securities purchased under agreements to resell (including $51,797 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (including $51,797 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Securities owned, at market (note 2)","Financial instruments owned, at fair value"
 Deposits with clearing organization (cash),Deposits with clearing organizations
 Deposit with clearing broker-dealer,Deposits with clearing organizations
@@ -869,7 +869,7 @@ Equities,Other assets
 Goodwill SEC,Other assets
 Other Assets Deposits with clearing organizations and others,Deposits with clearing organizations
 "Equipment, at cost, less accumulated depreciation of $67 (Note 4)","Property, plant and equipment"
-"Securities purchased under agreements to resell (includes $43,921 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $43,921 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Receivables from clients,Receivables from customers and counterparties
 Assets Receivable from Non-Customer,Other receivables
 CSC deposit,Deposits with clearing organizations
@@ -910,7 +910,7 @@ Deposits with clearing broker-dealer,Deposits with clearing organizations
 "securities segregated for benefit of customers (includes securities at fair value of $4,280,397)",Cash and securities segregated for benefit of customers
 "Investment, at fair value",Other assets
 "Leasehold improvements, furniture and equipment (net of accumulated amortization and depreciation of $257,383)","Property, plant and equipment"
-Securities purchased under agreements to resell (includes $302 at fair value),Reverse Repurchase Argreements (reverse-repo)
+Securities purchased under agreements to resell (includes $302 at fair value),Reverse Repurchase Agreements (reverse-repo)
 Receivable from Parent and affiliated company,Other receivables
 U.S. government and federal agency,U.S. government and government agency
 Prepaid expenses,Prepaid expenses and other assets
@@ -928,12 +928,12 @@ Restricted cash - deposits with clearing organization,Deposits with clearing org
 "Other secured financings (includes $1,317 at fair value)",Other assets
 Receivable from Non-customer,Other receivables
 Accrued Wages,Other assets
-"Securities purchased under agreements to resell (includes $2,472,713 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $2,472,713 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Cash and cash equivalents Cash and,Cash and cash equivalents
 Due from parent,Due from counterparties
 Section Total assets,Total assets
 "Property and Equipment, at Cost, Less Accumulated Depreciation of $64,908","Property, plant and equipment"
-"Securities purchased under agreements to resell (includes $111,922 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $111,922 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Furniture, equipment and leasehold improvements, (net of accumulated depreciation and amortization of $4,040,709)","Property, plant and equipment"
 "Fixed assets, net of accumulated depreciation of $24,188",Fixed assets
 Restricted cash - deposits with clearing organizations,Deposits with clearing organizations
@@ -944,7 +944,7 @@ Cash segregated in compliance with federal regulations,Cash and cash equivalents
 "Receivables from broker-dealers, exchanges and clearing organizations (net of allowance)",Receivable from broker-dealers
 "Property and equipment, net of accumulated depreciation of $221,457","Property, plant and equipment"
 "Securities owned, at market","Financial instruments owned, at fair value"
-"Securities purchased under agreements to resell (includes $2,670,797 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $2,670,797 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "depreciation and amortization of $335,636",Accumulated depreciation and amortization
 Related party note receivable,Other receivables
 Cash and Cash Equivalents,Cash and cash equivalents
@@ -963,7 +963,7 @@ Cash and securities segregated and on deposit for Federal and other regulations 
 "Fixed assets, net of accumulated depreciation of $29,711",Fixed assets
 "Financial instruments owned, at fair value (includes $19,779 pledged as collateral, which the counterparty has the right to sell or repledge)","Financial instruments owned, at fair value"
 "Investment in securities, at fair value",Other assets
-"Securities purchased under agreements to resell (includes $18,371 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $18,371 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Financial instruments owned, at fair value (includes $23,075 pledged as collateral)","Financial instruments owned, at fair value"
 Cash and securities segregated and on deposit other regulations or deposited with clearing,Cash and cash equivalents
 Deposits at clearing organization,Deposits with clearing organizations
@@ -972,7 +972,7 @@ Deposits at clearing organization,Deposits with clearing organizations
 Accounts Receivable [Note 1],Account receivable
 Deposit with clearing organization and depository (Note 7),Deposits with clearing organizations
 "Marketable at market value (cost $321,038)",Exchange memberships
-"Securities purchased under agreements to resell (including $65,836 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (including $65,836 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Refundable corporate taxes,Other assets
 Corporate and other debt,Other assets
 Notes Receivable,Other receivables
@@ -1013,11 +1013,11 @@ Corporate obligations,Other assets
 Customers (net of allowance for doubtful accounts of $13),Account receivable
 "Office furniture and equipment, net of accumulated depreciation of $10,515","Property, plant and equipment"
 "Property, equipment and leasehold improvements, accumulated depreciation and amortization","Property, plant and equipment"
-Securities purchased under agreements to resell (at fair value),Reverse Repurchase Argreements (reverse-repo)
+Securities purchased under agreements to resell (at fair value),Reverse Repurchase Agreements (reverse-repo)
 "Equipment, at cost - net of accumulated depreciation of $126,915 (note 2)","Property, plant and equipment"
 "(net of accumulated amortization and depreciation of $186,917)",Accumulated depreciation and amortization
 "Amortization of $214,575",Accumulated depreciation and amortization
-"Securities purchased under agreements to resell (includes fair value of $7,137)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes fair value of $7,137)",Reverse Repurchase Agreements (reverse-repo)
 Brokerage fees receivable,Other receivables
 Receivable from Parent,Other receivables
 "Amortization of $278,638",Accumulated depreciation and amortization
@@ -1028,7 +1028,7 @@ for doubtful accounts of $303,Account receivable
 "Equipment (net of accumulated depreciation of $30,526 and $43,983)","Property, plant and equipment"
 "Securities owned, at market value ($3,198,593 pledged as collateral)",Securities received as collateral
 "Equipment, at cost, less accumulated depreciation of $15 (Note 4)","Property, plant and equipment"
-"Securities purchased under agreements to resell (includes $21,053 at fair value) Securities borrowed (includes $15,141 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $21,053 at fair value) Securities borrowed (includes $15,141 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 U.S. Treasury and federal agencies,Other assets
 TOTAL ASSETS,Total assets
 Accounts Receivable,Account receivable
@@ -1086,7 +1086,7 @@ Fixed assets (net of accumulated depreciation of $345),Fixed assets
 Employee loan advances - net of reserves of $194,Loan advances to employee
 "Receivables from brokerage customers, net",Receivables from customers and counterparties
 Due from customers,Due from counterparties
-"Securities purchased under agreements to resell (includes $56,694 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $56,694 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Commissions and correspondent fees receivable,Other receivables
 "Prepaid administrative services and other expenses, related party",Prepaid expenses and other assets
 Receivables from customers (includes $24 at fair value),Receivables from customers and counterparties
@@ -1129,7 +1129,7 @@ clearing agents,Other assets
 "Amortization of $242,280",Accumulated depreciation and amortization
 "Amortization of $232,021",Accumulated depreciation and amortization
 Due from affiliated companies,Due from counterparties
-"Securities purchased under agreements to resell (includes $620,568 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $620,568 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Receivable from affiliates (Note 3),Other receivables
 Receivable from Clearing Broker,Receivable from broker-dealers
 Receivable from broker-dealers and clearing organizations,Receivable from broker-dealers
@@ -1146,7 +1146,7 @@ Receivable from broker-dealers,Receivable from broker-dealers
 "Stocks, warrants, and options pledged as collateral",Securities received as collateral
 "Due from Adler Coleman, bankrupt",Due from counterparties
 Marketable Securities,"Financial instruments owned, at fair value"
-"Securities purchased under agreements to resell (includes $55,204 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $55,204 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 State and municipal bond obligations,Other assets
 Goodwill,Other assets
 "Due from broker, securities owned",Due from counterparties
@@ -1161,8 +1161,8 @@ Deposits and other assets,Other assets
 Customers and counterparties (includes $313 at fair value),Receivables from customers and counterparties
 Total assets(a,Total assets
 Securities owned at market (note 2),"Financial instruments owned, at fair value"
-"Securities financing transactions: Securities purchased under agreements to resell (includes securities at fair value of $31,989,983) Securities borrowed (includes securities at fair value of $28,586,968)",Reverse Repurchase Argreements (reverse-repo)
-Securities purchased under agreements to resell Securities borrowed,Reverse Repurchase Argreements (reverse-repo)
+"Securities financing transactions: Securities purchased under agreements to resell (includes securities at fair value of $31,989,983) Securities borrowed (includes securities at fair value of $28,586,968)",Reverse Repurchase Agreements (reverse-repo)
+Securities purchased under agreements to resell Securities borrowed,Reverse Repurchase Agreements (reverse-repo)
 "accumulated depreciation and amortization of $64,662",Accumulated depreciation and amortization
 "Financial instruments owned, pledged to counterparties","Financial instruments owned, at fair value"
 CASH AND CASH EQUIVALENTS,Cash and cash equivalents
@@ -1189,7 +1189,7 @@ Accounts receivable - trade,Account receivable
 "Property and equipment, net of accumulated depreciation of $385 Other assets","Property, plant and equipment"
 Accrued real estate taxes,Other assets
 Note receivable,Other receivables
-Financial instruments purchased under agreements to resell,Reverse Repurchase Argreements (reverse-repo)
+Financial instruments purchased under agreements to resell,Reverse Repurchase Agreements (reverse-repo)
 Note 8. Fair Value Option,Other assets
 "accumulated depreciation and amortization of $68,419)",Accumulated depreciation and amortization
 "Property and equipment, net","Property, plant and equipment"
@@ -1199,7 +1199,7 @@ Investments,Other assets
 Escrow cash (Note 6),Escrow account balances
 Broker-dealer commissions receivable,Receivable from broker-dealers
 "Investment in Morgan Stanley Smith Barney Holdings LLC (including Preferred Securities of $2,000)",Other assets
-Securities purchased under agreements to resell,Reverse Repurchase Argreements (reverse-repo)
+Securities purchased under agreements to resell,Reverse Repurchase Agreements (reverse-repo)
 Broker-dealer commission receivable,Receivable from broker-dealers
 "Property and Equipment, at Cost, Less Accumulated Depreciation of $82,470","Property, plant and equipment"
 2. Less: Non Allowable Assets,Other assets
@@ -1234,7 +1234,7 @@ Due from client,Due from counterparties
 Due from Group,Due from counterparties
 "Cash and securities segregated for benefit of customers (includes securities at fair value of $4,021,472)",Cash and securities segregated for benefit of customers
 "Financial instruments owned, at fair value ($43,204,807 pledged as collateral)","Financial instruments owned, at fair value"
-"Securities borrowed and purchased under agreements to resell (including $102,240 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities borrowed and purchased under agreements to resell (including $102,240 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Fixed assets, net of accumulated depreciation",Fixed assets
 "INTANGIBLE ASSET - Net of accumulated amortization of $166,864",Accumulated depreciation and amortization
 (Approximately $25 billion were pledged to,"Financial instruments owned, at fair value"
@@ -1246,12 +1246,12 @@ Collateralized agreements and financings:,Other assets
 "Other assets (includes $8,050 of securities received as collateral at fair value)",Securities received as collateral
 Other assets (includes $875 of securities received as collateral at fair value),Securities received as collateral
 "Deferred income tax assets, net",Deferred tax asset
-Securities purchased under agreement to resell,Reverse Repurchase Argreements (reverse-repo)
+Securities purchased under agreement to resell,Reverse Repurchase Agreements (reverse-repo)
 Deposit with clearing firm,Deposits with clearing organizations
 Receivable from clearing organization,Other receivables
 Receivable from customers,Other receivables
 "Receivable from brokers, dealers, clearing organizations and others",Receivable from broker-dealers
-"Securities purchased under agreements to resell (includes $19,042 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities purchased under agreements to resell (includes $19,042 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 Exchange membership seats,Other assets
 "Securities owned, at market value ($14,878,096 pledged as collateral)",Securities received as collateral
 "Cash and securities segregated for benefit of customers (includes securities at fair value of $5,709)",Cash and securities segregated for benefit of customers
@@ -1263,7 +1263,7 @@ or deposited with clearing organizations,Deposits with clearing organizations
 Receivables: Customers,Receivables from customers and counterparties
 "Fixed assets, net of accumulated depreciation of $33,547",Fixed assets
 "Computer equipment at cost, net of accumulated depreciation of $6,575","Property, plant and equipment"
-"Securities borrowed or purchased under agreements to resell (including $104,834 at fair value)",Reverse Repurchase Argreements (reverse-repo)
+"Securities borrowed or purchased under agreements to resell (including $104,834 at fair value)",Reverse Repurchase Agreements (reverse-repo)
 "Financial instruments owned, at fair value (included assets pledged of $65,515)","Financial instruments owned, at fair value"
 Premises and equipment (net of accumulated depreciation of $585),"Property, plant and equipment"
 Restricted cash,Cash and cash equivalents
@@ -1303,7 +1303,7 @@ Customers (net of allowance for doubtful accounts),Account receivable
 "Accumulated Depreciatio $34,224",Other assets
 Loans and exchange,Other assets
 Employee advances,Loan advances to employee
-"Securities financing transactions: Securities under to resell (includes securities at fair value of $37,631)",Reverse Repurchase Argreements (reverse-repo)
+"Securities financing transactions: Securities under to resell (includes securities at fair value of $37,631)",Reverse Repurchase Agreements (reverse-repo)
 "Equipment (net of accumulated depreciation of $21,567)","Property, plant and equipment"
 "PROPERTY AND EQUIPMENT, less accumulated depreciation of $58,939","Property, plant and equipment"
 "Securities received as collateral, at fair value (includes $24,592 pledged as collateral)",Securities received as collateral
@@ -1337,49 +1337,49 @@ Receivables from customers (includes $62 at fair value),Receivables from custome
 Broker-dealer commissions,Receivable from broker-dealers
 Contractual commitments,Other assets
 "Financial instruments owned (at fair value and includes $33,607 pledged as collateral)","Financial instruments owned, at fair value"
-Securities pledged under collateral agreements (Note 4),Repurchase Argreements (repo)
+Securities pledged under collateral agreements (Note 4),Repurchase Agreements (repo)
 Accounts payable,Accounts payable
 "Investments, at fair value","Financial instruments owned, at fair value"
 Accounts payable and Accrued Expenses,Accounts payable
-Securities borrowed,Repurchase Argreements (repo)
+Securities borrowed,Repurchase Agreements (repo)
 Less: Accumulated Depreciation,Accumulated depreciation and amortization
 Accumulated Depreciation,Accumulated depreciation and amortization
 "depreciation of $68,679)",Accumulated depreciation and amortization
-"Financial instruments sold under agreements to repurchase, at fair value",Repurchase Argreements (repo)
-"Securities loaned or sold under agreements to repurchase (including $8,810 at fair value)",Repurchase Argreements (repo)
+"Financial instruments sold under agreements to repurchase, at fair value",Repurchase Agreements (repo)
+"Securities loaned or sold under agreements to repurchase (including $8,810 at fair value)",Repurchase Agreements (repo)
 "Financial instruments sold, but not yet purchased, at fair value",Securities sold short
 TOTAL OTHER ASSETS,Other assets
 Other Receivable,Other receivables
 Total Other Assets,Other assets
 Accounts Payable,Accounts payable
-"Securities sold under agreements to repurchase (including $70,440 at fair value)",Repurchase Argreements (repo)
-"Securities borrowed (includes S36,781 at fair value)",Repurchase Argreements (repo)
+"Securities sold under agreements to repurchase (including $70,440 at fair value)",Repurchase Agreements (repo)
+"Securities borrowed (includes S36,781 at fair value)",Repurchase Agreements (repo)
 Total fixed assets,Other assets
 Receivables - other,Other receivables
-"Securities sold under agreements to repurchase (includes $347,715 at fair value)",Repurchase Argreements (repo)
+"Securities sold under agreements to repurchase (includes $347,715 at fair value)",Repurchase Agreements (repo)
 1. Total Ownership Equity,Other assets
-"Securities borrowed (includes $12,694 at fair value)",Repurchase Argreements (repo)
-"purchased agreements Securities borrowed (includes securities at fair value of $26,492)",Repurchase Argreements (repo)
-"Securities borrowed (includes $61,182 at fair value)",Repurchase Argreements (repo)
+"Securities borrowed (includes $12,694 at fair value)",Repurchase Agreements (repo)
+"purchased agreements Securities borrowed (includes securities at fair value of $26,492)",Repurchase Agreements (repo)
+"Securities borrowed (includes $61,182 at fair value)",Repurchase Agreements (repo)
 "depreciation of $14,370",Accumulated depreciation and amortization
 Other Receivables,Other receivables
 "Investments in Securities, at value (cost $3,300)","Financial instruments owned, at fair value"
 Accrued interest and dividend receivables,Other receivables
 "depreciation of $7,591",Accumulated depreciation and amortization
-"Securities sold under agreements to repurchase, at fair value",Repurchase Argreements (repo)
-"Securities sold under agreements to repurchase (includes $848,785 at fair value)",Repurchase Argreements (repo)
+"Securities sold under agreements to repurchase, at fair value",Repurchase Agreements (repo)
+"Securities sold under agreements to repurchase (includes $848,785 at fair value)",Repurchase Agreements (repo)
 Taxes Payable,Accounts payable
 "Payable to broker Dealers, exchange",Accounts payable
-"Securities borrowed (includes $14,820 at fair value)",Repurchase Argreements (repo)
+"Securities borrowed (includes $14,820 at fair value)",Repurchase Agreements (repo)
 Accumulated depreciation,Accumulated depreciation and amortization
-"Securities borrowed (includes $79,312,735 at fair value)",Repurchase Argreements (repo)
+"Securities borrowed (includes $79,312,735 at fair value)",Repurchase Agreements (repo)
 "Accumulated Depreciation of $37,298",Accumulated depreciation and amortization
 Money market investments,"Financial instruments owned, at fair value"
-"Securities sold under agreements to repurchase (including $71,901 at fair value)",Repurchase Argreements (repo)
+"Securities sold under agreements to repurchase (including $71,901 at fair value)",Repurchase Agreements (repo)
 "Investments, at market value","Financial instruments owned, at fair value"
 Total current assets,Total current assets
-"Receivable under securities borrowing arrangements (includes $10,556 at fair value)",Repurchase Argreements (repo)
-"Securities borrowed (includes $14,092 at fair value)",Repurchase Argreements (repo)
+"Receivable under securities borrowing arrangements (includes $10,556 at fair value)",Repurchase Agreements (repo)
+"Securities borrowed (includes $14,092 at fair value)",Repurchase Agreements (repo)
 Payroll taxes payable,Accounts payable
 TOTAL CURRENT ASSETS,Total current assets
 Commercial paper and money market funds,"Financial instruments owned, at fair value"
@@ -1389,19 +1389,19 @@ Employee receivables,Other receivables
 Customers,Other receivables
 Less Accumulated Depreciation,Accumulated depreciation and amortization
 State and Local Tax Payable,Accounts payable
-"Securities borrowed (includes $82,144 at fair value)",Repurchase Argreements (repo)
-"Securities borrowed (includes $62,191 at fair value)",Repurchase Argreements (repo)
+"Securities borrowed (includes $82,144 at fair value)",Repurchase Agreements (repo)
+"Securities borrowed (includes $62,191 at fair value)",Repurchase Agreements (repo)
 Accounts Payable - Commissions,Accounts payable
-"Securities loaned or sold under agreements to repurchase (including $13,083 at fair value)",Repurchase Argreements (repo)
-"Securities borrowed (includes $74,019 at fair value)",Repurchase Argreements (repo)
+"Securities loaned or sold under agreements to repurchase (including $13,083 at fair value)",Repurchase Agreements (repo)
+"Securities borrowed (includes $74,019 at fair value)",Repurchase Agreements (repo)
 Branch receivables,Other receivables
 Miscellaneous receivables,Other receivables
 Other receivables,Other receivables
-"Securities borrowed (includes $32,849 at fair value)",Repurchase Argreements (repo)
-"Securities borrowed (includes fair value of $15,602)",Repurchase Argreements (repo)
+"Securities borrowed (includes $32,849 at fair value)",Repurchase Agreements (repo)
+"Securities borrowed (includes fair value of $15,602)",Repurchase Agreements (repo)
 Other Non Current Receivables,Other receivables
 "Accumulated Depreciation of $37,138",Accumulated depreciation and amortization
-"Securities loaned (includes $28,978 at fair value)",Repurchase Argreements (repo)
+"Securities loaned (includes $28,978 at fair value)",Repurchase Agreements (repo)
 "depreciation of $57,062",Accumulated depreciation and amortization
 Less: Accumulated depreciation,Accumulated depreciation and amortization
 Receivables from affiliates (Note 6),Other receivables
@@ -1417,31 +1417,31 @@ accumulated depreciation,Accumulated depreciation and amortization
 Dividends Payable,Accounts payable
 Accounts payable and accrued expenses,Accounts payable
 Payable to affiliate,Accounts payable
-"Securities loaned or sold under agreements to repurchase (including $2,562 at fair value)",Repurchase Argreements (repo)
-"Securities borrowed (includes $24,353 at fair value)",Repurchase Argreements (repo)
+"Securities loaned or sold under agreements to repurchase (including $2,562 at fair value)",Repurchase Agreements (repo)
+"Securities borrowed (includes $24,353 at fair value)",Repurchase Agreements (repo)
 Total Current Assets,Total current assets
-"Securities borrowed (includes $43,452 at fair value)",Repurchase Argreements (repo)
-Securities loaned (includes $6 at fair value),Repurchase Argreements (repo)
-"Securities borrowed (includes $23,356 at fair value)",Repurchase Argreements (repo)
+"Securities borrowed (includes $43,452 at fair value)",Repurchase Agreements (repo)
+Securities loaned (includes $6 at fair value),Repurchase Agreements (repo)
+"Securities borrowed (includes $23,356 at fair value)",Repurchase Agreements (repo)
 "Financial instruments sold, not yet purchased",Securities sold short
 Payable to clearing broker,Accounts payable
 Receivable - Other,Other receivables
 Total non-current assets,Other assets
-"Securities sold under agreements to repurchase (includes $363,715 at fair value)",Repurchase Argreements (repo)
+"Securities sold under agreements to repurchase (includes $363,715 at fair value)",Repurchase Agreements (repo)
 Money market instruments,"Financial instruments owned, at fair value"
 Cash & Liquid Money Market Funds,"Financial instruments owned, at fair value"
 "Financial instruments sold, not yet purchased,",Securities sold short
-"Securities loaned and sold under agreements to repurchase (including $5,207 at fair value)",Repurchase Argreements (repo)
+"Securities loaned and sold under agreements to repurchase (including $5,207 at fair value)",Repurchase Agreements (repo)
 "depreciation of $145,900)",Accumulated depreciation and amortization
 "Investments, at cost","Financial instruments owned, at fair value"
 "depreciation of $82,129)",Accumulated depreciation and amortization
 "Financial instruments sold, not yet purchased, and",Securities sold short
 Total other assets,Other assets
-"Securities borrowed (includes fair value of $23,345)",Repurchase Argreements (repo)
-"Receivable under securities borrowing arrangements (includes $33,075 at fair value)",Repurchase Argreements (repo)
-Securities sold under agreements to repurchase,Repurchase Argreements (repo)
+"Securities borrowed (includes fair value of $23,345)",Repurchase Agreements (repo)
+"Receivable under securities borrowing arrangements (includes $33,075 at fair value)",Repurchase Agreements (repo)
+Securities sold under agreements to repurchase,Repurchase Agreements (repo)
 Less accumulated depreciation,Accumulated depreciation and amortization
 Receivables-othe:,Other receivables
 "Total financial instruments sold, not yet purchased, at fair value",Securities sold short
-"Securities borrowed (includes securities at fair value of $41,128,727)",Repurchase Argreements (repo)
+"Securities borrowed (includes securities at fair value of $41,128,727)",Repurchase Agreements (repo)
 Payable to Related Party,Accounts payable
