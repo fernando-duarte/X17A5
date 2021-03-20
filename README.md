@@ -20,3 +20,4 @@ The project runs on Amazon Web Services (AWS) in a SageMaker instance. The scrip
 `PDF_Slicing.ipynb` responsible for reducing the size of the X-17A-5 pdf files to mangeable ~9 page pdfs
 
 `SEC_Textract.ipynb` calls the AWS asynchronous Textract API to perform OCR on the reduced X-17A-5 filings, selecting only the balance sheet and uploading it to a s3 bucket
+
