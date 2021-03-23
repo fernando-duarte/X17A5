@@ -17,7 +17,7 @@ The project runs on Amazon Web Services (AWS) in a SageMaker instance. The scrip
 ### 3.2 	Code Files
 `SEC_S3.ipynb` responsible for creating the resource files, downloading the X-17A-5 files from the SEC website and moving the downloaded files to a s3 buckets
 
-`PDF_Slicing.ipynb` responsible for reducing the size of the X-17A-5 pdf files to mangeable ~9 page pdfs
+`PDF_Slicing.ipynb` responsible for reducing the size of the X-17A-5 pdf files to mangeable ~9 page pdf(s)
 
 `SEC_Textract.ipynb` calls the AWS asynchronous Textract API to perform OCR on the reduced X-17A-5 filings, selecting only the balance sheet and uploading it to a s3 bucket
 
