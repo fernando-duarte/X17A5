@@ -1,6 +1,6 @@
 # X-17A-5 Optical Character Recognition (OCR)
 
-## 1	Introduction
+## 1	Introductions
 The project runs on Amazon Web Services (AWS) in a SageMaker instance. The scripts scrape the SEC for X-17A-5 filings and perform OCR through Amazon Textract, storing balance sheet information from files into s3 buckets. 
 
 ## 2	Software Dependencies
