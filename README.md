@@ -28,35 +28,35 @@ The code files are divided into four sub-groups that are responsible for executi
 
 #### Broker-Dealer Gathering
 
-* `readDealerData.ipynb` responsible for creating the resource files, downloading the X-17A-5 files from the SEC website and moving the downloaded files to a s3 buckets
+   * `readDealerData.ipynb` responsible for creating the resource files, downloading the X-17A-5 files from the SEC website and moving the downloaded files to a s3 buckets
 
 #### X17A5 File Retrieval
 
-* `pdfFileExtract.ipynb` responsible for extracting the X-17A-5 pdf files from broker-dealer URLS
+   * `pdfFileExtract.ipynb` responsible for extracting the X-17A-5 pdf files from broker-dealer URLS
 
-* `pdfFileSlicing.ipynb` responsible for reducing the size of the X-17A-5 pdf files to mangeable ~15 page pdf(s)
+   * `pdfFileSlicing.ipynb` responsible for reducing the size of the X-17A-5 pdf files to mangeable ~15 page pdf(s)
 
 #### Optical Character Recognition
 
-* `ocrTextract.ipynb` calls the AWS asynchronous Textract API to perform OCR on the reduced X-17A-5 filings, selecting only the balance sheet and uploading it to a s3 bucket
+   * `ocrTextract.ipynb` calls the AWS asynchronous Textract API to perform OCR on the reduced X-17A-5 filings, selecting only the balance sheet and uploading it to a s3 bucket
 
-* `ocrClean.ipynb` refines the scraped balance sheet data from Textract, handling case exemptions such as merged rows, multi-year columns and numeric string conversions 
+   * `ocrClean.ipynb` refines the scraped balance sheet data from Textract, handling case exemptions such as merged rows, multi-year columns and numeric string conversions 
 
 #### Database construcution
 
-* `databaseLineitems.ipynb` divides the balance sheet into asset terms and liability & equity terms
+   * `databaseLineitems.ipynb` divides the balance sheet into asset terms and liability & equity terms
 
-* `databaseUnstructured.ipynb` constructs a semi-finished database that captures all unique line items by column for the entirety of each bank and year
+   * `databaseUnstructured.ipynb` constructs a semi-finished database that captures all unique line items by column for the entirety of each bank and year
 
-* `databaseStructured.ipynb` constructs a finished database that aggregates columns by a predicted class for assets and liability & equity terms
+   * `databaseStructured.ipynb` constructs a finished database that aggregates columns by a predicted class for assets and liability & equity terms
 
 ### 3.4 	Output Files
 
-* `assetLines.txt` & `liabilityLines.txt` both represent line items that correspond to asset and liability & equity terms respectively from all of the broker-dealers surveyed
+   * `assetLines.txt` & `liabilityLines.txt` both represent line items that correspond to asset and liability & equity terms respectively from all of the broker-dealers surveyed
 
-* `unstructAsset.csv` & `unstructLiable.csv` both represent the unstructured liability 
+   * `unstructAsset.csv` & `unstructLiable.csv` both represent the unstructured asset and liability & equity terms respectively, from all of the broker-dealers per year 
 
-* `structAsset.csv` & `structLiable.csv`
+   * `structAsset.csv` & `structLiable.csv` both represent the structured asset and liability & equity terms respectively, from all of the broker-dealers per year 
 
 ## 4	Running Code
 
@@ -67,29 +67,34 @@ Our code file will run on AWS batch, via Sagemaker instance. We start by first c
 **Click the "Create notebook instance" button and modify the following:**
 
 _**Notebook instance settings**_
-    1. Notebook instance type: subject to user (e.g. ml.p2.xlarge)
-    2. Lifecycle configuration: Use ran-lifecycle-config-julia-ver-1-4-0-gpu
+
+ 1. Notebook instance type: subject to user (e.g. ml.p2.xlarge)
+ 2. Lifecycle configuration: Use ran-lifecycle-config-julia-ver-1-4-0-gpu
     
 _**Permissions and encryption**_
-    1. IAM role ARN: For access to SageMaker commands and AWS features (e.g. ran-notebook-execution-role-fernandod)
-    2. Root Access: Enabled (default) to give users root access to the notebook
-    3. Encryption key: First select "Enter a KMS key ARN" from the drop-down menu and then provide the accompanying KMS ARN key below (i.e. arn:aws:kms:us-east-2:347550782223:key/acf48e27-89bf-4086-995d-ae42027ec4c0)
+
+ 1. IAM role ARN: For access to SageMaker commands and AWS features (e.g. ran-notebook-execution-role-fernandod)
+ 2. Root Access: Enabled (default) to give users root access to the notebook
+ 3. Encryption key: First select "Enter a KMS key ARN" from the drop-down menu and then provide the accompanying KMS ARN key below (i.e. arn:aws:kms:us-east-2:347550782223:key/acf48e27-89bf-4086-995d-ae42027ec4c0)
 
 _**Network**_
-Select the default provided vpc-efd69186 (172.31.0.0/16)
-    1. Subnets: Provide the us-east-ohio private region (i.e. subnet-036ca68944320a3d7)
-    2. Security Group(s): sg-02bc281a2eed08cdc
-    3. Direct interest access: Disabled, access the internet through  a VPC 
+
+1. Select the default provided vpc-efd69186 (172.31.0.0/16)
+2. Subnets: Provide the us-east-ohio private region (i.e. subnet-036ca68944320a3d7)
+3. Security Group(s): sg-02bc281a2eed08cdc
+4. Direct interest access: Disabled, access the internet through  a VPC 
 
 _**Git Repositories**_
+
 If you would like to clone a Git repo, select "Clone a public Git repository to this notebook instance only" from the drop-down and proceed
-    1. Git repository URL: If you have a repo provide the URL from GitHub
+ 1. Git repository URL: If you have a repo provide the URL from GitHub
 
 ### 4.2 	Setting up the Terminal 
 
 #### First Time Use ONLY
 
 **Start the notebook and open in Jupyter. Click New -> terminal. Submit the following commands:**
+
 1. ```aws s3 cp s3://ran-s3-install-pkgs/config/RanPocKP.pem /home/ec2-user/```
 
 2. ```chmod 400 /home/ec2-user/RanPocKP.pem```
@@ -99,6 +104,7 @@ If you would like to clone a Git repo, select "Clone a public Git repository to 
 #### Subsequent Use ONLY
 
 **Start the notebook and open in Jupyter. Click New -> terminal. Submit the following commands:**
+
 1. ```sudo su - ec2-user```
     
 2. ```sudo ssh -i /home/ec2-user/RanPocKP.pem ec2-user@172.31.100.6```
@@ -106,6 +112,7 @@ If you would like to clone a Git repo, select "Clone a public Git repository to 
 ### 4.3 	Using the Terminal 
 
 **With an open terminal, submit the following commands**
+
 1. Begin by transferring files to run from a local repository to a designating s3 bucket
    ```aws s3 cp (s3_repo_name) (home_file_path)```
    ```aws s3 cp s3://ran-s3-systemic-risk/Code/sample.py /home/ec2-user/sample.py```
