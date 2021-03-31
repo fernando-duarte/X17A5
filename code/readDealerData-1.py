@@ -99,7 +99,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
 
         if coverage in years_covered:
             print('\tWe have covered {}'.format(coverage))
-            break
+            pass
 
         else:
             searchURL = '{}/{}/form.idx'.format(baseURL, coverage)
@@ -134,16 +134,17 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
                 # check whether X-17A-5 form type was found (if empty pass)
                 if not x17File.empty:
 
-                    # CIK number is taken from the last column of the rows splitting url string 
+                    # CIK number is taken from the last column of the rows splitting url string by row 
                     # e.g. edgar/data/886475/0001019056-10-000046.txt -> 886475
                     last_column = x17File.columns[-1]
                     cikNumbers = x17File[last_column].apply(lambda x: x.split('/')[2]).values
+                    
+                    # compute dictionary mapping for the CIK and company name for each broker-dealer    
+                    dictionary_update = dict(map(lambda x: (x, companyName(x)), cikNumbers))
 
-                    # iterate through CIK elements  
-                    for elm in cikNumbers:
-                        compName = companyName(elm)                       # company name for CIK 
-                        cik2brokers['broker-dealers'][elm] = compName     # broker-dealer reporting
-
+                    # update the broker-dealer list
+                    cik2brokers['broker-dealers'].update(dictionary_update)
+                    
                 # remove local file after it has been created
                 os.remove('main.txt')
         
@@ -164,8 +165,11 @@ if __name__ == "__main__":
     session = Session()
 
     paths = session.list_s3_files(bucket, folder)
+    
+    # determine the interval range for which we look back historically 
+    parse_years = np.arange(1993, datetime.datetime.today().year+1)
 
-    # if the CIK-Dealer file is located in out output folder we read it in and pass as argument
+    # if the CIK-Dealer file is located in the output folder we read it in and pass as argument
     if 'Output/CIKandDealers.json' in paths: 
         # retrieving downloaded files from s3 bucket
         s3.download_file(bucket, 'Output/CIKandDealers.json', 'temp.json')
@@ -173,14 +177,13 @@ if __name__ == "__main__":
         # read all CIK and Dealer name information from storage
         with open('temp.json', 'r') as f: old_cik2brokers = json.loads(f.read())
             
-        cik2brokers = dealerData(years=np.arange(1993, datetime.datetime.today().year+1), 
-                                 cik2brokers=old_cik2brokers)   
+        cik2brokers = dealerData(years=parse_years, cik2brokers=old_cik2brokers)   
         
         # remove local file after it has been created
         os.remove('temp.json')
     else:
         # otherwise we must run the entire history of broker-dealers registering a X-17A-5 file
-        cik2brokers = dealerData(years=[1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000])
+        cik2brokers = dealerData(years=parse_years)
         
     # write to a JSON file with accompanying meta information about coverage 
     with open('CIKandDealers.json', 'w') as file:
@@ -191,5 +194,6 @@ if __name__ == "__main__":
     with open('CIKandDealers.json', 'rb') as data:
         s3.upload_fileobj(data, bucket, 'Output/CIKandDealers.json')
         
-    # remove local file after it has been pushed to the s3
+    # remove local file after it has been created
     os.remove('CIKandDealers.json')
+    
