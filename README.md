@@ -90,29 +90,35 @@ If you would like to clone a Git repo, select "Clone a public Git repository to 
 #### First Time Use ONLY
 
 **Start the notebook and open in Jupyter. Click New -> terminal. Submit the following commands:**
-    1. ```aws s3 cp s3://ran-s3-install-pkgs/config/RanPocKP.pem /home/ec2-user/```
-    2. ```chmod 400 /home/ec2-user/RanPocKP.pem```
-    3. ```sudo ssh -i /home/ec2-user/RanPocKP.pem ec2-user@172.31.100.6```
+1. ```aws s3 cp s3://ran-s3-install-pkgs/config/RanPocKP.pem /home/ec2-user/```
+
+2. ```chmod 400 /home/ec2-user/RanPocKP.pem```
+
+3. ```sudo ssh -i /home/ec2-user/RanPocKP.pem ec2-user@172.31.100.6```
 
 #### Subsequent Use ONLY
 
 **Start the notebook and open in Jupyter. Click New -> terminal. Submit the following commands:**
-	1. ```sudo su - ec2-user```
-    2. ```sudo ssh -i /home/ec2-user/RanPocKP.pem ec2-user@172.31.100.6```
+1. ```sudo su - ec2-user```
+    
+2. ```sudo ssh -i /home/ec2-user/RanPocKP.pem ec2-user@172.31.100.6```
 
 ### 4.3 	Using the Terminal 
 
 **With an open terminal, submit the following commands**
-    1. Begin by transferring files to run from a local repository to a designating s3 bucket
-       ```aws s3 cp (s3_repo_name) (home_file_path)```
-       ```aws s3 cp s3://ran-s3-systemic-risk/Code/sample.py /home/ec2-user/sample.py```
-    2. To run the file and save a log-file to be viewed later. **(NOTE: CAN NOT BE USED FOR A JUPYTER NOTEBOOK file (.ipynb), ONLY PYTHON (.py) due to compiler restrictions)**
-       ```nohup time python (home_file_path) > (file_name) &```
-       ```nohup time python /home/ec2-user/sample.py > output.txt &```
-    3. To view the output files 
-       ```view output_name.txt```
-    4. To exit the terminal window for view output window
-       ```:qa!```
+1. Begin by transferring files to run from a local repository to a designating s3 bucket
+   ```aws s3 cp (s3_repo_name) (home_file_path)```
+   ```aws s3 cp s3://ran-s3-systemic-risk/Code/sample.py /home/ec2-user/sample.py```
+
+2. To run the file and save a log-file to be viewed later. **(NOTE: CAN NOT BE USED FOR A JUPYTER NOTEBOOK file (.ipynb), ONLY PYTHON (.py) due to compiler restrictions)**
+   ```nohup time python (home_file_path) > (file_name) &```
+   ```nohup time python /home/ec2-user/sample.py > output.txt &```
+
+3. To view the output files 
+   ```view output_name.txt```
+
+4. To exit the terminal window for view output window
+   ```:qa!```
 
 ## 5	Possible Extensions
 * Continue converting .ipynb files into .py files for use in batch execution
