@@ -6,6 +6,14 @@ The project scrapes the SEC for X-17A-5 filings published by registred broker-de
 ## 2	Software Dependencies
 * Python 3.6 (libraries: boto3, bs4, textract-trp, PyPDF2)
 
+```
+%pip install smart_open
+%pip install minecart
+%pip install textract-trp
+%pip install PyPDF2
+%pip install bs4
+```
+
 ## 3	File Structure
 
 ### 3.1 	Resource Files
