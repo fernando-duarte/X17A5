@@ -75,7 +75,7 @@ The code files are divided into four sub-groups that are responsible for executi
 
 #### Database construcution
 
-   * `databaseLineitems.ipynb` divides the balance sheet into asset terms and liability & equity terms
+   * `databaseLineitems.ipynb` divides the balance sheet into asset terms and liability & equity terms for pdf(s) and png(s)
 
    * `databaseUnstructured.ipynb` constructs a semi-finished database that captures all unique line items by column for the entirety of each bank and year
 
@@ -92,8 +92,11 @@ The code files are divided into four sub-groups that are responsible for executi
 Our code file runs linearly via Sagemaker instance, though we will make an effort in the future to streamline these processes via batch. 
 
 1. Begin by first running `readDealerData.ipynb`, this constructs a list of broker-dealers that file a X-17A-5 
-
-
+2. Second we run `pdfFileExtract.ipynb` to extract all relevant X-17A-5 filings that correspond with each year
+3. Follow by running `pdfFileSlicing.ipynb` to reduce the size of these "raw" X-17A-5 filings to be compatiable with Textract's file size constraint. **Note this algorthim takes a while to run, due to the png file conversion.**
+4. We now extract the balance sheet from each of the X-17A-5 filings and perform "cleaning" operations. We run `ocrTextract.ipynb` to perform OCR with AWS Textract, and proceed with `ocrClean.ipynb` to remove potential issues that may arise from Textract. **Note the Textract algorthim takes a while to run, due to the time for AWS to perform Textract.**
+5. We then run `databaseLineitems.ipynb` to divide the "cleaned" balance sheets in asset and liability & equity terms
+6. We then run `databaseUnstructured.ipynb` and follow by running `databaseStructured.ipynb` to complete each database 
 
 ## 5	Possible Extensions
 * Convert all .ipynb files into .py files for use in batch execution (.py calls python compiler)
