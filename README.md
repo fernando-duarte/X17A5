@@ -1,7 +1,7 @@
 # X-17A-5 Optical Character Recognition (OCR)
 
 ## 1	Introduction
-The project scrapes the SEC for X-17A-5 filings published by registred broker-dealers historically, and constructs a database for asset, liability and equity line items. The project runs on Amazon Web Services (AWS) in a SageMaker instance, and stores the scraped information  into an s3 bucket. 
+The project scrapes the SEC for X-17A-5 filings published by registered broker-dealers historically, and constructs a database for asset, liability and equity line items. The project runs on Amazon Web Services (AWS) in a SageMaker instance and stores the scraped information into an s3 bucket. 
 
 ## 2	Software Dependencies
 **All code is executed using Python 3.6**
@@ -63,9 +63,9 @@ The code files are divided into four sub-groups that are responsible for executi
 
 #### X17A5 File Retrieval & Slicing
 
-   * `pdfFileExtract.ipynb` responsible for extracting the X-17A-5 pdf files from broker-dealer urls
+   * `pdfFileExtract.ipynb` responsible for extracting the X-17A-5 pdf files from broker-dealer URLs
 
-   * `pdfFileSlicing.ipynb` reduces the size of the X-17A-5 pdf files to "mangeable" ~15 page pdf(s) as well as individual png(s)
+   * `pdfFileSlicing.ipynb` reduces the size of the X-17A-5 pdf files to "manageable" ~15-page pdf(s) as well as individual PNG(s)
 
 #### Optical Character Recognition
 
@@ -73,7 +73,7 @@ The code files are divided into four sub-groups that are responsible for executi
 
    * `ocrClean.ipynb` refines the scraped balance sheet data from Textract, handling case exemptions such as merged rows, multiple columns and numeric string conversions 
 
-#### Database construcution
+#### Database construction
 
    * `databaseLineitems.ipynb` divides the balance sheet into asset terms and liability & equity terms for pdf(s) and png(s)
 
@@ -89,12 +89,12 @@ The code files are divided into four sub-groups that are responsible for executi
 
 ## 4	Running Code
 
-Our code file runs linearly via Sagemaker instance, though we will make an effort in the future to streamline these processes via batch. 
+Our code file runs linearly via SageMaker instance, though we will make an effort in the future to streamline these processes via batch. 
 
 1. Begin by first running `readDealerData.ipynb`, this constructs a list of broker-dealers that file a X-17A-5 
 2. Second we run `pdfFileExtract.ipynb` to extract all relevant X-17A-5 filings that correspond with each year
-3. Follow by running `pdfFileSlicing.ipynb` to reduce the size of these "raw" X-17A-5 filings to be compatiable with Textract's file size constraint. **Note this algorthim takes a while to run, due to the png file conversion.**
-4. We now extract the balance sheet from each of the X-17A-5 filings and perform "cleaning" operations. We run `ocrTextract.ipynb` to perform OCR with AWS Textract, and proceed with `ocrClean.ipynb` to remove potential issues that may arise from Textract. **Note the Textract algorthim takes a while to run, due to the time for AWS to perform Textract.**
+3. Follow by running `pdfFileSlicing.ipynb` to reduce the size of these "raw" X-17A-5 filings to be compatible with Textract's file size constraint. **Note this algorithm takes a while to run, due to the PNG file conversion.**
+4. We now extract the balance sheet from each of the X-17A-5 filings and perform "cleaning" operations. We run `ocrTextract.ipynb` to perform OCR with AWS Textract and proceed with `ocrClean.ipynb` to remove potential issues that may arise from Textract. **Note the Textract algorithm takes a while to run, due to the time for AWS to perform Textract.**
 5. We then run `databaseLineitems.ipynb` to divide the "cleaned" balance sheets in asset and liability & equity terms
 6. We then run `databaseUnstructured.ipynb` and follow by running `databaseStructured.ipynb` to complete each database 
 
@@ -104,3 +104,4 @@ Our code file runs linearly via Sagemaker instance, though we will make an effor
 
 ## 6	Contributors
 * [Rajesh Rao](https://github.com/Raj9898) (Sr. Research Analyst 22’)
+* [Fernando Duarte](https://github.com/fernando-duarte) (Sr. Economist)
