@@ -3,13 +3,6 @@
 
 
 ##################################
-# INSTALL LIBRARIES
-##################################
-
-get_ipython().magic('pip install bs4')
-
-
-##################################
 # LIBRARY/PACKAGE IMPORTS
 ##################################
 
@@ -18,10 +11,8 @@ import os
 import re
 import datetime
 
-# data reading and exporting  
-import json
+# structured data reading
 import pandas as pd
-import numpy as np
 
 # parsing SEC website for data  
 import requests 
@@ -50,7 +41,6 @@ def companyName(cik:str) -> str:
     
     # we try requesting the URL and break only if response object returns status of 200 (i.e. success)
     for _ in range(100):
-        # response time for retrieving company names, returning BeautifulSoup obj.
         res = requests.get(url, allow_redirects=True)
         if res.status_code == 200: break
     
@@ -65,7 +55,7 @@ def companyName(cik:str) -> str:
         
         # retrieve the company name from info class in HTML
         comp_name = val.text.split('CIK')[0].split('/BD')[0]
-        print('\t\tFound CIK {}, company-name {}'.format(cik, comp_name))
+        print('\t\tFound CIK %s, company-name %s' % (cik, comp_name))
         
         return comp_name
 
@@ -105,16 +95,15 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
     for coverage in archiveDates:
         
         if coverage in years_covered:
-            print('\tWe have covered {}'.format(coverage))
+            print('\tWe have covered %s' % coverage)
             pass
 
         else:
             searchURL = '{}/{}/form.idx'.format(baseURL, coverage)
-            print('\nSearching for broker dealers at {}'.format(searchURL))
+            print('\nSearching for broker dealers at %s' % searchURL)
             
             # we try requesting the URL and break only if response object returns status of 200
             for _ in range(10):
-                # send request to SEC website to retrieve broker dealer information 
                 response = requests.get(searchURL, allow_redirects=True)
                 if response.status_code == 200: break
             
@@ -123,7 +112,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
 
                 # append the coverage year for the cik in question
                 cik2brokers['years-covered'].append(coverage)
-                print('  Adding coverage for {}'.format(coverage))
+                print('  Adding coverage for %s' % coverage)
 
                 # extract only main text from body, selecting terms below dashes '---' 
                 # we use triple dashes to avoid improper splits that exist locally with company names
@@ -134,7 +123,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
                 
                 # convert text data to dataframe object using a fixed-width-file convention
                 df = pd.read_fwf('main.txt', header=None)
-                cleanDf = df[~pd.isnull(df[0])]               # strip away rows with NaN from the Form Type column
+                cleanDf = df[~pd.isnull(df[0])]               
 
                 # check to see if first column contains information on X-17A-5 filings (use regex for x-17a flag)
                 x17_check = cleanDf[0].str.contains('^x-17a', 
@@ -142,7 +131,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
                                                     flags=re.IGNORECASE)
                 x17File = cleanDf[x17_check]
 
-                print('\tFound {} X-17A-5 filings in {}'.format(x17File.shape[0], coverage))
+                print('\tFound %.d X-17A-5 filings in %s' % (x17File.shape[0], coverage))
 
                 if not x17File.empty:
 
