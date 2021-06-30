@@ -34,6 +34,8 @@ Member's capital:,Total shareholder's equity
 Payables:,Accounts payable
 Total liabilities,Total liabilities
 Total member's capital Total liabilities and member's capital,Total liabilities and shareholder's equity
+Accrued expenses and other liabilities,Accrued liabilities
+Member's Capital,Total shareholder's equity
 "Corporate stock (proceeds $1,261,282,922)","Financial instruments sold,  but not yet purchased at fair value"
 Dividends payable,Accounts payable
 "Options (proceeds $565,083,855)","Financial instruments sold,  but not yet purchased at fair value"
@@ -52,11 +54,14 @@ Subordinated borrowings from affiliate,Subordinated liabilities
 Interest payable,Accounts payable
 Payable for order flow,Subordinated liabilities
 "Payable to brokers, dealers, and futures commission merchants",Payable to broker-dealers
+"Exchange, clearance and regulatory fees payable",Accounts payable
+Payable to affiliated customers,Payable to customers and counterparties
+"Payable to brokers, dealers, and clearing organizations",Payable to broker-dealers
+Receivable from affiliates,Payable to parent and affiliates
 Dividends receivable,Accounts payable
 "Exchange, clearance, and regulatory fees payable",Accounts payable
 Payable to brokers and dealers,Payable to broker-dealers
 "Securities sold, not yet purchased, at fair value","Financial instruments sold,  but not yet purchased at fair value"
-"Payable to brokers, dealers, and clearing organizations",Payable to broker-dealers
 "Payable to brokers, dealers, clearing organizations, and custodians",Payable to broker-dealers
 Payable for liquidity and order flow,Subordinated liabilities
 Subordinated loans and accrued interest,Subordinated liabilities
@@ -93,7 +98,6 @@ Obligation to return securities received as collateral,Obligation to return secu
 Short-term bank loans,Payable to banks
 Subordinated debt,Subordinated liabilities
 "Payable to brokers, dealers and clearing organizaltions",Payable to broker-dealers
-Accrued expenses and other liabilities,Accrued liabilities
 "Commitments, contingencies and guarantees Subordinated borrowings",Subordinated liabilities
 "Payables to brokers, dealers and clearing organizations",Payable to broker-dealers
 Payables to non-customers,Payable to customers and counterparties
@@ -103,8 +107,9 @@ Payables to non-customers,Payable to customers and counterparties
 Obligation to return securities received as collateral - at fair value,Obligation to return secunties received as collateral
 Accounts payable,Accounts payable
 Members' equity,Total shareholder's equity
-Accounts payables,Accounts payable
 Due to affiliate,Payable to parent and affiliates
+Payable to clearing broker,Payable to broker-dealers
+Accounts payables,Accounts payable
 Payable to brokers and clearing organizations,Payable to broker-dealers
 Repurchase agreements,Collateralized borrowing agreements
 Unrealized loss on forward commitments,"Financial instruments sold,  but not yet purchased at fair value"
@@ -112,7 +117,6 @@ Accounts payables and accrued expenses,Current liabilities
 Payables to brokers and clearing organizations,Payable to broker-dealers
 "Securities sold under agreements to repurchase, net",Collateralized borrowing agreements
 Clearance and regulatory fees payable,Accounts payable
-Payable to affiliated customers,Payable to customers and counterparties
 Payable to broker and dealer,Payable to broker-dealers
 Brokers and dealers,Payable to broker-dealers
 "Common stock, par value $1 per share; 1,000 shares authorized; 1,000 shares issued and outstanding","Common stock, par value"
@@ -264,6 +268,10 @@ Unsecured long-term borrowings,Long-term borrowing
 "Securities loaned (includes $6,541 at fair value)",Collateralized borrowing agreements
 "Unsecured long-term borrowings (includes $347,904 at fair value)",Long-term borrowing
 "long-term borrowings (includes $1,303,559 at fair value)",Long-term borrowing
+"Other secured financings (includes $1,317 at fair value)",Collateralized borrowing agreements
+Securities loaned (includes $6 at fair value),Collateralized borrowing agreements
+Unsecured long-term borrowings (includes $146 at fair value),Long-term borrowing
+"Unsecured short-term borrowings, including the current portion of unsecured long-term borrowings (includes $1 at fair value)",Short-term borrowing
 Other liabilities and accrued expenses (includes $17 at fair value),Other liabilities
 Other secured financings (includes $853 at fair value),Collateralized borrowing agreements
 "Securities loaned (includes $23,810 at fair value)",Collateralized borrowing agreements
@@ -440,6 +448,20 @@ Accumulated other comprehensive income - foreign currency translation adjustment
 "Capital stock - no par value. Authorized 100,000 shares; issued and outstanding 30 shares","Common stock, par value"
 Intercompany payable due to affiliates,Payable to parent and affiliates
 "Trading securities sold, not yet purchased, at fair value","Financial instruments sold,  but not yet purchased at fair value"
+Cash at beginning of year,Other liabilities
+Decrease in payables to customers,Payable to customers and counterparties
+"Decrease in trading securities sold, not yet purchased, at market value","Financial instruments sold,  but not yet purchased at fair value"
+Foreign currency translation adjustment,"Financial instruments sold,  but not yet purchased at fair value"
+Increase in accounts payable and accrued liabilities,Current liabilities
+Increase in due to affiliates,Payable to parent and affiliates
+Increase in intercompany income taxes payable,Taxes payable
+Increase in payables to broker/dealers and clearing organizations,Payable to broker-dealers
+Increase in securities sold under agreements to repurchase,Collateralized borrowing agreements
+Interest paid,Additional paid-in capital
+Net cash provided by operating activities,"Financial instruments sold,  but not yet purchased at fair value"
+"Purchase of furniture, equipment, and leasehold improvements",Other liabilities
+Supplemental disclosure of noncash financing activity: Noncash capital contribution (note 2(1)),Total shareholder's equity
+Taxes paid,Taxes payable
 Accumulated other comprehensive loss - foreign currency translation adjustment,Other equity
 Intercompany income taxes payable,Taxes payable
 Payables to broker/dealers and clearing organizations,Payable to broker-dealers
@@ -654,8 +676,13 @@ Commitments and contingencies (Notes 10 and 11),Subordinated liabilities
 Securities loaned and obligation to return securities received as collateral,Obligation to return secunties received as collateral
 Securities sold under agreements to repurchase (includes $392 measured at fair value),Collateralized borrowing agreements
 "2,000 shares authorized, 690 shares outstanding","Common stock, par value"
+"Common stock, no par value; 2,000 shares authorized, 690 shares outstanding","Common stock, par value"
 "Securities sold, but not yet purchased","Financial instruments sold,  but not yet purchased at fair value"
+"Securities sold, but not yet purchased (US Government)","Financial instruments sold,  but not yet purchased at fair value"
 "Common stock, no par value and additional paid-in-capital; 2,000 shares authorized, 690 shares outstanding","Common stock, par value"
+"Financial instruments sold, but not yet purchased","Financial instruments sold,  but not yet purchased at fair value"
+"10,000 shares authorized, 2,690 shares issued and outstanding","Common stock, par value"
+Commitments and contingencies (see Footnote 13),Other liabilities
 "10,000 shares authorized, 4,690 shares issued and outstanding","Common stock, par value"
 Acccumulated other comprehensive loss,Other equity
 Commitments and contingencies (see Footnote 14),Other liabilities
@@ -683,8 +710,8 @@ Long-term debt,Long-term borrowing
 Payables to brokerage clients,Payable to customers and counterparties
 Subordinated borrowings from The Charles Schwab Corporation,Subordinated liabilities
 Total,Total liabilities
-Payables to affliates,Payable to customers and counterparties
 "Preferred stock 3,000,000 shares authorized; $.10 par value per share; none issued","Common stock, par value"
+Payables to affliates,Payable to customers and counterparties
 Subordinated borrowings due to The Charies Schwab Corporation,Subordinated liabilities
 "Preferred stock - 3,000,000 shares authorized; $.10 par value per share; none issued","Common stock, par value"
 Subordinated borrowings due to The Charles Schwab Corporation,Subordinated liabilities
@@ -737,10 +764,15 @@ Short-term bank borrowings,Payable to banks
 "Voting common stock, Class A, $.01 par value; authorized 65,000 shares; issued and outstanding 1,000 shares","Common stock, par value"
 dividends and interest payable,Accounts payable
 Accrued compensation,Accrued liabilities
-"Common stock ($.125 par value, 100,000 shares authorized, issued and outstanding)","Common stock, par value"
+"Common stock ($.125 par value, 100,000 shares issued and outstanding)","Common stock, par value"
 Customer drafts payable,Accounts payable
+LIABILITIES AND SHAREHOLDER'S EQUITY,Total liabilities and shareholder's equity
 Other accrued expenses,Accrued liabilities
+"Payable to Parent and affiliates, net",Payable to parent and affiliates
+Shareholder's equity:,Total shareholder's equity
+Total liabilities and shareholder's equity,Total liabilities and shareholder's equity
 "Trading securities sold, but not yet purchased, at market value","Financial instruments sold,  but not yet purchased at fair value"
+"Common stock ($.125 par value, 100,000 shares authorized, issued and outstanding)","Common stock, par value"
 Borrowings from affiliate (Note 6),Payable to parent and affiliates
 Income toxes payable (Notes 2 and 14),Taxes payable
 Liabilities subordinated to claims of general croditors,Subordinated liabilities
@@ -808,6 +840,13 @@ Senior notes,Other equity
 Short-term debt,Short-term borrowing
 Securities and other financial instruments sold but not yet purchased,"Financial instruments sold,  but not yet purchased at fair value"
 Other secured borrowings,Collateralized borrowing agreements
+Securities and other inventory positions sold but not yet purchased,"Financial instruments sold,  but not yet purchased at fair value"
+Short-term financings,Short-term borrowing
+Financial instruments and other inventory positions sold but not yet purchased,"Financial instruments sold,  but not yet purchased at fair value"
+Accumulated other comprehensive income (net of tax),Other equity
+Financial instruments sold but not yet purchased,"Financial instruments sold,  but not yet purchased at fair value"
+"Preferred stock, $0.10 par value; 10,000 shares authorized; none outstanding","Common stock, par value"
+Short-term borrowings and current portion of long-term borrowings,Short-term borrowing
 Accumulated changes in equity from nonowner sources,Other equity
 Contractual commitments,Other liabilities
 Corporate debt securities,"Financial instruments sold,  but not yet purchased at fair value"
@@ -836,6 +875,9 @@ Trading account liabilities:,"Financial instruments sold,  but not yet purchased
 "Obligations to return securities received as collateral, at fair value",Obligation to return secunties received as collateral
 "Securities loaned or sold under agreements to repurchase (including $13,083 at fair value)",Collateralized borrowing agreements
 U.S. Treasury and federal agency securities,"Financial instruments sold,  but not yet purchased at fair value"
+Long-term debt (including $137 at fair value),Long-term borrowing
+Other (including $447 at fair value),Other liabilities
+"Securities loaned or sold under agreements to repurchase (including $2,562 at fair value)",Collateralized borrowing agreements
 "Securities loaned or sold under agreements to repurchase (including $8,793 at fair value)",Collateralized borrowing agreements
 "Securities loaned or sold under agreements to repurchase (including $10,611 at fair value)",Collateralized borrowing agreements
 "Securities loaned or sold under agreements to repurchase (including $8,810 at fair value)",Collateralized borrowing agreements
@@ -844,7 +886,6 @@ U.S. Treasury and federal agency securities,"Financial instruments sold,  but no
 Accrued trading payables,Accrued liabilities
 Bond interest payable,Accounts payable
 Guaranteed payments to partner,Other equity
-Payable to clearing broker,Payable to broker-dealers
 Payable to clearing brokers,Payable to broker-dealers
 Guaranteed payments to partners,Other equity
 Guaranteed payments to member,Other equity
