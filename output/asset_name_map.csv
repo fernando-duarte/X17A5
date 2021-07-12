@@ -67,8 +67,12 @@ Receivable from brokers and dealers,Receivable from broker-dealers
 Receivable from clearing organizations and custodians,Receivable from broker-dealers
 "Exchange memberships and trading rights (fair value $13,984) (Note: 2)",Exchange memberships
 "Exchange memberships and trading rights (fair value $29,110) (Note 2)",Exchange memberships
-Exchange memberships and trading rights (fair value $21) (Note 2),Exchange memberships
+"Exchange memberships and trading rights (fair value $24,517) (Note 2)",Exchange memberships
 Interest receivable,Other receivables
+Liquidity rebate and order flow receivable,Other receivables
+Receivable from clearing organizations,Receivable from broker-dealers
+Exchange memberships and trading rights (fair value $21) (Note 2),Exchange memberships
+Receivable from clearing organizations and custodian,Receivable from broker-dealers
 "Fixed assets, net of accumulated depreciation and amortization of $2,731",Fixed assets
 Prepaid expenses,Prepaid expenses
 "Fixed assets, net of $49,763 accumulated depreciation and amortization",Fixed assets
@@ -77,7 +81,6 @@ Receivable from a clearing organization,Receivable from broker-dealers
 all are pledged to a clearing organization),"Financial instruments owned, at fair value"
 "Financial instruments owned, at market value (of which all is pledged to FICC)","Financial instruments owned, at fair value"
 "Fixed assets, net",Fixed assets
-Receivable from clearing organizations,Receivable from broker-dealers
 Deposits with clearing organization,Deposits with clearing organizations
 Receivable from clearing organization,Receivable from broker-dealers
 Receivable from customers and counterparties,Receivables from customers and counterparties
@@ -162,6 +165,8 @@ Funds segregated for regulatory purposes,Cash and securities segregated for bene
 Cash and investments segregated on deposit for regulatory purposes,Cash and securities segregated for benefit of customers or regulations
 Fixed Assets (net of accumulated depreciation and amortization of $100.4 million),Fixed assets
 Deposits,Deposits with clearing organizations
+Receivable from clearing broker,Receivable from broker-dealers
+"Securities owned, at estimated fair value","Financial instruments owned, at fair value"
 CASH AND CASH EQUIVALENTS: Beginning of period,Cash and cash equivalents
 CASH FLOWS FROM FINANCING ACTIVITIES: Members' contributions,Cash and cash equivalents
 Change in accounts payable,Account receivable
@@ -172,7 +177,6 @@ Change in prepaid expenses,Prepaid expenses
 Change in receivable from clearing broker,Receivable from broker-dealers
 Change in securities owned,"Financial instruments owned, at fair value"
 Net income,Deferred tax asset
-"Securities owned, at estimated fair value","Financial instruments owned, at fair value"
 Prepaid expenses and deposits,Prepaid expenses
 "Property and equipment, net of accumulated depreciation of $967",PPE (net depreciation & amortization)
 Receivables from brokers and clearing organizations,Receivable from broker-dealers
@@ -274,9 +278,13 @@ Dividends and interest receivable,Other receivables
 "Exchange memberships, at cost (fair value $53,644)",Exchange memberships
 "Financial assets, at fair value","Financial instruments owned, at fair value"
 "Goodwill and intangible assets (net of accumulated amortization of $36,650)","Intangible assets, net amortization"
+"Exchange memberships, at cost (fair value $67,806)",Exchange memberships
+"Securities owned, at fair value $","Financial instruments owned, at fair value"
 "Exchange memberships, at cost (fair value $43,709)",Exchange memberships
 "Exchange memberships, at cost (fair value $22,025)",Exchange memberships
 "Goodwill and intangible assets (net of accumulated amortization and impairment of $146,150)","Intangible assets, net amortization"
+"Exchange memberships, at cost (fair value $17,280)",Exchange memberships
+"Goodwill and intangible assets, with indefinite lives (net of accumulated amortization and impairment of $801,061)","Intangible assets, net amortization"
 "Exchange memberships, at cost (fair value $28,580)",Exchange memberships
 "Exchange memberships, at cost (fair value $12,347)",Exchange memberships
 regulations,Cash and securities segregated for benefit of customers or regulations
@@ -339,6 +347,9 @@ Cash and securities segregated for regulatory purposes,Cash and securities segre
 "Furniture, equipment, and leasehold improvements, at cost, less accumulated depreciation and amortization of $4,214 (note 5)",PPE (net depreciation & amortization)
 Receivable from affiliate (note 6),Receivable from parent and affiliates
 "Furniture, equipment, and leasehold improvements, at cost, less accumulated depreciation and amortization of $4,507 (note 5)",PPE (net depreciation & amortization)
+"Furniture, equipment, and leasehold improvements, at cost, less depreciation and amortization of $1,662 (note 5)",PPE (net depreciation & amortization)
+"Receivable from brokers. dealers, and clearing organizations (note 3)",Receivable from broker-dealers
+Short term investments. at market value,"Financial instruments owned, at fair value"
 Goodwill (note 10),"Intangible assets, net amortization"
 Receivable from affiliated parties (note 5),Receivable from parent and affiliates
 "depreciation and amortization of $1,719 (note 4)",PPE (net depreciation & amortization)
@@ -977,6 +988,8 @@ Secarities purchased under agreements to resell and other collateralized financi
 "Securities and other financial instruments owned ($29,286","Financial instruments owned, at fair value"
 "Securities and other financial instruments owned ($30,684 pledged as collateral)","Financial instruments owned, at fair value"
 "Securities and other financial instruments owned ($33,781 pledged as collateral)","Financial instruments owned, at fair value"
+ASSETS,Other assets
+"Financial instruments owned, at fair value ($43,301 pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($60,893 pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($41,921 pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($49,710 pledged as collateral)","Financial instruments owned, at fair value"
@@ -986,7 +999,13 @@ Secarities purchased under agreements to resell and other collateralized financi
 Total Assets,Total assets
 financing arrangements,"Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($2,500 million pledged as collateral)","Financial instruments owned, at fair value"
+"Financial instruments owned, at fair value ($1,094 million pledged as collateral)","Financial instruments owned, at fair value"
+"Financial instruments owned, at fair value ($758 million pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($4,271 million pledged as collateral)","Financial instruments owned, at fair value"
+"Financial instruments owned, at fair value ($5,661 million pledged as collateral)","Financial instruments owned, at fair value"
+"Financial instruments owned, at fair value ($6,220 million pledged as collateral)","Financial instruments owned, at fair value"
+"Receivables from brokers, dealers, customers and other institutions",Receivable from broker-dealers
+"Securities purchased under agreements to resell and other colateralized financing arrangements, at fair value",Collateralized short-term financing agreements
 Accrued interest and dividends receivable,Other receivables
 Cash and securities segregated in compliance with federal and other regulations,Cash and securities segregated for benefit of customers or regulations
 "Exchange memberships - at cost (market value $3,988)",Exchange memberships
@@ -1051,6 +1070,7 @@ Receivable under securities borrowing arrangements,Collateralized short-term fin
 Securities pledged under collateral agreements (Note 4),Securities received as collateral
 "Trading inventory, at market value (Note 4)","Financial instruments owned, at fair value"
 "Trading inventory, at market value, pledged (Note 4)","Financial instruments owned, at fair value"
+Securities received as collateral (Note 4),Securities received as collateral
 "Receivable from brokers, dealers, clearing organizations and customers",Receivable from broker-dealers
 "Trading inventory, at market value","Financial instruments owned, at fair value"
 "Trading inventory, at market value, pledged","Financial instruments owned, at fair value"
@@ -1148,6 +1168,8 @@ Receivables from brokerage clients - net,Receivables from customers and counterp
 Securities owned - at market value (including securities pledged of $3),"Financial instruments owned, at fair value"
 "Cash and investments segregated and on deposit for federal or other regulatory purposes (1) (including resale agreements of $16,824)",Cash and securities segregated for benefit of customers or regulations
 Securities owned - at market value (including securities pledged of $2),"Financial instruments owned, at fair value"
+"Cash and investments segregated and on deposit for federal or other regulatory purposes (1) (including resale agreements of $13,102)",Cash and securities segregated for benefit of customers or regulations
+Securities owned - at market value (including securities pledged of $8),"Financial instruments owned, at fair value"
 "Cash and investments segregated and on deposit for federal or other reg ulatory purposes (1) (including resale agreements of $8,274)",Cash and securities segregated for benefit of customers or regulations
 "Equipment, o: fice facilities and property - net",PPE (net depreciation & amortization)
 Securities owned - at market value (including securities pledged of $5),"Financial instruments owned, at fair value"
@@ -1164,6 +1186,11 @@ Securities owned - at fair value,"Financial instruments owned, at fair value"
 "Cash and investments segregated and on deposit for regulatory purposes (including resale agreements of $19,325)",Cash and securities segregated for benefit of customers or regulations
 "Cash and investments segregated and on deposit for regulatory purposes (including resale agreements of $14,016)",Cash and securities segregated for benefit of customers or regulations
 "Cash and investments segregated and on deposit for regulatory purposes (including resale agreements of $10,186)",Cash and securities segregated for benefit of customers or regulations
+Aggregate intrinsic value of options exercised,"Financial instruments owned, at fair value"
+"Cash and investments segregated and on deposit for regulatory purposes (including resale agreements of $8,088)",Cash and securities segregated for benefit of customers or regulations
+Cash received from options exercised,Cash and cash equivalents
+Tax benefit realized on options exercised,"Intangible assets, net amortization"
+Weighted-average fair value of options granted per share,"Financial instruments owned, at fair value"
 "Cash and investments segregated and on deposit for regulatory purposes (including resale agreements of $9,547)",Cash and securities segregated for benefit of customers or regulations
 "Cash and investments segregated and on deposit for regulatory purposes (including resale agreements of $6,596)",Cash and securities segregated for benefit of customers or regulations
 Intangible assets - net,"Intangible assets, net amortization"
@@ -1259,7 +1286,6 @@ Securities borrowed (including accrued interest),Collateralized short-term finan
 "Other assets, primarily dividends and interest receivable",Other assets
 "Receivable from affiliated introducing brokers, net",Receivable from broker-dealers
 regulatory purposes,Other assets
-ASSETS,Other assets
 "Equipment and leasehold improvements, at cost, less accumulated depreciation and amortization of $28,231 and $22,828 in 2001 and 2000, respectively",PPE (net depreciation & amortization)
 "Goodwill, net of amortization of $22,017 and $16,148 in 2001 and 2000, respectively","Intangible assets, net amortization"
 "Goodwill, net of accumulated amortization of $21,311","Intangible assets, net amortization"
