@@ -29,11 +29,6 @@ Member's equity,Total shareholder's equity
 Short-term borrowings (Note 7),Short-term borrowing
 Subordinated Borrowings,Subordinated liabilities
 Broker-dealers and clearing organizations,Payable to broker-dealers
-Liabilities:,Total liabilities
-Member's capital:,Total shareholder's equity
-Payables:,Accounts payable
-Total liabilities,Total liabilities
-Total member's capital Total liabilities and member's capital,Total liabilities and shareholder's equity
 Accrued expenses and other liabilities,Accrued liabilities
 Member's Capital,Total shareholder's equity
 "Corporate stock (proceeds $1,261,282,922)","Financial instruments sold,  but not yet purchased at fair value"
@@ -58,7 +53,6 @@ Payable for order flow,Subordinated liabilities
 Payable to affiliated customers,Payable to customers and counterparties
 "Payable to brokers, dealers, and clearing organizations",Payable to broker-dealers
 Receivable from affiliates,Payable to parent and affiliates
-Dividends receivable,Accounts payable
 "Exchange, clearance, and regulatory fees payable",Accounts payable
 Payable to brokers and dealers,Payable to broker-dealers
 "Securities sold, not yet purchased, at fair value","Financial instruments sold,  but not yet purchased at fair value"
@@ -66,6 +60,7 @@ Payable to brokers and dealers,Payable to broker-dealers
 Payable for liquidity and order flow,Subordinated liabilities
 Subordinated loans and accrued interest,Subordinated liabilities
 Loans payable to affiliate,Payable to parent and affiliates
+Total liabilities,Total liabilities
 Loans and interest payable to affiliate,Payable to parent and affiliates
 Accounts payable and other accrued expenses,Current liabilities
 "Common units; par value $10,000 per share - authorized 100 shares; issued and outstanding 1 share","Common stock, par value"
@@ -76,7 +71,6 @@ Accrued expenses,Accrued liabilities
 Member's Equity,Total shareholder's equity
 Payable to FICC,Payable to parent and affiliates
 Payable to clearing organization,Payable to broker-dealers
-Total liabilities and member's equity,Total liabilities and shareholder's equity
 Other trading liability,"Financial instruments sold,  but not yet purchased at fair value"
 "(includes $783,419,799 at fair value)",Other liabilities
 "Payables to brokers, dealers and clearing organization",Payable to broker-dealers
@@ -155,9 +149,7 @@ Obligation to return securities,Obligation to return secunties received as colla
 "Clients (including free credit balances of $ 1,841,557)",Payable to banks
 "Brokers, dealers and clearing organizations",Payable to broker-dealers
 "Clients (including free credit balances of $1,638,213)",Payable to banks
-Commitments and contingencies (Note 11),Subordinated liabilities
 Income taxes payable,Taxes payable
-Liabilities and stockholder's equity,Total liabilities and shareholder's equity
 Payables to affiliated companies,Payable to parent and affiliates
 "Clients (including free credit balances of $2,193,176)",Payable to banks
 "Clients (including free credit balances of $3,593,857)",Payable to banks
@@ -217,6 +209,7 @@ Asset acquisition payable,Accounts payable
 Due to affiliates,Payable to parent and affiliates
 Bank loan payable,Payable to banks
 Affiliates,Payable to parent and affiliates
+Total liabilities and member's equity,Total liabilities and shareholder's equity
 Bank loans payable,Payable to banks
 Overdrafts payable,Accounts payable
 Accumulated other comprehensive loss,Other equity
@@ -279,12 +272,11 @@ Other secured financings (includes $853 at fair value),Collateralized borrowing 
 "Securities loaned (includes $23,810 at fair value)",Collateralized borrowing agreements
 Unsecured long-term borrowings (includes $221 at fair value),Long-term borrowing
 long-term borrowings (includes $3 at fair value),Long-term borrowing
-"Financial Instruments sold,bu t not yet purchased. at fair value","Financial instruments sold,  but not yet purchased at fair value"
+"Financial instruments sold,t bu t not yet purchased, at fair value","Financial instruments sold,  but not yet purchased at fair value"
 Other liabilities and accrued expenses (includes $23 at fair value),Other liabilities
 "Other secured financings (includes $2,598 at fair value)",Collateralized borrowing agreements
 "Securities loaned (includes $28,083 at fair value)",Collateralized borrowing agreements
 "Securities sold under agreements to repurchase, at fair value",Collateralized borrowing agreements
-Total liabilities and partners' capital,Total liabilities and shareholder's equity
 Unsecured long-term borrowings (includes $227 at fair value),Long-term borrowing
 "Unsecured short-term borrowings, including the current portion of unsecured long-term borrowings (includes $3 at fair value)",Short-term borrowing
 Other liabilities and accrued expenses (includes $20 at fair value),Other liabilities
@@ -695,6 +687,7 @@ Commitments and contingencies (see Footnote 13),Other liabilities
 "10,000 shares authorized, 4,690 shares issued and outstanding","Common stock, par value"
 Acccumulated other comprehensive loss,Other equity
 Commitments and contingencies (see Footnote 14),Other liabilities
+Short termborrowings,Short-term borrowing
 TOTAL ASSEIS,Total liabilities
 Securities loaned (including $240.5 million of collateral at fair value),Collateralized borrowing agreements
 "1,030 shares outstanding","Common stock, par value"
@@ -795,15 +788,12 @@ Payable to customers (Note 2),Payable to customers and counterparties
 Recained earnings,Retained (accumulated) earnings
 Securities loaned (Note 3),Collateralized borrowing agreements
 Securities sold under repurchase agreements (Note 2),Collateralized borrowing agreements
-Totul liabilities and shareholder's equity,Total liabilities and shareholder's equity
 "Trading securities sold. but not yet purchased, at market value (Notes 2 and 4)","Financial instruments sold,  but not yet purchased at fair value"
 "Common stock (S.125 par value. 100,000 share authorized. issued and outstanding)","Common stock, par value"
 Liabilities subordinated to claims of general creditors (Note 9),Subordinated liabilities
 Long-term borrowings from affiliate (Note 8),Long-term borrowing
-"Payble to brokers, dealers. and clearing organizations (Note 3)",Payable to broker-dealers
 Payble to brokers. dealers and clearing organizations (Note 3),Payable to broker-dealers
 Securities (Notes 2 and 3),"Financial instruments sold,  but not yet purchased at fair value"
-Securities loaned (Notes 2 and 3),Collateralized borrowing agreements
 Short-term borrowings from affiliate (Note 7),Short-term borrowing
 "Trading securities sold, but not yet purchased-at market value (Notes 2 and 4)","Financial instruments sold,  but not yet purchased at fair value"
 "Common stock ($.125 par value. 100,000 share authorized, issued and outstanding)","Common stock, par value"
