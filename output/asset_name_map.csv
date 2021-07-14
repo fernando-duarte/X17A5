@@ -72,6 +72,7 @@ Liquidity rebate and order flow receivable,Other receivables
 Receivable from clearing organizations,Receivable from broker-dealers
 Exchange memberships and trading rights (fair value $21) (Note 2),Exchange memberships
 Receivable from clearing organizations and custodian,Receivable from broker-dealers
+Total assets,Total assets
 "Fixed assets, net of accumulated depreciation and amortization of $2,731",Fixed assets
 Prepaid expenses,Prepaid expenses
 "Fixed assets, net of $49,763 accumulated depreciation and amortization",Fixed assets
@@ -188,7 +189,6 @@ Other receivables,Other receivables
 "Property and equipment, net of accumulated depreciation of $105,071",PPE (net depreciation & amortization)
 "Receivable from brokers, dealers, and clearing organizations",Receivable from broker-dealers
 Receivable from affiliated customer,Receivable from parent and affiliates
-Total assets,Total assets
 Brokers and dealers,Receivable from broker-dealers
 Cash and securities segregated for regulatory purposes or deposited with clearing organizations,Cash and securities segregated for benefit of customers or regulations
 Corporate debt and preferred stock,"Financial instruments owned, at fair value"
@@ -448,7 +448,9 @@ Securities owned - at market value,"Financial instruments owned, at fair value"
 "Receivable from customers, net of reserve of $3,293",Receivables from customers and counterparties
 "Securities owned - at fair value ($62,006 pledged as collateral)","Financial instruments owned, at fair value"
 TOTAL ASSETS,Total assets
+"Furniture, office equipment and leasehold improvements, at cost, less accumulated depreciation and amortization of $87,616",PPE (net depreciation & amortization)
 "Receivable from customers, net of reserve of $1,543",Receivables from customers and counterparties
+"Securities owned-at fair value ($39,404 pledged as collateral)","Financial instruments owned, at fair value"
 Cash and securities segregated under federal regulations,Cash and securities segregated for benefit of customers or regulations
 Federal funds sold,"Financial instruments owned, at fair value"
 "Receivable from customers, net of allowance of $46,552",Receivables from customers and counterparties
@@ -751,21 +753,12 @@ Receivables from brokers and dealers and clearing organizations,Receivable from 
 "Furniture, equipment, and leasehold improvements, at cost, less accumulated depreciation and amortization of $7,380",PPE (net depreciation & amortization)
 "Memberships in exchanges, at cost (market value $485)",Exchange memberships
 "Trading securities owned, at fair value ($1,303,007 pledged as collateral)","Financial instruments owned, at fair value"
-Cumulative effect of change in accounting principle,Other assets
-Decrease in receivables from customers,Receivables from customers and counterparties
-"Decrease in trading securities owned, at market value","Financial instruments owned, at fair value"
-Deferred tax benefit,Deferred tax asset
-Depreciation and amortization,PPE (net depreciation & amortization)
-Increase in cash segregated in compliance with federal regulations,Cash and securities segregated for benefit of customers or regulations
-Increase in due from affiliates,Receivable from parent and affiliates
-Increase in memberships in exchange,Exchange memberships
-Increase in other assets,Other assets
-Increase in receivables from broker/dealers and clearing organizations,Receivable from broker-dealers
-Increase in securities purchased under agreements to resell,Collateralized short-term financing agreements
-Net earnings,PPE (net depreciation & amortization)
+"Furniture, equipment, and leasehold improvements, at cost, less accumulated depreciation and amortization of $10,483",PPE (net depreciation & amortization)
+"Memberships in exchanges, at cost (market value $1,221)",Exchange memberships
+Receivables from broker/dealers and clearing organizations,Receivable from broker-dealers
+"Trading securities owned, at fair value ($668,189 pledged as collateral)","Financial instruments owned, at fair value"
 "Furniture, equipment, and leasehold improvements, at cost, less accumulated depreciation and amortization of $9,179",PPE (net depreciation & amortization)
 "Memberships in exchanges, at cost (market value $1,020)",Exchange memberships
-Receivables from broker/dealers and clearing organizations,Receivable from broker-dealers
 "Trading securities owned, at fair value ($1,465,517 pledged as collateral)","Financial instruments owned, at fair value"
 "Furniture, equipment, and leasehold improvements, at cost, less accumulated depreciation and amortization of $11,701",PPE (net depreciation & amortization)
 "Memberships in exchanges, at cost (market value $1,923)",Exchange memberships
