@@ -232,6 +232,7 @@ and is from consolidated VIEs,Payable to parent and affiliates
 "Other liabilities, of which $946 reported at fair value",Other liabilities
 "Subordinated and other long-term borrowings, of which $438 is reported at fair value and is from consolidated VIEs.",Long-term borrowing
 "Other liabilities, of which $464 reported at fair value",Other liabilities
+Total liabilities.,Total liabilities
 "Other liabilities, of which $336 reported at fair value.",Other liabilities
 "Subordinated and other long-term borrowings, of which $93 is reported at fair value and is from consolidated VIEs",Long-term borrowing
 "Other liabilities, of which $349 reported at fair value",Other liabilities
@@ -766,9 +767,9 @@ Total liabilities and shareholder's equity,Total liabilities and shareholder's e
 "Trading securities sold, but not yet purchased, at market value","Financial instruments sold,  but not yet purchased at fair value"
 "Common stock ($.125 par value, 100,000 shares authorized, issued and outstanding)","Common stock, par value"
 Borrowings from affiliate (Note 6),Payable to parent and affiliates
-Income toxes payable (Notes 2 and 14),Taxes payable
+Income taxes payable (Notes 2 and 14),Taxes payable
 Liabilities subordinated to claims of general croditors,Subordinated liabilities
-Other accnied expenses,Other liabilities
+Other accried expenses,Other liabilities
 "Payable to Parent and affiliates, net (Note 11)",Payable to parent and affiliates
 Payable to brokers. dealers and clearing organizations (Note 3),Payable to broker-dealers
 Payable to customers (Note 2),Payable to customers and counterparties

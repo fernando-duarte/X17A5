@@ -72,7 +72,6 @@ Liquidity rebate and order flow receivable,Other receivables
 Receivable from clearing organizations,Receivable from broker-dealers
 Exchange memberships and trading rights (fair value $21) (Note 2),Exchange memberships
 Receivable from clearing organizations and custodian,Receivable from broker-dealers
-Total assets,Total assets
 "Fixed assets, net of accumulated depreciation and amortization of $2,731",Fixed assets
 Prepaid expenses,Prepaid expenses
 "Fixed assets, net of $49,763 accumulated depreciation and amortization",Fixed assets
@@ -189,6 +188,7 @@ Other receivables,Other receivables
 "Property and equipment, net of accumulated depreciation of $105,071",PPE (net depreciation & amortization)
 "Receivable from brokers, dealers, and clearing organizations",Receivable from broker-dealers
 Receivable from affiliated customer,Receivable from parent and affiliates
+Total assets,Total assets
 Brokers and dealers,Receivable from broker-dealers
 Cash and securities segregated for regulatory purposes or deposited with clearing organizations,Cash and securities segregated for benefit of customers or regulations
 Corporate debt and preferred stock,"Financial instruments owned, at fair value"
@@ -444,13 +444,14 @@ Securities owned - at market value,"Financial instruments owned, at fair value"
 "Furniture, office equipment and leasehold improvements, at cost, less accumulated depreciation and amortization of $62,428",PPE (net depreciation & amortization)
 "Receivable from customers, net of reserve of $1,454",Receivables from customers and counterparties
 "Securities owned-At fair value ($47,320 pledged as collateral)","Financial instruments owned, at fair value"
+Cash and resale agreements segregated under federal regulation,Cash and securities segregated for benefit of customers or regulations
 "Furniture, office equipment and leasehold improvements, at cost, less accumulated depreciation and amortization of $77,560",PPE (net depreciation & amortization)
 "Receivable from customers, net of reserve of $3,293",Receivables from customers and counterparties
 "Securities owned - at fair value ($62,006 pledged as collateral)","Financial instruments owned, at fair value"
-TOTAL ASSETS,Total assets
 "Furniture, office equipment and leasehold improvements, at cost, less accumulated depreciation and amortization of $87,616",PPE (net depreciation & amortization)
 "Receivable from customers, net of reserve of $1,543",Receivables from customers and counterparties
 "Securities owned-at fair value ($39,404 pledged as collateral)","Financial instruments owned, at fair value"
+TOTAL ASSETS,Total assets
 Cash and securities segregated under federal regulations,Cash and securities segregated for benefit of customers or regulations
 Federal funds sold,"Financial instruments owned, at fair value"
 "Receivable from customers, net of allowance of $46,552",Receivables from customers and counterparties
@@ -986,6 +987,7 @@ ASSETS,Other assets
 "Financial instruments owned, at fair value ($15,368 million pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($18,456 million pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($14,880 million pledged as collateral)","Financial instruments owned, at fair value"
+"Financial instruments owned, at fair value ($8,913 million pledged as collateral)","Financial instruments owned, at fair value"
 Total Assets,Total assets
 financing arrangements,"Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($2,500 million pledged as collateral)","Financial instruments owned, at fair value"
@@ -1283,7 +1285,7 @@ regulatory purposes,Other assets
 "Receivable from Parent and affiliates, net",Receivable from parent and affiliates
 "less accumulated depreciation and amortization of $28,211",PPE (net depreciation & amortization)
 Cash and cash equivalents (Note 2),Cash and cash equivalents
-"Equipment and leasehold improvements, at cust, net of accumulated depreciation and amortization of $28,615 (Note: 2)",PPE (net depreciation & amortization)
+"Equipment and leasehold improvements, at cust, net of accumulated depreciation' and amortization of $28,615 (Note: 2)",PPE (net depreciation & amortization)
 Goodwill (Note 2),"Intangible assets, net amortization"
 Incomé taxes deferred (Notes 2 and 14),Deferred tax asset
 Other receivables (Note: 2),Other receivables
@@ -1369,6 +1371,7 @@ Identifiable intangible assets and goodwill (net of accumulated amortization of 
 "Securities and other inventory positions owned (includes $31,003 pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments and other inventory positions owned (includes $24,255 pledged as collateral)","Financial instruments owned, at fair value"
 Identifiable intangible assets and goodwill (net of accumulated amortization of $142),"Intangible assets, net amortization"
+Property. equipment and leasehold improvements (net of accumulated depreciation and amortization of $215),PPE (net depreciation & amortization)
 Brokers. dealers and clearing organizations,Receivable from broker-dealers
 "Financial instruments owned (including $47,518 pledged as collateral)","Financial instruments owned, at fair value"
 Identifiable intangible assets and goodwill (net of accumulated amortization of $146),"Intangible assets, net amortization"
