@@ -793,9 +793,11 @@ Cash and securities segregated pursuant to federal and other regulations,Cash an
 "Furniture, equipment, leasehold improvements and software, net of accumulated depreciation and amortization of $88,415",PPE (net depreciation & amortization)
 "Securities purchased under agreements to resell (includes $56,694 at fair value)",Collateralized short-term financing agreements
 "Trading assets ($18,564,047 were pledged to various parties and $312,874 related to consolidated variable interest entities, not available to the Company)","Financial instruments owned, at fair value"
+Assets,Other assets
 Deposits with exchanges and other segregated cash,Deposits with clearing organizations
+"Furniture, equipment, leasehold improvements and software net of, accumulated depreciation and amortization of $97,196",PPE (net depreciation & amortization)
 "Securities purchased under agreements to resell (includes $55,945 at fair value)",Collateralized short-term financing agreements
-"accumulated depreciation and amortization of $97,196",PPE (net depreciation & amortization)
+Securities sold under agreements to repurchase,Collateralized short-term financing agreements
 "consolidated variable interest entities, not available to the Company)","Financial instruments owned, at fair value"
 Deposits with exchanges and segregated cash,Deposits with clearing organizations
 "Securities purchased under agreements to resell (includes $55,204 at fair value)",Collateralized short-term financing agreements
@@ -1081,7 +1083,6 @@ Securities received as collateral (Note 4),Securities received as collateral
 "Financial instruments owned, at fair value (includes $9,093,229 pledged as collateral, which the counterparty has the right to sell or repledge)","Financial instruments owned, at fair value"
 "Receivable under securities borrowing arrangements (includes $10,556 at fair value)",Collateralized short-term financing agreements
 "Securities purchased under agreements to resell (includes $2,472,713 at fair value)",Collateralized short-term financing agreements
-Assets,Other assets
 "Financial instruments owned, at fair value (includes $19,779 pledged as collateral, which the counterparty has the right to sell or repledge)","Financial instruments owned, at fair value"
 "Securities purchased under agreements to resell (includes $1,329 at fair value)",Collateralized short-term financing agreements
 "Financial instruments owned, at fair value (includes $12,423 pledged as collateral, which the counterparty has the right to sell or repledge)","Financial instruments owned, at fair value"
