@@ -798,6 +798,7 @@ Deposits with exchanges and other segregated cash,Deposits with clearing organiz
 "Furniture, equipment, leasehold improvements and software net of, accumulated depreciation and amortization of $97,196",PPE (net depreciation & amortization)
 "Securities purchased under agreements to resell (includes $55,945 at fair value)",Collateralized short-term financing agreements
 Securities sold under agreements to repurchase,Collateralized short-term financing agreements
+"accumulated depreciation and amortization of $97,196",PPE (net depreciation & amortization)
 "consolidated variable interest entities, not available to the Company)","Financial instruments owned, at fair value"
 Deposits with exchanges and segregated cash,Deposits with clearing organizations
 "Securities purchased under agreements to resell (includes $55,204 at fair value)",Collateralized short-term financing agreements
@@ -981,7 +982,6 @@ Secarities purchased under agreements to resell and other collateralized financi
 "Securities and other financial instruments owned ($29,286","Financial instruments owned, at fair value"
 "Securities and other financial instruments owned ($30,684 pledged as collateral)","Financial instruments owned, at fair value"
 "Securities and other financial instruments owned ($33,781 pledged as collateral)","Financial instruments owned, at fair value"
-ASSETS,Other assets
 "Financial instruments owned, at fair value ($43,301 pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($60,893 pledged as collateral)","Financial instruments owned, at fair value"
 "Financial instruments owned, at fair value ($41,921 pledged as collateral)","Financial instruments owned, at fair value"
@@ -1280,6 +1280,7 @@ Securities borrowed (including accrued interest),Collateralized short-term finan
 "Other assets, primarily dividends and interest receivable",Other assets
 "Receivable from affiliated introducing brokers, net",Receivable from broker-dealers
 regulatory purposes,Other assets
+ASSETS,Other assets
 "Equipment and leasehold improvements, at cost, less accumulated depreciation and amortization of $28,231 and $22,828 in 2001 and 2000, respectively",PPE (net depreciation & amortization)
 "Goodwill, net of amortization of $22,017 and $16,148 in 2001 and 2000, respectively","Intangible assets, net amortization"
 "Goodwill, net of accumulated amortization of $21,311","Intangible assets, net amortization"
