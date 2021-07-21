@@ -84,7 +84,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
         string must be of the form "QTRX", where X is an integer
         from 1-4 inclusive default = [QTR1, QTR2, QTR3, QTR4]. 
         
-    cik2brokers : dictionary
+    cik2brokers : dict
         A nested dictionary for storing the broker-dealer data as 
         well as the years covered from the archive, we provide default
         template in the event no  
@@ -164,7 +164,7 @@ def update_dealer_names(cik2broker:dict) -> dict:
     
     Parameters
     ----------
-    cik2brokers : dictionary
+    cik2brokers : dict
         A nested dictionary for storing the broker-dealer 
         data as well as the years covered from the archive 
         e.g. {'years-reported':['2020/QTR1', '2020/QTR2'],

@@ -35,6 +35,7 @@ def selectPages(pdf:PdfFileReader, pageSelection:list) -> PdfFileWriter:
         these page numbers do not have to be sequential, 
         but often times are read as such
     """
+    
     # initialize a pdf object to store pdf pages
     pdfWriter = PdfFileWriter()
     nPages = pdf.getNumPages()

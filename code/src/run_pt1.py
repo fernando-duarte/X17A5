@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-RunPT_1.py: Script responsible for retrieving CIKs from broker-dealers
+run_pt1.py: Script responsible for retrieving CIKs from broker-dealers
 filing FOCUS (X-17A-5) reports and downloading all relevant filings
 from the SEC. We execute the following local scripts:
 
@@ -15,6 +15,7 @@ from the SEC. We execute the following local scripts:
 # LIBRARY/PACKAGE IMPORTS
 ##################################
 
+import json
 import datetime
 
 from pdf2image import convert_from_path
@@ -30,16 +31,12 @@ from FocusReportSlice import selectPages, extractSubset
 def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf, input_png,
             parse_years, broker_dealers_list):
     
-    # all s3 files corresponding within folders 
-    temp_paths = s3_session.list_s3_files(bucket, temp_folder)
-    input_paths = s3_session.list_s3_files(bucket, input_raw)
-    
-    pdf_paths = s3_session.list_s3_files(bucket, input_pdf)
-    png_paths = s3_session.list_s3_files(bucket, input_png)
-    
     # ==============================================================================
     #                 STEP 1 (Gathering updated broker-dealer list)
     # ==============================================================================
+    
+    # all s3 files corresponding within folders 
+    temp_paths = s3_session.list_s3_files(bucket, temp_folder)
     
     # if no years are provided by the user, we default to the full sample
     if len(parse_years) == 0:
@@ -74,6 +71,8 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
     #                 STEP 2 (Gathering X-17A-5 Filings)
     # ==============================================================================
     
+    input_paths = s3_session.list_s3_files(bucket, input_raw)
+          
     # if no broker-dealers are provided by the user, we default to the full sample
     if len(broker_dealers_list) == 0:
         broker_dealers_list = cik2brokers['broker-dealers'].keys()
@@ -136,6 +135,9 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
     #                 STEP 3 (Slice X-17A-5 Filings)
     # ==============================================================================
     
+    pdf_paths = s3_session.list_s3_files(bucket, input_pdf)
+    png_paths = s3_session.list_s3_files(bucket, input_png)
+          
     # iterate through each of the raw FOCUS reports (index 1+ to avoid directory header)
     for path_name in np.array(input_paths)[1:]:
         print('Slicing information for %s' % path_name)
