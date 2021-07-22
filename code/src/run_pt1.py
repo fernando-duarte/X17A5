@@ -21,7 +21,7 @@ import datetime
 from pdf2image import convert_from_path
 from ExtractBrokerDealers import dealerData
 from FocusReportExtract import searchURL, edgarParse, fileExtract, mergePdfs
-from FocusReportSlice import selectPages, extractSubset
+from FocusReportSlicing import selectPages, extractSubset
 
 
 ##################################
@@ -65,7 +65,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
         s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'CIKandDealers.json')
     os.remove('CIKandDealers.json')
     
-    print('\n===================\nStep 1: Gathering Broker-Dealer Data Completed\n===================\')
+    print('\n===================\nStep 1: Gathering Broker-Dealer Data Completed\n===================')
     
     # ==============================================================================
     #                 STEP 2 (Gathering X-17A-5 Filings)
@@ -129,7 +129,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
         else: print('ERROR: In downloading %s - CIK (%s)' % (companyName, cik_id))
     
     
-    print('\n===================\nStep 2: Gathering X-17A-5 Filings Completed\n===================\')
+    print('\n===================\nStep 2: Gathering X-17A-5 Filings Completed\n===================')
           
     # ==============================================================================
     #                 STEP 3 (Slice X-17A-5 Filings)
@@ -146,6 +146,8 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
         base_file = path_name.split('/')[-1].split('.')[0]
         png_look_up = export_folder_png + base_file + '/' + base_file + '-p0.png'
         pdf_look_up = export_folder_pdf + base_file + '-subset.pdf'
+        
+        # only want one name (cik) to be handled with re-run flag
         
         # ---------------------------------------------------------------
         # PDF FILE DOWNLOAD
@@ -212,5 +214,5 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
             
         else: print('\t%s already saved png' % base_file)
      
-    print('\n===================\nStep 3: Slicing X-17A-5 Filings Completed\n===================\')
+    print('\n===================\nStep 3: Slicing X-17A-5 Filings Completed\n===================')
           

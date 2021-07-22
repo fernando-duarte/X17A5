@@ -17,7 +17,7 @@ Textract errors and converting the read strings as numeric values
 import json
 
 from OCRTextract import textractParse  
-form OCRClean import clean_wrapper
+from OCRClean import clean_wrapper
 
 
 ##################################
@@ -33,14 +33,14 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     # ==============================================================================
     
     # csv directory where we store balance sheet information 
-    output_pdf_csvs = np.array(session.list_s3_files(s3_bucket, out_folder_raw_pdf))
-    output_png_csvs = np.array(session.list_s3_files(s3_bucket, out_folder_raw_png))
+    output_pdf_csvs = np.array(s3_session.list_s3_files(s3_bucket, out_folder_raw_pdf))
+    output_png_csvs = np.array(s3_session.list_s3_files(s3_bucket, out_folder_raw_png))
     
     # temp directory where JSON files is stored
-    temp = np.array(session.list_s3_files(s3_bucket, temp_folder))
+    temp = np.array(s3_session.list_s3_files(s3_bucket, temp_folder))
     
     # pdf directory where we store the broker-dealer information 
-    pdf_files = np.array(session.list_s3_files(s3_bucket, input_pdf))[1:]
+    pdf_files = np.array(s3_session.list_s3_files(s3_bucket, input_pdf))[1:]
     
     # ---------------------------------------------------------------------------
     # Load in Temp JSON files (FORM, TEXT, ERROR) if present from s3
@@ -95,6 +95,9 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     prior_png_scaler = 1.0
     prior_pdf_cik = np.nan
     prior_png_cik = np.nan
+    
+    
+    # only want one name (cik) to be handled with re-run flag
     
     for pdf_paths in textract_files:
         
@@ -196,5 +199,5 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
         s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'ERROR-TEXTRACT.json')
     os.remove('ERROR-TEXTRACT.json')
     
-    print('\n===================\nStep 4 & 5: Peformed OCR via AWS Textract and Cleaned Data Tables\n===================\')
+    print('\n===================\nStep 4 & 5: Peformed OCR via AWS Textract and Cleaned Data Tables\n===================')
           

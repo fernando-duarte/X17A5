@@ -26,7 +26,7 @@ from fuzzywuzzy import fuzz
 ##################################
 
 # numpy exception for handling invalid log10 RunTime error (we opt to not show)
-# switch 'ignore' to 'warn', if you would like to flag the RunTime error 
+# switch 'ignore' to 'warn' if you would like to flag the RunTime error 
 np.seterr(invalid = 'ignore') 
 
 def multiple_check(x1:float, x2:float) -> bool:
