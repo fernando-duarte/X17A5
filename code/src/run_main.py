@@ -44,10 +44,10 @@ subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-U', 'scikit-lea
 # LIBRARY/PACKAGE IMPORTS (code)
 ##################################
 
-from GLOBAL import *
-from run_pt1 import main_p1
-from run_pt2 import main_p2
-from run_pt3 import main_p3
+from GLOBAL import GlobVars
+from run_file_extraction import main_p1
+from run_ocr import main_p2
+from run_build_database import main_p3
 
 
 ##################################
@@ -78,8 +78,9 @@ class Parameters:
     #                          or retrieve all broker-information, default is 
     #                          an empty list
     
-    # e.g. broker_dealers_list = [782124], default handled in main_p1.py
-    broker_dealers_list = [1224385, 1675365,  276523, 42352, 68136, 782124]
+    # e.g. broker_dealers_list = ['782124'], default handled in main_p1.py
+    broker_dealers_list = ['782124']
+    
     
     # FLAG for determing whether we want to re-run the entire job from
     # start to finish - WITHOUT taking any existing files stored in the s3.
@@ -92,30 +93,35 @@ class Parameters:
 
 if __name__ == "__main__":
     
-    start_time = time.time()
-               
-#     # responsible for gathering FOCUS reports and building list of broker-dealers
-#     main_p1(
-#         Parameters.bucket, Parameters.s3_pointer, Parameters.s3_session, 
-#         temp_folder, input_folder_raw, input_folder_pdf_slice, 
-#         input_folder_png_slice, Parameters.parse_years, Parameters.broker_dealers_list
-#            )
-       
-#     # responsible for extracting balance-sheet figures
-#     main_p2(
-#         Parameters.bucket, Parameters.s3_pointer, Parameters.s3_session, 
-#         temp_folder, input_folder_pdf_slice, input_folder_png_slice, 
-#         output_folder_raw_pdf, output_folder_raw_png, textract, 
-#         Parameters.files_to_textract, output_folder_clean_pdf, 
-#         output_folder_clean_png
-#            ) 
+    start_time = time.time()    
+    print('\n\n\n')
     
-#     # responsible for developing structured database
-#     main_p3(
-#         Parameters.bucket, Parameters.s3_pointer, Parameters.s3_session, temp_folder,
-#         output_folder_clean_pdf, output_folder_clean_png, output_folder_split_pdf, 
-#         output_folder_split_png, output_folderasset_ml_model, liable_ml_model
-#            )   
+    # responsible for gathering FOCUS reports and building list of broker-dealers
+    bk_list = main_p1(
+        Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, 
+        GlobVars.temp_folder, GlobVars.input_folder_raw, GlobVars.temp_folder_pdf_slice, 
+        GlobVars.temp_folder_png_slice, Parameters.parse_years, Parameters.broker_dealers_list,
+        Parameters.job_rerun
+           )
+     
+    # responsible for extracting balance-sheet figures
+    main_p2(
+        Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, 
+        GlobVars.temp_folder, GlobVars.temp_folder_pdf_slice, GlobVars.temp_folder_png_slice, 
+        GlobVars.temp_folder_raw_pdf, GlobVars.temp_folder_raw_png, GlobVars.textract, 
+        GlobVars.temp_folder_clean_pdf, GlobVars.temp_folder_clean_png, Parameters.job_rerun,
+        bk_list
+           ) 
+    
+    # responsible for developing structured database
+    main_p3(
+        Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, GlobVars.temp_folder,
+        GlobVars.temp_folder_clean_pdf, GlobVars.temp_folder_clean_png, GlobVars.temp_folder_split_pdf, 
+        GlobVars.temp_folder_split_png, GlobVars.output_folder, GlobVars.asset_ml_model, 
+        GlobVars.liable_ml_model, GlobVars.asset_ml_ttset, GlobVars.liable_ml_ttset,
+        Parameters.job_rerun, bk_list
+           )   
    
     elapsed_time = time.time() - start_time
-    print('\n\n\nFOCUS REPORT SCRIPT COMPLETED - total time taken %.2f minutes' % elapsed_time)
+    print('\n\n\nFOCUS REPORT SCRIPT COMPLETED - total time taken %.2f minutes' % (elapsed_time / 60))
+    

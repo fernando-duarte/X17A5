@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-run_pt2.py: Script responsible for performing OCR via AWS Textract, 
+run_ocr.py: Script responsible for performing OCR via AWS Textract, 
 and then "cleaning" the reported dataframes by handling special 
 Textract errors and converting the read strings as numeric values
 
@@ -14,10 +14,14 @@ Textract errors and converting the read strings as numeric values
 # LIBRARY/PACKAGE IMPORTS
 ##################################
 
+import os
 import json
+import numpy as np
 
 from OCRTextract import textractParse  
 from OCRClean import clean_wrapper
+
+from run_file_extraction import brokerFilter
 
 
 ##################################
@@ -25,30 +29,29 @@ from OCRClean import clean_wrapper
 ##################################
 
 def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png, 
-            out_folder_raw_pdf, out_folder_raw_png, textract_obj, textract_files,
-            out_folder_clean_pdf, out_folder_clean_png):
+            out_folder_raw_pdf, out_folder_raw_png, textract_obj, out_folder_clean_pdf, 
+            out_folder_clean_png, rerun_job, broker_dealers):
     
     # ==============================================================================
     #               STEP 4 (Perform OCR via Textract on FOCUS Reports)
     # ==============================================================================
     
     # csv directory where we store balance sheet information 
-    output_pdf_csvs = np.array(s3_session.list_s3_files(s3_bucket, out_folder_raw_pdf))
-    output_png_csvs = np.array(s3_session.list_s3_files(s3_bucket, out_folder_raw_png))
+    output_pdf_csvs = s3_session.list_s3_files(s3_bucket, out_folder_raw_pdf)
     
     # temp directory where JSON files is stored
-    temp = np.array(s3_session.list_s3_files(s3_bucket, temp_folder))
+    temp = s3_session.list_s3_files(s3_bucket, temp_folder)
     
-    # pdf directory where we store the broker-dealer information 
-    pdf_files = np.array(s3_session.list_s3_files(s3_bucket, input_pdf))[1:]
+    # s3 directory where we store the broker-dealer sliced filings 
+    raw_pdf_files = s3_session.list_s3_files(s3_bucket, input_pdf)
     
     # ---------------------------------------------------------------------------
     # Load in Temp JSON files (FORM, TEXT, ERROR) if present from s3
     # ---------------------------------------------------------------------------
     
-    if temp_folder + 'X17A5-FORMS.json' in temp:
+    if (temp_folder + 'X17A5-FORMS.json' in temp) and (rerun_job == False):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(bucket, 'Temp/X17A5-FORMS.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, 'Temp/X17A5-FORMS.json', 'temp.json')
         
         # read data on KEY-VALUE dictionary (i.e Textract FORMS) 
         with open('temp.json', 'r') as f: forms_dictionary = json.loads(f.read())
@@ -58,9 +61,9 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     else:
         forms_dictionary = {}
     
-    if temp_folder + 'X17A5-TEXT.json' in temp:
+    if (temp_folder + 'X17A5-TEXT.json' in temp) and (rerun_job == False):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(bucket, 'Temp/X17A5-TEXT.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, 'Temp/X17A5-TEXT.json', 'temp.json')
         
         # read data on TEXT-Confidence dictionary
         with open('temp.json', 'r') as f: text_dictionary = json.loads(f.read())  
@@ -70,9 +73,9 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     else:
         text_dictionary = {}
     
-    if temp_folder + 'ERROR-TEXTRACT.json' in temp:
+    if (temp_folder + 'ERROR-TEXTRACT.json' in temp) and (rerun_job == False):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(bucket, 'Temp/ERROR-TEXTRACT.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, 'Temp/ERROR-TEXTRACT.json', 'temp.json')
         
         # read data on errors derived from Textract
         with open('temp.json', 'r') as f: error_dictionary = json.loads(f.read()) 
@@ -86,18 +89,14 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     # Perform Textract analysis on PDFs and PNGs
     # ---------------------------------------------------------------------------
     
-    # if no files were provided by the user, we default to the full sample
-    if len(textract_files) == 0:
-        textract_files = pdf_files
-    
     # trailing scaler for firms, keep track of missing
     prior_pdf_scaler = 1.0
     prior_png_scaler = 1.0
     prior_pdf_cik = np.nan
     prior_png_cik = np.nan
     
-    
-    # only want one name (cik) to be handled with re-run flag
+    # pdf directory where we store the broker-dealer information 
+    textract_files = filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files) 
     
     for pdf_paths in textract_files:
         
@@ -107,9 +106,12 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
         print('\nPerforming OCR for %s' % fileName)
         
         # if file is not found in output directory we extract the balance sheet
-        # WE LOOK TO AVOID RE-RUNNING OLD TEXTRACT PARSES TO SAVE TIME
-        if (out_folder_raw_pdf + fileName not in output_pdf_csvs):
-            
+        # WE LOOK TO AVOID RE-RUNNING OLD TEXTRACT PARSES TO SAVE TIME, but if 
+        # rerun_job is True we re-run Textract again on 
+        if (out_folder_raw_pdf + fileName in output_pdf_csvs) and (rerun_job == False):
+            print('%s has been downloaded' % fileName)
+                
+        else:
             # run Textract OCR job and extract the parsed data 
             png_paths = input_png + basefile + '/'
             pdf_df, png_df, forms_data, text_data, error = textractParse(pdf_paths, png_paths, s3_bucket)
@@ -161,9 +163,6 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
                 
             else:
                 error_dictionary[basefile] = error
-                
-        else:
-            print('%s has been downloaded' % fileName)
     
     # ---------------------------------------------------------------------------
     # Save JSON files for updated figures (FORM, TEXT, ERROR)
@@ -199,5 +198,5 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
         s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'ERROR-TEXTRACT.json')
     os.remove('ERROR-TEXTRACT.json')
     
-    print('\n===================\nStep 4 & 5: Peformed OCR via AWS Textract and Cleaned Data Tables\n===================')
+    print('\n============\nStep 4 & 5: Peformed OCR via AWS Textract and Cleaned Data Tables\n============\n')
           

@@ -2,8 +2,8 @@
 # coding: utf-8
 
 """
-run_pt3.py: Script responsible for creating the structured database by 
-aggregating individual b
+run_build_database.py: Script responsible for creating the structured database by 
+aggregating individual balance sheets from broker-dealers. 
 
     1) DatabaseSplits.py
     2) DatabaseUnstructured.py
@@ -15,13 +15,20 @@ aggregating individual b
 ##################################
 
 import os
+import json
 import botocore
 
-from DatabaseSplits import lineItems
-from DatabaseUnstructured import extra_cols, totals_check, special_merge, unstructured_data
-from DatabaseStructured import prediction_probabilites, structured_data, relative_indicator, relative_finder
+import pandas as pd
+import numpy as np
 
+from joblib import load
 from sklearn.feature_extraction.text import HashingVectorizer
+
+from DatabaseSplits import lineItems
+from DatabaseUnstructured import reorder_columns, extra_cols, totals_check, special_merge, unstructured_data
+from DatabaseStructured import prediction_probabilites, structured_data, relative_indicator, relative_finder, manual_cl_merge
+
+from run_file_extraction import brokerFilter
 
 
 ##################################
@@ -30,15 +37,16 @@ from sklearn.feature_extraction.text import HashingVectorizer
 
 def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf, 
             out_folder_clean_png, out_folder_split_pdf, out_folder_split_png,
-            out_folder, asset_model, liability_model):
+            out_folder, asset_model, liability_model, asset_ttset, liable_ttset, 
+            rerun_job, broker_dealers):
     
-    pdf_paths = np.array(s3_session.list_s3_files(s3_bucket, out_folder_clean_pdf))[1:]
-    pdf_asset_split = np.array(s3_session.list_s3_files(s3_bucket, out_folder_split_pdf + 'Assets/'))
-    pdf_liability_split = np.array(s3_session.list_s3_files(s3_bucket, out_folder_split_pdf + 'Liability & Equity/'))
+    pdf_paths = s3_session.list_s3_files(s3_bucket, out_folder_clean_pdf)
+    pdf_asset_split = s3_session.list_s3_files(s3_bucket, out_folder_split_pdf + 'Assets/')
+    pdf_liability_split = s3_session.list_s3_files(s3_bucket, out_folder_split_pdf + 'Liability & Equity/')
     
-    png_paths = np.array(s3_session.list_s3_files(s3_bucket, out_folder_clean_png))[1:]
-    png_asset_split = np.array(s3_session.list_s3_files(s3_bucket, out_folder_split_png + 'Assets/'))
-    png_liability_split = np.array(s3_session.list_s3_files(s3_bucket, out_folder_split_png + 'Liability & Equity/'))
+    png_paths = s3_session.list_s3_files(s3_bucket, out_folder_clean_png)
+    png_asset_split = s3_session.list_s3_files(s3_bucket, out_folder_split_png + 'Assets/')
+    png_liability_split = s3_session.list_s3_files(s3_bucket, out_folder_split_png + 'Liability & Equity/')
     
     pdf_asset_folder = out_folder_split_pdf + "Assets/"
     pdf_liable_folder = out_folder_split_pdf + "Liability & Equity/"
@@ -50,26 +58,30 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     #       STEP 6 (Segregate Asset and Liability & Equity from FOCUS Reports)
     # ==============================================================================
     
+    # directory where we store the broker-dealer information for cleaned filings on s3
+    pdf_clean_files = filter(lambda x: brokerFilter(broker_dealers, x), pdf_paths) 
+    png_clean_files = filter(lambda x: brokerFilter(broker_dealers, x), png_paths) 
+    
     # --------------------------------------------
     # PDF PROCESSING (LINE-ITEM SPLIT)
     # --------------------------------------------
     
-    # iterate through files from s3 bucket 
-    for file in pdf_paths:
-        print('\n %s' % file)
-        fileName = file.split('/')[-1]                                          # file-name for a given path
-        asset_name = pdf_output_folder + 'Assets/' + fileName                   # export path to assets
-        liability_name = pdf_output_folder + 'Liability & Equity/' + fileName   # export path to liability and equity
+    for file in pdf_clean_files:
         
-        # only want one name (cik) to be handled with re-run flag
+        print('\n %s' % file)
+        fileName = file.split('/')[-1]                                             # file-name for a given path
+        asset_name = out_folder_split_pdf + 'Assets/' + fileName                   # export path to assets
+        liability_name = out_folder_split_pdf + 'Liability & Equity/' + fileName   # export path to liability and equity
         
         # check to see presence of split files 
-        if (asset_name not in pdf_asset_split) or (liability_name not in pdf_liability_split):
+        if (asset_name in pdf_asset_split) and (liability_name in pdf_liability_split) and (rerun_job == False):
+            print("We've already downloaded %s" % fileName)
         
-            # download temporary file from s3 bucket
+        else: 
             s3_pointer.download_file(s3_bucket, file, 'temp.csv')
             df = pd.read_csv('temp.csv')
-
+            os.remove('temp.csv')
+            
             n = df.columns.size   # the number of columns in read dataframe    
 
             if n > 1: # if there is more than 1 column we continue examination 
@@ -101,27 +113,27 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
                 else: print('Issue with splitting balance-sheet table into asset and liability')
 
             else: print('%s incomplete dataframe' % file)
-                
-        else: print("We've already downloaded %s" % fileName)
     
     # --------------------------------------------
     # PNG PROCESSING (LINE-ITEM SPLIT)
     # --------------------------------------------
     
-    # iterate through files from s3 bucket 
-    for file in png_paths:
+    for file in png_clean_files:
+        
         print('\n %s' % file)
-        fileName = file.split('/')[-1]                                          # file-name for a given path
-        asset_name = png_output_folder + 'Assets/' + fileName                   # export path to assets
-        liability_name = png_output_folder + 'Liability & Equity/' + fileName   # export path to liability and equity
+        fileName = file.split('/')[-1]                                             # file-name for a given path
+        asset_name = out_folder_split_png + 'Assets/' + fileName                   # export path to assets
+        liability_name = out_folder_split_png + 'Liability & Equity/' + fileName   # export path to liability and equity
         
         # check to see presence of split files 
-        if (asset_name not in png_asset_split) or (liability_name not in png_liability_split):
+        if (asset_name in png_asset_split) and (liability_name in png_liability_split) and (rerun_job == False):              
+            print("We've already downloaded %s" % fileName)
         
-            # download temporary file from s3 bucket
+        else: 
             s3_pointer.download_file(s3_bucket, file, 'temp.csv')
             df = pd.read_csv('temp.csv')
-
+            os.remove('temp.csv')
+    
             n = df.columns.size   # the number of columns in read dataframe    
 
             if n > 1: # if there is more than 1 column we continue examination 
@@ -153,14 +165,8 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
                 else: print('Issue with splitting balance-sheet table into asset and liability')
 
             else: print('%s incomplete dataframe' % file)
-                
-        else: print("We've already downloaded %s" % fileName)
     
-    
-    # remove local file for storing cleaned data  
-    os.remove('temp.csv')
-    
-    print('\n===================\nStep 6: Determined Assets and Liabilities & Equity Sets\n===================')
+    print('\n========\nStep 6: Determined Assets and Liabilities & Equity Sets\n========\n')
     
     # ==============================================================================
     #     STEP 7 (Develop an Unstructured Asset and Liability & Equity Database)
@@ -169,13 +175,11 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     # retrieving CIK-Dealers JSON file from s3 bucket
     s3_pointer.download_file(s3_bucket, temp_folder + 'CIKandDealers.json', 'temp.json')
     with open('temp.json', 'r') as f: cik2brokers = json.loads(f.read())
-
-    # remove local file after it has been created (variable is stored in memory)
     os.remove('temp.json')      
   
     # s3 paths where asset and liability paths are stored
     asset_paths = s3_session.list_s3_files(s3_bucket, pdf_asset_folder)
-    liable_paths = s3_session.list_s3_files(s4_bucket, pdf_liable_folder)
+    liable_paths = s3_session.list_s3_files(s3_bucket, pdf_liable_folder)
     
     # intialize list to store dataframes for asset and liability & equity
     asset_concat = [0] * len(asset_paths)
@@ -193,9 +197,9 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         # first load in both the PNG and PDF split balance sheets
         # NOTE: All these balance sheets are cleaned numerical values
         try:
-            s3.download_file(s3_bucket, csv, 'temp.csv')
+            s3_pointer.download_file(s3_bucket, csv, 'temp.csv')
             pdf_df = pd.read_csv('temp.csv')
-            s3.download_file(s3_bucket, png_asset_folder + fileName, 'temp.csv')
+            s3_pointer.download_file(s3_bucket, png_asset_folder + fileName, 'temp.csv')
             png_df = pd.read_csv('temp.csv')
             os.remove('temp.csv')
 
@@ -267,9 +271,9 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         try:
             # first load in both the PNG and PDF split balance sheets
             # NOTE: All these balance sheets are cleaned numerical values
-            s3.download_file(s3_bucket, csv, 'temp.csv')
+            s3_pointer.download_file(s3_bucket, csv, 'temp.csv')
             pdf_df = pd.read_csv('temp.csv')
-            s3.download_file(s3_bucket, png_liable_folder + fileName, 'temp.csv')
+            s3_pointer.download_file(s3_bucket, png_liable_folder + fileName, 'temp.csv')
             png_df = pd.read_csv('temp.csv')
             os.remove('temp.csv')
 
@@ -341,7 +345,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     filename = 'unstructured_assets.csv'
     asset_df.to_csv(filename, index=False)
     with open(filename, 'rb') as data:
-        s3.put_object(Bucket=s3_bucket, Key=out_folder + 'unstructured_assets.csv', Body=data)
+        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'unstructured_assets.csv', Body=data)
     os.remove(filename)
           
     # writing data frame to .csv file
@@ -352,18 +356,24 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     filename = 'unstructured_liable.csv'
     liable_df.to_csv(filename, index=False)
     with open(filename, 'rb') as data:
-        s3.put_object(Bucket=s3_bucket, Key=out_folder + 'unstructured_liable.csv', Body=data)
+        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'unstructured_liable.csv', Body=data)
     os.remove(filename)
           
-    print('\n===================\nStep 7: Unstructured Database has been Created\n===================')
+    print('\n========\nStep 7: Unstructured Database has been Created\n========\n')
                
     # ==============================================================================
     #      STEP 8 (Develop an Structured Asset and Liability & Equity Database)
     # ==============================================================================      
-          
+    
+    # retrieving the old training-test sets for classification model
+    s3_pointer.download_file(s3_bucket, asset_ttset, 'temp.csv')
+    old_asset_training = pd.read_csv('temp.csv')
+    s3_pointer.download_file(s3_bucket, liable_ttset, 'temp.csv')
+    old_liable_training = pd.read_csv('temp.csv')
+    
     # retrieving the unstructured asset values file from s3 bucket
-    s3.download_file(s3_bucket, out_folder + 'unstructured_assets.csv', 'unstructAsset.csv')
-    s3.download_file(s3_bucket, out_folder + 'unstructured_liable.csv', 'unstructLiable.csv')
+    s3_pointer.download_file(s3_bucket, out_folder + 'unstructured_assets.csv', 'unstructAsset.csv')
+    s3_pointer.download_file(s3_bucket, out_folder + 'unstructured_liable.csv', 'unstructLiable.csv')
 
     # load in asset and liability dataframes
     assetDF = pd.read_csv('unstructAsset.csv')
@@ -374,8 +384,8 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     os.remove('unstructLiable.csv')      
     
     # retrieving the asset and liability classification modesl from s3 bucket
-    s3.download_file(s3_bucket, asset_model, 'asset_mdl.joblib')
-    s3.download_file(s3_bucket, liability_model, 'liable_mdl.joblib')
+    s3_pointer.download_file(s3_bucket, asset_model, 'asset_mdl.joblib')
+    s3_pointer.download_file(s3_bucket, liability_model, 'liable_mdl.joblib')
     
     # load in asset and liability models to be used for prediction
     assetMDL = load('asset_mdl.joblib')
@@ -390,8 +400,8 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     
     # the non-prediction columns are stationary (we don't predict anything)
     non_prediction_columns = ['CIK', 'Name', 'Filing Date', 'Filing Year']
-    a_columns = assetDF.columns[~np.isin(assetDF.columns)]
-    l_columns = liableDF.columns[~np.isin(liableDF.columns)]
+    a_columns = assetDF.columns[~np.isin(assetDF.columns, non_prediction_columns)]
+    l_columns = liableDF.columns[~np.isin(liableDF.columns, non_prediction_columns)]
     
     # Use classification model to predict label names for each line item
     asset_label_predictions = assetMDL.predict(str_mdl.fit_transform(a_columns))
@@ -399,10 +409,14 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     
     # structured database for asset and liability terms 
     struct_asset_map = pd.DataFrame([a_columns, asset_label_predictions], 
-                                    index=['LineItems', 'Labels']).T
+                                    index=['Lineitems', 'Labels']).T
 
     struct_liable_map = pd.DataFrame([l_columns, liable_label_predictions], 
-                                     index=['LineItems', 'Labels']).T
+                                     index=['Lineitems', 'Labels']).T
+    
+    # assigning variables in accordance with manual classification sets
+    struct_asset_map = manual_cl_merge(struct_asset_map, old_asset_training)
+    struct_liable_map = manual_cl_merge(struct_liable_map, old_liable_training)
     
     # construct the line-item prediction classes with corresponding probabilites 
     a_proba_df = prediction_probabilites(a_columns, assetMDL, str_mdl)
@@ -412,28 +426,38 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     # Auxillary Database Files 
     # ------------------------------------------------------------------------------
     
-    filename = 'asset_prediction_proba.csv'
-    a_proba_df.to_csv(filename, index=False)
-    with open(filename, 'rb') as data:
-        s3.put_object(Bucket=s3_bucket, Key=out_folder + 'asset_prediction_proba.csv', Body=data)
-    os.remove(filename)
+    # concat the old and new asset training sets, where new predictions are greater than or equal to 85%    
+    old_training = old_asset_training[old_asset_training.columns[:2]]
+    add_training = a_proba_df[a_proba_df['Max Prediction score'] >= 0.85][['Lineitems', 'Manual Classification']]
+    joint_training = pd.concat([old_training, add_training]).drop_duplicates(subset=['Lineitems'], keep='first')
     
-    filename = 'liable_prediction_proba.csv'
-    l_proba_df.to_csv(filename, index=False)
-    with open(filename, 'rb') as data:
-        s3.put_object(Bucket=s3_bucket, Key=out_folder + 'liable_prediction_proba.csv', Body=data)
-    os.remove(filename)
+    joint_training.to_csv('temp.csv', index=False)
+    with open('temp.csv', 'rb') as data:
+        s3_pointer.put_object(Bucket=s3_bucket, Key=asset_ttset, Body=data)
+    
+    # concat the old and new liability training sets, where new predictions are greater than or equal to 85%    
+    old_training = old_liable_training[old_liable_training.columns[:2]]
+    add_training = l_proba_df[l_proba_df['Max Prediction score'] >= 0.85][['Lineitems', 'Manual Classification']]
+    joint_training = pd.concat([old_training, add_training]).drop_duplicates(subset=['Lineitems'], keep='first')
+    
+    joint_training.to_csv('temp.csv', index=False)
+    with open('temp.csv', 'rb') as data:
+        s3_pointer.put_object(Bucket=s3_bucket, Key=liable_ttset, Body=data)
+    
+    os.remove('temp.csv')
+    
+    # ------------------------------------------------------------------------------
     
     filename = 'asset_name_map.csv'
     struct_asset_map.to_csv(filename, index=False)
     with open(filename, 'rb') as data:
-        s3.put_object(Bucket=s3_bucket, Key=out_folder + 'asset_name_map.csv', Body=data)
+        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'asset_name_map.csv', Body=data)
     os.remove(filename)
           
     filename = 'liability_name_map.csv'
     struct_liable_map.to_csv(filename, index=False)
     with open(filename, 'rb') as data:
-        s3.put_object(Bucket=s3_bucket, Key=out_folder + 'liability_name_map.csv', Body=data)
+        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'liability_name_map.csv', Body=data)
     os.remove(filename)
           
     # ------------------------------------------------------------------------------
@@ -461,7 +485,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     filename = 'structured_asset.csv'
     struct_asset_df.to_csv(filename, index=False)
     with open(filename, 'rb') as data:
-        s3.put_object(Bucket=s3_bucket, Key=out_folder + 'structured_asset.csv', Body=data)
+        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'structured_asset.csv', Body=data)
     os.remove(filename)
           
     # ------------------------------------------------------------------------------
@@ -500,8 +524,8 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
                                                        ['Relative Error1', 'Relative Error2', 
                                                         'Relative Error3', 'Relative Error4'])]].to_csv(filename, index=False)
     with open(filename, 'rb') as data:
-        s3.put_object(Bucket=s3_bucket, Key=out_folder + 'structured_liability.csv', Body=data)
+        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'structured_liability.csv', Body=data)
     os.remove(filename)
           
-    print('\n===================\nStep 8: Structured Database has been Created\n===================')
+    print('\n========\nStep 8: Structured Database has been Created\n========\n')
     

@@ -44,14 +44,14 @@ def companyName(cik:str) -> str:
     url = baseURL+'CIK={}&type=X-17A-5&dateb={}1231'.format(cik, current_year)
     
     # we try requesting the URL and break only if response object returns status of 200 (i.e. success)
-    for _ in range(10):
+    for _ in range(20):
         res = requests.get(url, allow_redirects=True)
         if res.status_code == 200: 
             break
     
     # last check to see if response object is "problamatic" e.g. 403 after 10 tries
     if res.status_code != 200:
-        print('ERROR: Unable to retrieve response from URL, response object %d' % res.status_code)
+        print('\t\tERROR: Unable to retrieve response from URL, response object %d' % res.status_code)
         return None
     
     # parse HTML through BeautifulSoup object
@@ -99,11 +99,12 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
     archiveDates = ['{}/{}'.format(yt, qt) for yt in years for qt in quarters]
     years_covered = cik2brokers['years-covered']
     
+    print('EXTRACTING BROKER-DEALER INFORMATION')
     # itterate through years and quarters for archival search
     for coverage in archiveDates:
         
         if coverage in years_covered:
-            print('\tWe have covered %s' % coverage)
+            print('We have covered %s' % coverage)
             pass
 
         else:
@@ -111,7 +112,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
             print('\nSearching for broker dealers at %s' % searchURL)
             
             # we try requesting the URL and break only if response object returns status of 200
-            for _ in range(10):
+            for _ in range(20):
                 response = requests.get(searchURL, allow_redirects=True)
                 if response.status_code == 200: break
             

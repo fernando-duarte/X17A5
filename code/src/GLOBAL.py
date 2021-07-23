@@ -18,39 +18,43 @@ from sagemaker.session import Session
 # GLOBAL VARIABLES
 ##################################
 
-# Amazon Textract client and Sagemaker session
-s3_pointer = boto3.client('s3')
-s3_session = Session()
+class GlobVars:
+    
+    # Amazon Textract client and Sagemaker session
+    s3_pointer = boto3.client('s3')
+    s3_session = Session()
 
-# Amazon Textract client
-textract = boto3.client('textract')
+    # Amazon Textract client
+    textract = boto3.client('textract')
 
-# folder & directory information
-code_folder = 'Code/'
-temp_folder ='Temp/'
-input_folder = 'Input/'
-output_folder = 'Output/'                
+    # folder & directory information
+    temp_folder ='Temp/'
+    input_folder = 'Input/'
+    output_folder = 'Output/'                
 
-input_folder_raw = input_folder + 'X-17A-5/'
-input_folder_pdf_slice = temp_folder + 'X-17A-5-PDF-SUBSETS/'
-input_folder_png_slice = temp_folder + 'X-17A-5-PNG-SUBSETS/'
+    input_folder_raw = input_folder + 'X-17A-5/'
 
-# files report raw Textract files
-output_folder_raw_pdf = temp_folder + 'X-17A-5-PDF-RAW/'
-output_folder_raw_png = temp_folder + 'X-17A-5-PNG-RAW/'
+    # files report reduced FOCUS reports parsed from SEC
+    temp_folder_pdf_slice = temp_folder + 'X-17A-5-PDF-SUBSETS/'
+    temp_folder_png_slice = temp_folder + 'X-17A-5-PNG-SUBSETS/'
 
-# files clean raw Textract files, handling exceptions
-output_folder_clean_pdf = temp_folder + 'X-17A-5-CLEAN-PDFS/'
-output_folder_clean_png = temp_folder + 'X-17A-5-CLEAN-PNGS/'
+    # files report raw Textract files
+    temp_folder_raw_pdf = temp_folder + 'X-17A-5-PDF-RAW/'
+    temp_folder_raw_png = temp_folder + 'X-17A-5-PNG-RAW/'
 
-# files distinguish between assets and liability terms
-output_folder_split_pdf = temp_folder + 'X-17A-5-SPLIT-PDFS/'
-output_folder_split_png = temp_folder + 'X-17A-5-SPLIT-PNGS/'
+    # files clean raw Textract files, handling exceptions
+    temp_folder_clean_pdf = temp_folder + 'X-17A-5-CLEAN-PDFS/'
+    temp_folder_clean_png = temp_folder + 'X-17A-5-CLEAN-PNGS/'
 
-# storage for machine learning models
-asset_ml_model = input_folder + 'asset_log_reg_mdl_v2.joblib'
-liable_ml_model = input_folder + 'liability_log_reg_mdl_v2.joblib'
+    # files distinguish between assets and liability terms
+    temp_folder_split_pdf = temp_folder + 'X-17A-5-SPLIT-PDFS/'
+    temp_folder_split_png = temp_folder + 'X-17A-5-SPLIT-PNGS/'
 
-# add training set
-# add appended training set
+    # storage for machine learning models (logistic regression)
+    asset_ml_model = input_folder + 'asset_log_reg_mdl_v2.joblib'
+    liable_ml_model = input_folder + 'liability_log_reg_mdl_v2.joblib'
 
+    # storage for training-test sets for ML model
+    asset_ml_ttset = input_folder + 'asset_mdl_training_testing_set.csv'
+    liable_ml_ttset = input_folder + 'liable_mdl_training_testing_set.csv'
+    

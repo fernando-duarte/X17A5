@@ -71,7 +71,7 @@ def edgarParse(url:str):
     response = requests.Response()
     
     # we try requesting the URL and break only if response object returns status of 200
-    for _ in range(10): 
+    for _ in range(20): 
         response = requests.get(url, allow_redirects=True)
         if response.status_code == 200: break
     
@@ -84,7 +84,7 @@ def edgarParse(url:str):
     # read in HTML tables from the url link provided 
     try:
         # due to web-scrapping non-constant behavior (check against 10 tries)
-        for _ in range(10):
+        for _ in range(20):
             try: 
                 filings = pd.read_html(url) 
                 break
@@ -122,7 +122,7 @@ def fileExtract(archive:str) -> list:
     pdf_storage = requests.Response()
     
     # we try requesting the URL and break only if response object returns status of 200
-    for _ in range(10):
+    for _ in range(20):
         pdf_storage = requests.get(archive, allow_redirects=True)
         if pdf_storage.status_code == 200: break
     
@@ -160,7 +160,7 @@ def mergePdfs(files:list) -> PdfFileWriter:
         pdf_file = 'https://www.sec.gov' + pdf 
         
         # we try requesting the URL and break only if response object returns status of 200
-        for _ in range(10):
+        for _ in range(20):
             pdf_storage = requests.get(pdf_file, allow_redirects=True)
             if pdf_storage.status_code == 200: break
 

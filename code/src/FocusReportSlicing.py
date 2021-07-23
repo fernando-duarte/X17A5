@@ -20,6 +20,26 @@ from PyPDF2 import PdfFileReader, PdfFileWriter, utils
 # USER DEFINED FUNCTIONS
 ##################################
 
+def brokerFilter(select_list:list, directory_list:list):
+    """
+    Helps determine (filter) corresponding pdf strings from
+    a list of filings present on the s3
+    
+    Parameters
+    ----------
+    select_list : list
+        A list of CIKs that correspond to broker-dealers
+            
+    directory_list : list   
+        An list of directories that store information pertaining
+        to FOCUS report filings on the s3
+    """
+    
+    # itterate through broker-dealers CIK and flag string presence in list
+    for cik in select_list:
+        if cik in directory_list:
+            return True
+
 def selectPages(pdf:PdfFileReader, pageSelection:list) -> PdfFileWriter:
     """
     Extracts pages from a pdf and returns a PdfFileWriter object 

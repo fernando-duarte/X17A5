@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-run_pt1.py: Script responsible for retrieving CIKs from broker-dealers
+run_file_extraction.py: Script responsible for retrieving CIKs from broker-dealers
 filing FOCUS (X-17A-5) reports and downloading all relevant filings
 from the SEC. We execute the following local scripts:
 
@@ -15,34 +15,37 @@ from the SEC. We execute the following local scripts:
 # LIBRARY/PACKAGE IMPORTS
 ##################################
 
+import os
 import json
 import datetime
 
 from pdf2image import convert_from_path
 from ExtractBrokerDealers import dealerData
 from FocusReportExtract import searchURL, edgarParse, fileExtract, mergePdfs
-from FocusReportSlicing import selectPages, extractSubset
+from FocusReportSlicing import selectPages, extractSubset, brokerFilter
 
 
 ##################################
 # MAIN CODE EXECUTION
 ##################################
 
-def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf, input_png,
-            parse_years, broker_dealers_list):
+def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pdf, export_png,
+            parse_years, broker_dealers_list, rerun_job):
     
     # ==============================================================================
     #                 STEP 1 (Gathering updated broker-dealer list)
     # ==============================================================================
     
     # all s3 files corresponding within folders 
-    temp_paths = s3_session.list_s3_files(bucket, temp_folder)
+    temp_paths = s3_session.list_s3_files(s3_bucket, temp_folder)
     
     # if no years are provided by the user, we default to the full sample
     if len(parse_years) == 0:
         parse_years = np.arange(1993, datetime.datetime.today().year+1)
     
-    if temp_folder + 'CIKandDealers.json' in temp_paths: 
+    # if rerun_job is True, we overwrite our current CIKandDealer information on s3
+    if (temp_folder + 'CIKandDealers.json' in temp_paths) and (rerun_job == False): 
+        
         # retrieve old information from CIK and Dealers JSON file
         s3_pointer.download_file(s3_bucket, temp_folder + 'CIKandDealers.json', 'temp.json')
         with open('temp.json', 'r') as f: old_cik2brokers = json.loads(f.read())
@@ -51,8 +54,8 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
         cik2brokers = dealerData(years=parse_years, cik2brokers=old_cik2brokers)   
         os.remove('temp.json')
         
-    # start from scratch to create cik-broker dealer list
     else:
+        # start from scratch to create cik-broker dealer list
         cik2brokers = dealerData(years=parse_years)
         
     # write to a local JSON file with accompanying meta information 
@@ -65,13 +68,13 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
         s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'CIKandDealers.json')
     os.remove('CIKandDealers.json')
     
-    print('\n===================\nStep 1: Gathering Broker-Dealer Data Completed\n===================')
+    print('\n========\nStep 1: Gathering Broker-Dealer Data Completed\n========\n')
     
     # ==============================================================================
     #                 STEP 2 (Gathering X-17A-5 Filings)
     # ==============================================================================
     
-    input_paths = s3_session.list_s3_files(bucket, input_raw)
+    input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
           
     # if no broker-dealers are provided by the user, we default to the full sample
     if len(broker_dealers_list) == 0:
@@ -100,8 +103,10 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
                 # Construct filename & pdf file naming convention (e.g. filename = 1904-2020-02-26.pdf)   
                 file_name = str(cik_id) + '-' + date + '.pdf'        
                 pdf_name = input_raw + file_name
-
-                if pdf_name in input_paths: 
+                
+                # if rerun_job is true, we ignore the flag and extract focus reports
+                # for every reported year in the reponse object for filings
+                if (pdf_name in input_paths) and (rerun_job == False): 
                     print('\tAll files for %s are downloaded' % companyName)
                     break
 
@@ -129,32 +134,34 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
         else: print('ERROR: In downloading %s - CIK (%s)' % (companyName, cik_id))
     
     
-    print('\n===================\nStep 2: Gathering X-17A-5 Filings Completed\n===================')
+    print('\n========\nStep 2: Gathering X-17A-5 Filings Completed\n========\n')
           
     # ==============================================================================
     #                 STEP 3 (Slice X-17A-5 Filings)
     # ==============================================================================
     
-    pdf_paths = s3_session.list_s3_files(bucket, input_pdf)
-    png_paths = s3_session.list_s3_files(bucket, input_png)
-          
-    # iterate through each of the raw FOCUS reports (index 1+ to avoid directory header)
-    for path_name in np.array(input_paths)[1:]:
-        print('Slicing information for %s' % path_name)
+    pdf_paths = s3_session.list_s3_files(s3_bucket, export_pdf)
+    png_paths = s3_session.list_s3_files(s3_bucket, export_png)
+    
+    # filter FOCUS reports from the s3 that correspond to list of broker-dealers 
+    raw_broker_dealer_pdfs = filter(lambda x: brokerFilter(broker_dealers_list, x), input_paths)
+        
+    for path_name in raw_broker_dealer_pdfs:
+        print('Slicing FOCUS report filing for %s' % path_name)
         
         # check to see if values are downloaded to s3 sub-bin
         base_file = path_name.split('/')[-1].split('.')[0]
-        png_look_up = export_folder_png + base_file + '/' + base_file + '-p0.png'
-        pdf_look_up = export_folder_pdf + base_file + '-subset.pdf'
-        
-        # only want one name (cik) to be handled with re-run flag
+        pdf_look_up = export_pdf + base_file + '-subset.pdf'
+        png_look_up = export_png + base_file + '/' + base_file + '-p0.png'
         
         # ---------------------------------------------------------------
         # PDF FILE DOWNLOAD
         # ---------------------------------------------------------------
         
-        if pdf_look_up not in pdf_paths:
-            
+        if (pdf_look_up in pdf_paths) and (rerun_job == False):
+            print('\t%s already saved pdf' % base_file)
+
+        else: 
             # retrieving downloaded files from s3 bucket
             s3_pointer.download_file(bucket, path_name, 'temp.pdf')
             
@@ -164,21 +171,21 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
             
              # save contents to AWS S3 bucket as specified
             with open(export_name, 'rb') as data:
-                s3_pointer.upload_fileobj(data, s3_bucket, input_pdf + export_name)
+                s3_pointer.upload_fileobj(data, s3_bucket, export_pdf + export_name)
                 print('\tSaved pdf files for -> %s' % export_name)
             
             # remove local file after it has been created
             os.remove('temp.pdf')
             os.remove(export_name)
-            
-        else: print('\t%s already saved pdf' % base_file)
         
         # ---------------------------------------------------------------
         # PNG FILE DOWNLOAD
         # ---------------------------------------------------------------
         
-        if png_look_up not in png_paths:
+        if (png_look_up in png_paths) and (rerun_job == False):
+            print('\t%s already saved png' % base_file)
             
+        else: 
             # retrieving downloaded files from s3 bucket
             s3_pointer.download_file(bucket, path_name, 'temp.pdf')
             
@@ -200,7 +207,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
                     
                     # save contents to AWS S3 bucket as specified
                     with open(export_file_name, 'rb') as data:
-                        s3_pointer.upload_fileobj(data, bucket, input_png + base_file + '/' + export_file_name)
+                        s3_pointer.upload_fileobj(data, bucket, export_png + base_file + '/' + export_file_name)
                     
                     os.remove(export_file_name)
                     
@@ -211,8 +218,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, input_pdf
                 
             except PDFPageCountError:
                 print('\tEncountered PDFPageCounterError when trying to convert to png for -> %s' % base_file)
-            
-        else: print('\t%s already saved png' % base_file)
      
-    print('\n===================\nStep 3: Slicing X-17A-5 Filings Completed\n===================')
-          
+    print('\n========\nStep 3: Slicing X-17A-5 Filings Completed\n========\n')
+    
+    return broker_dealers_list      
