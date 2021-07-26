@@ -55,6 +55,6 @@ class GlobVars:
     liable_ml_model = input_folder + 'liability_log_reg_mdl_v2.joblib'
 
     # storage for training-test sets for ML model
-    asset_ml_ttset = input_folder + 'asset_mdl_training_testing_set.csv'
-    liable_ml_ttset = input_folder + 'liable_mdl_training_testing_set.csv'
+    asset_ml_ttset = input_folder + 'asset_lineitem_training_testing.csv'
+    liable_ml_ttset = input_folder + 'liable_lineitem_training_testing.csv'
     

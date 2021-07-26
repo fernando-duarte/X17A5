@@ -79,7 +79,7 @@ class Parameters:
     #                          an empty list
     
     # e.g. broker_dealers_list = ['782124'], default handled in main_p1.py
-    broker_dealers_list = ['782124']
+    broker_dealers_list = ['87634']
     
     
     # FLAG for determing whether we want to re-run the entire job from
@@ -104,7 +104,7 @@ if __name__ == "__main__":
         Parameters.job_rerun
            )
      
-    # responsible for extracting balance-sheet figures
+    # responsible for extracting balance-sheet figures by OCR via AWS Textract
     main_p2(
         Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, 
         GlobVars.temp_folder, GlobVars.temp_folder_pdf_slice, GlobVars.temp_folder_png_slice, 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         bk_list
            ) 
     
-    # responsible for developing structured database
+    # responsible for developing structured and unstructured database
     main_p3(
         Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, GlobVars.temp_folder,
         GlobVars.temp_folder_clean_pdf, GlobVars.temp_folder_clean_png, GlobVars.temp_folder_split_pdf, 
@@ -123,5 +123,5 @@ if __name__ == "__main__":
            )   
    
     elapsed_time = time.time() - start_time
-    print('\n\n\nFOCUS REPORT SCRIPT COMPLETED - total time taken %.2f minutes' % (elapsed_time / 60))
+    print('\n\nFOCUS REPORT SCRIPT COMPLETED - total time taken %.2f minutes' % (elapsed_time / 60))
     

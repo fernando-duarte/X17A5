@@ -157,3 +157,111 @@ def relative_finder(pct):
     cleanValue = min_find(pct)           # apply vector function
     
     return cleanValue
+
+def structured_wrapper(asset_df, liable_df, asset_training, liable_training, hashing_model, 
+                       asset_model, liable_model) -> tuple:
+    """
+    Re-order the completed DataFrame by ordering the CIK, Name, 
+    Filing Data and Filing Year. 
+    
+    Parameters
+    ----------
+    asset_df : pandas.DataFrame
+        The asset side balance sheet for a broker-dealer derivied from 
+        PDFs/PNGs
+        
+    liable_df : pandas.DataFrame
+        The liability & equity side balance sheet for a broker-dealer 
+        derivied from PDFs/PNGs
+        
+    asset_training : pandas.DataFrame
+        The classification training set for asset line items 
+        
+    liable_training : pandas.DataFrame
+        The classification training set for liability & equity line items 
+        
+    hashing_model : sklearn.HashingVectorizer
+        A HashingVectorizer model for converting text/string to numerics
+        
+    asset_model : joblib
+        A log-regression model for predicting asset class items
+        
+    liable_model : joblib
+        A log-regression model for predicting liability & equity class items
+    """
+    
+    # the non-prediction columns are stationary (we don't predict anything)
+    non_prediction_columns = ['CIK', 'Name', 'Filing Date', 'Filing Year']
+    
+    # select columns that do not belong to the non-prediction columns list
+    a_columns = asset_df.columns[~np.isin(asset_df.columns, non_prediction_columns)]
+    l_columns = liable_df.columns[~np.isin(liable_df.columns, non_prediction_columns)]
+    
+    # Use classification model to predict label names for each line item
+    asset_label_predictions = asset_model.predict(hashing_model.fit_transform(a_columns))
+    liable_label_predictions = liable_model.predict(hashing_model.fit_transform(l_columns))
+    
+    # structured database for asset and liability terms 
+    struct_asset_map = pd.DataFrame([a_columns, asset_label_predictions], 
+                                    index=['Lineitems', 'Labels']).T
+
+    struct_liable_map = pd.DataFrame([l_columns, liable_label_predictions], 
+                                     index=['Lineitems', 'Labels']).T
+    
+    # assigning variables in accordance with manual classification sets
+    struct_asset_map = manual_cl_merge(struct_asset_map, asset_training)
+    struct_liable_map = manual_cl_merge(struct_liable_map, liable_training)
+    
+    # construct the line-item prediction classes with corresponding probabilites 
+    a_proba_df = prediction_probabilites(a_columns, asset_model, hashing_model)
+    l_proba_df = prediction_probabilites(l_columns, liable_model, hashing_model)
+    
+    # ------------------------------------------------------------------------
+    
+    # structured database for asset terms 
+    struct_asset_df = structured_data(asset_df, struct_asset_map, non_prediction_columns)
+    
+    # we drop ammended releases, preserving unique CIKs with Filing Year (default to first instance)
+    struct_asset_df = struct_asset_df.drop_duplicates(subset=['CIK', 'Filing Year'], keep='first')
+    
+    # extract all line items to reconstruct the appropriate total categories and compute relative differences
+    asset_lines = struct_asset_df.columns[~np.isin(struct_asset_df.columns,
+                                                   ['CIK', 'Name', 'Filing Date', 'Filing Year',  'Total assets'])]
+    struct_asset_df['Reconstructed Total assets'] = struct_asset_df[asset_lines].sum(axis=1)
+    
+    # construct absolute relative error, differencing returned Total assets from our reconstructed values
+    struct_asset_df['Relative Error'] = abs(struct_asset_df['Reconstructed Total assets'] - struct_asset_df['Total assets']) / struct_asset_df['Total assets']
+
+    struct_asset_df['Total asset check'] = struct_asset_df['Relative Error'].apply(relative_indicator)
+    
+    # ------------------------------------------------------------------------
+    
+    # structured database for liability terms 
+    struct_liable_df = structured_data(liable_df, struct_liable_map, non_prediction_columns)
+    struct_liable_df = struct_liable_df.drop_duplicates(subset=['CIK', 'Filing Year'], keep='first')
+    
+    # extract all line items to reconstruct the appropriate total categories and compute relative differences
+    liable_lines = struct_liable_df.columns[~np.isin(struct_liable_df.columns, 
+                                            ['CIK', 'Name', 'Filing Date', 'Filing Year',  
+                                             "Total liabilities and shareholder's equity"])]
+    
+    # we remove all other premature totals from the reconsturctured
+    struct_liable_df["Reconstructed Total liabilities and shareholder's equity"] = struct_liable_df[liable_lines].sum(axis=1) 
+    struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total liabilites)"] = struct_liable_df[liable_lines].sum(axis=1) - struct_liable_df['Total liabilities'].fillna(0)
+    struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total equity)"] = struct_liable_df[liable_lines].sum(axis=1) - struct_liable_df["Total shareholder's equity"].fillna(0)
+    struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total L+E)"] = struct_liable_df[liable_lines].sum(axis=1) - struct_liable_df['Total liabilities'].fillna(0) - struct_liable_df["Total shareholder's equity"].fillna(0)
+    
+    # constructing measures of relative erorrs against each different reconstruction frameworks
+    struct_liable_df['Relative Error1'] = abs(struct_liable_df["Reconstructed Total liabilities and shareholder's equity"] - struct_liable_df["Total liabilities and shareholder's equity"]) / struct_liable_df["Total liabilities and shareholder's equity"]
+          
+    struct_liable_df['Relative Error2'] = abs(struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total liabilites)"] - struct_liable_df["Total liabilities and shareholder's equity"]) / struct_liable_df["Total liabilities and shareholder's equity"]
+          
+    struct_liable_df['Relative Error3'] = abs(struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total equity)"] - struct_liable_df["Total liabilities and shareholder's equity"]) / struct_liable_df["Total liabilities and shareholder's equity"]
+          
+    struct_liable_df['Relative Error4'] = abs(struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total L+E)"] - struct_liable_df["Total liabilities and shareholder's equity"]) / struct_liable_df["Total liabilities and shareholder's equity"]
+
+    struct_liable_df["Total liabilities & shareholder's equity check"] = struct_liable_df[['Relative Error1', 'Relative Error2', 'Relative Error3', 'Relative Error4']].apply(relative_indicator, axis=1)
+    struct_liable_df["Relative Error"] = struct_liable_df[['Relative Error1', 'Relative Error2', 'Relative Error3', 'Relative Error4']].apply(relative_finder, axis=1)
+    
+    # export all neccessary dataframes constructed
+    return struct_asset_map, struct_liable_map, a_proba_df, l_proba_df, struct_asset_df, struct_liable_df

@@ -640,7 +640,7 @@ def idio_chg(df:pd.DataFrame, base_file:str) -> pd.DataFrame:
     elif base_file == '867626-2013-02-28':
         # our numeric scaler scales by the wrong value using 1e6 as opposed to 1e3, we scale back everything
         df[df.columns[1]] = df[df.columns[1]].apply(lambda x: x / 1e3)
-        return df
+        return df 
     
     elif base_file == '890203-2020-03-02':
         # out numeric scaler can't find the correct value to scale the balance sheet by, we scale manually

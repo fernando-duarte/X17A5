@@ -174,9 +174,9 @@ def totals_check(df:pd.DataFrame) -> tuple:
                         total_flag = 1
                         total_amt = val
                     
-                    # Error Handling for row deletions (uncomment for when not in use)
-                    print('\tWe dropped row %d, %s, with lookback window of %d.' % (i, name, j+1))
-                    print('\t\tOur row is valued at %.2f, our lookback sum is %.2f' % (item1, item2))
+#                     # Error Handling for row deletions (uncomment for when not in use)
+#                     print('\tWe dropped row %d, %s, with lookback window of %d.' % (i, name, j+1))
+#                     print('\t\tOur row is valued at %.2f, our lookback sum is %.2f' % (item1, item2))
                     
                     # we break from inner loop to avoid key error flag 
                     break     
@@ -346,3 +346,74 @@ def reorder_columns(df:pd.DataFrame, col_preserve:list) -> pd.DataFrame:
 
     # clean dataframe for unstructured asset terms
     return df[cleanCols]
+
+def unstructured_wrapper(pdf_df:pd.DataFrame, png_df:pd.DataFrame, csv:str, cik2name:dict,
+                         naming_conv:str) -> pd.DataFrame:
+    """
+    Re-order the completed DataFrame by ordering the CIK, Name, 
+    Filing Data and Filing Year. 
+    
+    Parameters
+    ----------
+    pdf_df : pandas.DataFrame
+        The balance sheet for a broker-dealer derivied from PDFs
+        
+    png_df : pandas.DataFrame
+        The balance sheet for a broker-dealer derivied from PDFs
+        
+    csv : str
+        The name corresponding for a particular file belonging to a 
+        broker-dealer FOCUS report of the form CIK-YYYY-MM-DD
+        
+    cik2name : str
+        A dictionary that maps CIK to broker dealer names 
+        
+    naming_conv : str
+        The naming convention for the "Total" column being created 
+    """
+    
+    # decompose csv name into corresponding terms
+    fileName, filing_date, fiscal_year, cik = extra_cols(csv)
+    
+    # run accounting check to remove sub-totals for each respective line-item
+    temp_df1, total_flag1, total_amt1 = totals_check(pdf_df)
+    temp_df2, total_flag2, total_amt2 = totals_check(png_df)
+
+    #########################
+    # Exporation assumption
+    #########################
+    
+    # if no pdf or png returns a total asset flag then we want to merge
+    # otherwise we simply see use the first value
+
+    if (total_flag1 == 1) or (total_flag2 == 1):
+
+        if total_flag1 == 1:
+            # construct row for the unstructured data frame 
+            export_df = unstructured_data(temp_df1, filing_date, fiscal_year, cik, cik2name)
+
+            # we have that "total asset" was found and matches
+            export_df[naming_conv] = total_amt1
+
+        elif total_flag2 == 1:
+            # construct row for the unstructured data frame 
+            export_df = unstructured_data(temp_df2, filing_date, fiscal_year, cik, cik2name)
+
+            export_df[naming_conv] = total_amt2
+    
+    # we have that "total asset" was found, but did not match correctly
+    # we do not need to add a "total asset" column since we already have it somewhere
+    elif (total_flag1 == 0) or (total_flag2 == 0):
+
+        # do a special merge that combines unique line items names between PDF & PNG
+        df = special_merge(temp_df1, temp_df2, '0')
+        export_df = unstructured_data(df, filing_date, fiscal_year, cik, cik2name)
+
+    # we have that no "total asset" figure was found, so we have nothing 
+    elif (total_flag1 == 2) and (total_flag2 == 2):
+
+        # do a special merge that combines unique line items names between PDF & PNG
+        df = special_merge(temp_df1, temp_df2, '0')
+        export_df = unstructured_data(df, filing_date, fiscal_year, cik, cik2name)
+    
+    return export_df

@@ -25,8 +25,8 @@ from joblib import load
 from sklearn.feature_extraction.text import HashingVectorizer
 
 from DatabaseSplits import lineItems
-from DatabaseUnstructured import reorder_columns, extra_cols, totals_check, special_merge, unstructured_data
-from DatabaseStructured import prediction_probabilites, structured_data, relative_indicator, relative_finder, manual_cl_merge
+from DatabaseUnstructured import unstructured_wrapper, reorder_columns
+from DatabaseStructured import structured_wrapper
 
 from run_file_extraction import brokerFilter
 
@@ -191,148 +191,64 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     print('Assets Unstructured Database')
     for idx, csv in enumerate(asset_paths):
         
-        # decompose csv name into corresponding terms
-        fileName, filing_date, fiscal_year, cik = extra_cols(csv)
-        
+        # decompose csv name into filename
+        filename = csv.split('/')[-1]
+    
         # first load in both the PNG and PDF split balance sheets
         # NOTE: All these balance sheets are cleaned numerical values
         try:
             s3_pointer.download_file(s3_bucket, csv, 'temp.csv')
             pdf_df = pd.read_csv('temp.csv')
-            s3_pointer.download_file(s3_bucket, png_asset_folder + fileName, 'temp.csv')
+            s3_pointer.download_file(s3_bucket, png_asset_folder + filename, 'temp.csv')
             png_df = pd.read_csv('temp.csv')
             os.remove('temp.csv')
-
-            print('Working on %s-%s' % (cik, filing_date))
             
-            # run accounting check to remove sub-totals for each respective line-item
-            temp_df1, total_flag1, total_amt1 = totals_check(pdf_df)
-            temp_df2, total_flag2, total_amt2 = totals_check(png_df)
-            
-            #########################
-            # Exporation assumption
-            #########################
-            
-            # if no pdf or png returns a total asset flag then we want to merge
-            # otherwise we simply see use the first value
-            
-            if (total_flag1 == 1) or (total_flag2 == 1):
-                
-                if total_flag1 == 1:
-                    # construct row for the unstructured data frame 
-                    export_df = unstructured_data(temp_df1, filing_date, fiscal_year, cik, cik2brokers)
-                    
-                    # we have that "total asset" was found and matches
-                    export_df["Total asset"] = total_amt1
-                    
-                elif total_flag2 == 1:
-                    # construct row for the unstructured data frame 
-                    export_df = unstructured_data(temp_df2, filing_date, fiscal_year, cik, cik2brokers)
-
-                    export_df["Total asset"] = total_amt2
-                    
-            # we have that "total asset" was found, but did not match correctly
-            # we do not need to add a "total asset" column since we already have it somewhere
-            elif (total_flag1 == 0) or (total_flag2 == 0):
-                
-                # do a special merge that combines unique line items names between PDF & PNG
-                df = special_merge(temp_df1, temp_df2, '0')
-                export_df = unstructured_data(df, filing_date, fiscal_year, cik, cik2brokers)
-                
-            # we have that no "total asset" figure was found, so we have nothing 
-            elif (total_flag1 == 2) and (total_flag2 == 2):
-                
-                # do a special merge that combines unique line items names between PDF & PNG
-                df = special_merge(temp_df1, temp_df2, '0')
-                export_df = unstructured_data(df, filing_date, fiscal_year, cik, cik2brokers)
-
             # stores the reported data frame 
-            asset_concat[idx] = export_df
-            
+            asset_concat[idx] = unstructured_wrapper(pdf_df, png_df, csv, cik2brokers, "Total asset")
+
         # in the event we can't download file from s3 (i.e. does not exist, we ignore)
         except botocore.exceptions.ClientError:
-            
+
             # assign an empty DataFrame and print out error
             asset_concat[idx] = pd.DataFrame()
-            
-            print('\nCLIENT-ERROR: WE COULD NOT DOWNLOAD SPLIT DATA FOR %s\n' % fileName)
-     
-    print('\n\n\n\n')
-        
+
+            print('\t\tCLIENT-ERROR: WE COULD NOT DOWNLOAD SPLIT DATA FOR %s\n' % filename)
+
+        if (idx + 1) % 100 == 0:
+            print('\tWe have integrated %d balance sheet(s) to the unstructured database' % (idx+1))
+    
     # --------------------------------------------
     # Liability & Equity Unstructured Database
     # --------------------------------------------
     print('\nLiability & Equity Unstructured Database')
     for idx, csv in enumerate(liable_paths):
         
-        # decompose csv name into corresponding terms
-        fileName, filing_date, fiscal_year, cik = extra_cols(csv)
+        # decompose csv name into filename
+        filename = csv.split('/')[-1]
         
         try:
             # first load in both the PNG and PDF split balance sheets
             # NOTE: All these balance sheets are cleaned numerical values
             s3_pointer.download_file(s3_bucket, csv, 'temp.csv')
             pdf_df = pd.read_csv('temp.csv')
-            s3_pointer.download_file(s3_bucket, png_liable_folder + fileName, 'temp.csv')
+            s3_pointer.download_file(s3_bucket, png_liable_folder + filename, 'temp.csv')
             png_df = pd.read_csv('temp.csv')
             os.remove('temp.csv')
-
-            print('Working on %s-%s' % (cik, filing_date))
             
-            # run accounting check to remove sub-totals for each respective line-item
-            temp_df1, total_flag1, total_amt1 = totals_check(pdf_df)
-            temp_df2, total_flag2, total_amt2 = totals_check(png_df)
-            
-            # do a special merge that combines unique line items names between PDF & PNG
-            df = special_merge(temp_df1, temp_df2, '0')
-            
-            #########################
-            # Exporation assumption
-            #########################
-            
-            # if no pdf or png returns a total asset flag then we want to merge
-            # otherwise we simply see use the first value
-            
-            if (total_flag1 == 1) or (total_flag2 == 1):
-                
-                if total_flag1 == 1:
-                    # construct row for the unstructured data frame 
-                    export_df = unstructured_data(temp_df1, filing_date, fiscal_year, cik, cik2brokers)
-                    
-                    # we have that "total asset" was found and matches
-                    export_df["Total liabilities & shareholder's equity"] = total_amt1
-                    
-                elif total_flag2 == 1:
-                    # construct row for the unstructured data frame 
-                    export_df = unstructured_data(temp_df2, filing_date, fiscal_year, cik, cik2brokers)
-                    
-                    export_df["Total liabilities & shareholder's equity"] = total_amt2
-                    
-            # we have that "total asset" was found, but did not match correctly
-            elif (total_flag1 == 0) or (total_flag2 == 0):
-                
-                # do a special merge that combines unique line items names between PDF & PNG
-                df = special_merge(temp_df1, temp_df2, '0')
-                export_df = unstructured_data(df, filing_date, fiscal_year, cik, cik2brokers)
-             
-            # we have that no "total asset" figure was found
-            elif (total_flag1 == 2) and (total_flag2 == 2):
-                
-                # do a special merge that combines unique line items names between PDF & PNG
-                df = special_merge(temp_df1, temp_df2, '0')
-                export_df = unstructured_data(df, filing_date, fiscal_year, cik, cik2brokers)
-
             # stores the reported data frame 
-            liable_concat[idx] = export_df
-        
+            liable_concat[idx] = unstructured_wrapper(pdf_df, png_df, csv, cik2brokers, "Total liabilities & shareholder's equity")
+
         # in the event we can't download file from s3 (i.e. does not exist, we ignore the )
         except botocore.exceptions.ClientError:
-            
+
             # assign an empty DataFrame and print out error
             liable_concat[idx] = pd.DataFrame()
+
+            print('\t\tCLIENT-ERROR: WE COULD NOT DOWNLOAD SPLIT DATA FOR %s\n' % filename)
+
+        if (idx + 1) % 100 == 0:
+            print('\tWe have integrated %d balance sheet(s) to the unstructured database\n' % (idx+1))
             
-            print('\nCLIENT-ERROR: WE COULD NOT DOWNLOAD SPLIT DATA FOR %s\n' % fileName)
-    
     # --------------------------------------------
     # Database exportation
     # --------------------------------------------
@@ -362,98 +278,75 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     print('\n========\nStep 7: Unstructured Database has been Created\n========\n')
                
     # ==============================================================================
-    #      STEP 8 (Develop an Structured Asset and Liability & Equity Database)
+    #      STEP 8 (Develop a Structured Asset and Liability & Equity Database)
     # ==============================================================================      
     
     # retrieving the old training-test sets for classification model
     s3_pointer.download_file(s3_bucket, asset_ttset, 'temp.csv')
-    old_asset_training = pd.read_csv('temp.csv')
+    old_asset_training = pd.read_csv('temp.csv')[['Lineitems', 'Manual Classification']]
     s3_pointer.download_file(s3_bucket, liable_ttset, 'temp.csv')
-    old_liable_training = pd.read_csv('temp.csv')
+    old_liable_training = pd.read_csv('temp.csv')[['Lineitems', 'Manual Classification']]
     
+    # ------------------------------------------------------------------------
     # retrieving the unstructured asset values file from s3 bucket
-    s3_pointer.download_file(s3_bucket, out_folder + 'unstructured_assets.csv', 'unstructAsset.csv')
-    s3_pointer.download_file(s3_bucket, out_folder + 'unstructured_liable.csv', 'unstructLiable.csv')
-
-    # load in asset and liability dataframes
+    s3_pointer.download_file(s3_bucket, out_folder + 'unstructured_assets.csv', 
+                             'unstructAsset.csv')
+    s3_pointer.download_file(s3_bucket, out_folder + 'unstructured_liable.csv', 
+                             'unstructLiable.csv')
     assetDF = pd.read_csv('unstructAsset.csv')
     liableDF = pd.read_csv('unstructLiable.csv')
-
-    # remove local file after it has been created (variable is stored in memory)
     os.remove('unstructAsset.csv')
     os.remove('unstructLiable.csv')      
     
-    # retrieving the asset and liability classification modesl from s3 bucket
+    # ------------------------------------------------------------------------
+    # retrieving the asset and liability classification models from s3 bucket
     s3_pointer.download_file(s3_bucket, asset_model, 'asset_mdl.joblib')
     s3_pointer.download_file(s3_bucket, liability_model, 'liable_mdl.joblib')
-    
-    # load in asset and liability models to be used for prediction
     assetMDL = load('asset_mdl.joblib')
     liableMDL = load('liable_mdl.joblib')
-
-    # remove local file after it has been created (variable is stored in memory)
     os.remove('asset_mdl.joblib')
     os.remove('liable_mdl.joblib')      
-          
-    # text vectorizer to format line items to be accepted in the classification model 
-    str_mdl = HashingVectorizer(strip_accents='unicode', lowercase=True, analyzer='word', n_features=1000, norm='l2')
     
-    # the non-prediction columns are stationary (we don't predict anything)
-    non_prediction_columns = ['CIK', 'Name', 'Filing Date', 'Filing Year']
-    a_columns = assetDF.columns[~np.isin(assetDF.columns, non_prediction_columns)]
-    l_columns = liableDF.columns[~np.isin(liableDF.columns, non_prediction_columns)]
+    # ------------------------------------------------------------------------
+    # text vectorizer to format line items to be accepted in the model 
+    str_mdl = HashingVectorizer(strip_accents='unicode', lowercase=True, analyzer='word', 
+                                n_features=1000, norm='l2')
     
-    # Use classification model to predict label names for each line item
-    asset_label_predictions = assetMDL.predict(str_mdl.fit_transform(a_columns))
-    liable_label_predictions = liableMDL.predict(str_mdl.fit_transform(l_columns))
-    
-    # structured database for asset and liability terms 
-    struct_asset_map = pd.DataFrame([a_columns, asset_label_predictions], 
-                                    index=['Lineitems', 'Labels']).T
-
-    struct_liable_map = pd.DataFrame([l_columns, liable_label_predictions], 
-                                     index=['Lineitems', 'Labels']).T
-    
-    # assigning variables in accordance with manual classification sets
-    struct_asset_map = manual_cl_merge(struct_asset_map, old_asset_training)
-    struct_liable_map = manual_cl_merge(struct_liable_map, old_liable_training)
-    
-    # construct the line-item prediction classes with corresponding probabilites 
-    a_proba_df = prediction_probabilites(a_columns, assetMDL, str_mdl)
-    l_proba_df = prediction_probabilites(l_columns, liableMDL, str_mdl)
+    # construct the asset/liability mapping alongside prediction probabilites (unpack tuple for data figures)
+    data_response = structured_wrapper(assetDF, liableDF, old_asset_training, old_liable_training, 
+                                       str_mdl, assetMDL, liableMDL)
+    struct_asset_map, struct_liable_map, a_proba_df, l_proba_df, struct_asset_df, struct_liable_df = data_response
     
     # ------------------------------------------------------------------------------
     # Auxillary Database Files 
     # ------------------------------------------------------------------------------
     
     # concat the old and new asset training sets, where new predictions are greater than or equal to 85%    
-    old_training = old_asset_training[old_asset_training.columns[:2]]
     add_training = a_proba_df[a_proba_df['Max Prediction score'] >= 0.85][['Lineitems', 'Manual Classification']]
-    joint_training = pd.concat([old_training, add_training]).drop_duplicates(subset=['Lineitems'], keep='first')
+    joint_training = pd.concat([old_asset_training, 
+                                add_training]).drop_duplicates(subset=['Lineitems'], 
+                                                               keep='first')
     
     joint_training.to_csv('temp.csv', index=False)
-    with open('temp.csv', 'rb') as data:
-        s3_pointer.put_object(Bucket=s3_bucket, Key=asset_ttset, Body=data)
+    with open('temp.csv', 'rb') as data: s3_pointer.put_object(Bucket=s3_bucket, Key=asset_ttset, Body=data)
     
     # concat the old and new liability training sets, where new predictions are greater than or equal to 85%    
-    old_training = old_liable_training[old_liable_training.columns[:2]]
     add_training = l_proba_df[l_proba_df['Max Prediction score'] >= 0.85][['Lineitems', 'Manual Classification']]
-    joint_training = pd.concat([old_training, add_training]).drop_duplicates(subset=['Lineitems'], keep='first')
+    joint_training = pd.concat([old_liable_training, 
+                                add_training]).drop_duplicates(subset=['Lineitems'], 
+                                                               keep='first')
     
     joint_training.to_csv('temp.csv', index=False)
-    with open('temp.csv', 'rb') as data:
-        s3_pointer.put_object(Bucket=s3_bucket, Key=liable_ttset, Body=data)
+    with open('temp.csv', 'rb') as data: s3_pointer.put_object(Bucket=s3_bucket, Key=liable_ttset, Body=data)
     
     os.remove('temp.csv')
-    
-    # ------------------------------------------------------------------------------
     
     filename = 'asset_name_map.csv'
     struct_asset_map.to_csv(filename, index=False)
     with open(filename, 'rb') as data:
         s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'asset_name_map.csv', Body=data)
     os.remove(filename)
-          
+    
     filename = 'liability_name_map.csv'
     struct_liable_map.to_csv(filename, index=False)
     with open(filename, 'rb') as data:
@@ -461,26 +354,8 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     os.remove(filename)
           
     # ------------------------------------------------------------------------------
-    # Database construction 
+    # Database Exportation 
     # ------------------------------------------------------------------------------
-    
-    # structured database for asset terms 
-    struct_asset_df = structured_data(unstructured_df=assetDF, 
-                                      cluster_df=struct_asset_map, 
-                                      col_preserve=non_prediction_columns)
-    
-    # we drop ammended releases, preserving unique CIKs with Filing Year (default to first instance)
-    struct_asset_df = struct_asset_df.drop_duplicates(subset=['CIK', 'Filing Year'], keep='first')
-    
-    # extract all line items to reconstruct the appropriate total categories and compute relative differences
-    asset_lines = struct_asset_df.columns[~np.isin(struct_asset_df.columns,
-                                                   ['CIK', 'Name', 'Filing Date', 'Filing Year',  'Total assets'])]
-    struct_asset_df['Reconstructed Total assets'] = struct_asset_df[asset_lines].sum(axis=1)
-    
-    # construct absolute relative error, differencing returned Total assets from our reconstructed values
-    struct_asset_df['Relative Error'] = abs(struct_asset_df['Reconstructed Total assets'] - struct_asset_df['Total assets']) / struct_asset_df['Total assets']
-
-    struct_asset_df['Total asset check'] = struct_asset_df['Relative Error'].apply(relative_indicator)
     
     filename = 'structured_asset.csv'
     struct_asset_df.to_csv(filename, index=False)
@@ -488,37 +363,6 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'structured_asset.csv', Body=data)
     os.remove(filename)
           
-    # ------------------------------------------------------------------------------
-          
-    # structured database for liability terms 
-    struct_liable_df = structured_data(unstructured_df=liableDF, 
-                                       cluster_df=struct_liable_map, 
-                                       col_preserve=non_prediction_columns)
-    struct_liable_df = struct_liable_df.drop_duplicates(subset=['CIK', 'Filing Year'], keep='first')
-    
-    # extract all line items to reconstruct the appropriate total categories and compute relative differences
-    liable_lines = struct_liable_df.columns[~np.isin(struct_liable_df.columns, 
-                                            ['CIK', 'Name', 'Filing Date', 'Filing Year',  
-                                             "Total liabilities and shareholder's equity"])]
-    
-    # we remove all other premature totals from the reconsturctured
-    struct_liable_df["Reconstructed Total liabilities and shareholder's equity"] = struct_liable_df[liable_lines].sum(axis=1) 
-    struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total liabilites)"] = struct_liable_df[liable_lines].sum(axis=1) - struct_liable_df['Total liabilities'].fillna(0)
-    struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total equity)"] = struct_liable_df[liable_lines].sum(axis=1) - struct_liable_df["Total shareholder's equity"].fillna(0)
-    struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total L+E)"] = struct_liable_df[liable_lines].sum(axis=1) - struct_liable_df['Total liabilities'].fillna(0) - struct_liable_df["Total shareholder's equity"].fillna(0)
-    
-    # constructing measures of relative erorrs against each different reconstruction frameworks
-    struct_liable_df['Relative Error1'] = abs(struct_liable_df["Reconstructed Total liabilities and shareholder's equity"] - struct_liable_df["Total liabilities and shareholder's equity"]) / struct_liable_df["Total liabilities and shareholder's equity"]
-          
-    struct_liable_df['Relative Error2'] = abs(struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total liabilites)"] - struct_liable_df["Total liabilities and shareholder's equity"]) / struct_liable_df["Total liabilities and shareholder's equity"]
-          
-    struct_liable_df['Relative Error3'] = abs(struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total equity)"] - struct_liable_df["Total liabilities and shareholder's equity"]) / struct_liable_df["Total liabilities and shareholder's equity"]
-          
-    struct_liable_df['Relative Error4'] = abs(struct_liable_df["Reconstructed Total liabilities and shareholder's equity (less total L+E)"] - struct_liable_df["Total liabilities and shareholder's equity"]) / struct_liable_df["Total liabilities and shareholder's equity"]
-
-    struct_liable_df["Total liabilities & shareholder's equity check"] = struct_liable_df[['Relative Error1', 'Relative Error2', 'Relative Error3', 'Relative Error4']].apply(relative_indicator, axis=1)
-    struct_liable_df["Relative Error"] = struct_liable_df[['Relative Error1', 'Relative Error2', 'Relative Error3', 'Relative Error4']].apply(relative_finder, axis=1)
-    
     filename = 'structured_liability.csv'
     struct_liable_df[struct_liable_df.columns[~np.isin(struct_liable_df.columns, 
                                                        ['Relative Error1', 'Relative Error2', 
