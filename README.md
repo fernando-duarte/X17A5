@@ -80,7 +80,7 @@ The code files are divided into three sub-groups that are responsible for execut
 
    * `run_ocr.py` runs all execution for Part 2 (see below 3.3b), responsible for extracting balance-sheet figures by OCR via AWS Textract
    
-   * `run_ocr.py` runs all execution for Part 3 (see below 3.3b), responsible for developing structured and unstructured database
+   * `run_build_database.py` runs all execution for Part 3 (see below 3.3b), responsible for developing structured and unstructured database
 
 #### 3.3b 	
 
@@ -95,7 +95,7 @@ The code files are divided into three sub-groups that are responsible for execut
    * `OCRTextract.py` calls the AWS asynchronous Textract API to perform OCR on the reduced X-17A-5 filings, selecting only the balance sheet and uploading it to a s3 bucket
    * `OCRClean.py` refines the scraped balance sheet data from Textract, handling case exemptions such as merged rows, multiple columns and numeric string conversions 
 
-##### Par 3: Database construction
+##### Part 3: Database construction
 
    * `DatabaseSplits.py` divides the balance sheet into asset terms and liability & equity terms for pdf(s) and png(s)
    * `DatabaseUnstructured.py` constructs a semi-finished database that captures all unique line items by column for the entirety of each bank and year
