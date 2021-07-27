@@ -58,6 +58,8 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     #       STEP 6 (Segregate Asset and Liability & Equity from FOCUS Reports)
     # ==============================================================================
     
+    print('\n========\nStep 6: Determing Assets and Liabilities & Equity Splits\n========\n')
+    
     # directory where we store the broker-dealer information for cleaned filings on s3
     pdf_clean_files = filter(lambda x: brokerFilter(broker_dealers, x), pdf_paths) 
     png_clean_files = filter(lambda x: brokerFilter(broker_dealers, x), png_paths) 
@@ -66,16 +68,17 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     # PDF PROCESSING (LINE-ITEM SPLIT)
     # --------------------------------------------
     
+    print('\nBalance Sheets derived from PDFS')
     for file in pdf_clean_files:
         
-        print('\n %s' % file)
+        print('\n\t%s' % file)
         fileName = file.split('/')[-1]                                             # file-name for a given path
         asset_name = out_folder_split_pdf + 'Assets/' + fileName                   # export path to assets
         liability_name = out_folder_split_pdf + 'Liability & Equity/' + fileName   # export path to liability and equity
         
         # check to see presence of split files 
         if (asset_name in pdf_asset_split) and (liability_name in pdf_liability_split) and (rerun_job == False):
-            print("We've already downloaded %s" % fileName)
+            print("\n\t\tWe've already performed split operation for %s" % fileName)
         
         else: 
             s3_pointer.download_file(s3_bucket, file, 'temp.csv')
@@ -110,24 +113,25 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
                     # remove local file after it has been created
                     os.remove(fileName)
                 
-                else: print('Issue with splitting balance-sheet table into asset and liability')
+                else: print('\n\t\tIssue with splitting balance-sheet table into asset and liability')
 
-            else: print('%s incomplete dataframe' % file)
+            else: print('\n\t\t%s incomplete dataframe' % file)
     
     # --------------------------------------------
     # PNG PROCESSING (LINE-ITEM SPLIT)
     # --------------------------------------------
     
+    print('\nBalance Sheets derived from PNGS')
     for file in png_clean_files:
         
-        print('\n %s' % file)
+        print('\n\t%s' % file)
         fileName = file.split('/')[-1]                                             # file-name for a given path
         asset_name = out_folder_split_png + 'Assets/' + fileName                   # export path to assets
         liability_name = out_folder_split_png + 'Liability & Equity/' + fileName   # export path to liability and equity
         
         # check to see presence of split files 
         if (asset_name in png_asset_split) and (liability_name in png_liability_split) and (rerun_job == False):              
-            print("We've already downloaded %s" % fileName)
+            print("\n\t\tWe've already performed split operation for %s" % fileName)
         
         else: 
             s3_pointer.download_file(s3_bucket, file, 'temp.csv')
@@ -162,16 +166,16 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
                     # remove local file after it has been created
                     os.remove(fileName)
                 
-                else: print('Issue with splitting balance-sheet table into asset and liability')
+                else: print('\n\t\tIssue with splitting balance-sheet table into asset and liability')
 
-            else: print('%s incomplete dataframe' % file)
-    
-    print('\n========\nStep 6: Determined Assets and Liabilities & Equity Sets\n========\n')
+            else: print('\n\t\t%s incomplete dataframe' % file)
     
     # ==============================================================================
     #     STEP 7 (Develop an Unstructured Asset and Liability & Equity Database)
     # ==============================================================================
-          
+    
+    print('\n========\nStep 7: Creating Unstructured Database\n========\n')
+    
     # retrieving CIK-Dealers JSON file from s3 bucket
     s3_pointer.download_file(s3_bucket, temp_folder + 'CIKandDealers.json', 'temp.json')
     with open('temp.json', 'r') as f: cik2brokers = json.loads(f.read())
@@ -212,10 +216,10 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
             # assign an empty DataFrame and print out error
             asset_concat[idx] = pd.DataFrame()
 
-            print('\t\tCLIENT-ERROR: WE COULD NOT DOWNLOAD SPLIT DATA FOR %s\n' % filename)
+            print('\tTextract Issue for %s\n\t\tRefer to OCR confluence page https://fernandoduarte.atlassian.net/wiki/spaces/NN/pages/1145929733/OCR\n' % filename)
 
         if (idx + 1) % 100 == 0:
-            print('\tWe have integrated %d balance sheet(s) to the unstructured database' % (idx+1))
+            print('\tWe have integrated %d balance sheet(s) to the unstructured database\n' % (idx+1))
     
     # --------------------------------------------
     # Liability & Equity Unstructured Database
@@ -243,8 +247,8 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
 
             # assign an empty DataFrame and print out error
             liable_concat[idx] = pd.DataFrame()
-
-            print('\t\tCLIENT-ERROR: WE COULD NOT DOWNLOAD SPLIT DATA FOR %s\n' % filename)
+            
+            print('\tTextract Issue for %s\n\t\tRefer to OCR confluence page https://fernandoduarte.atlassian.net/wiki/spaces/NN/pages/1145929733/OCR\n' % filename)
 
         if (idx + 1) % 100 == 0:
             print('\tWe have integrated %d balance sheet(s) to the unstructured database\n' % (idx+1))
@@ -274,12 +278,12 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     with open(filename, 'rb') as data:
         s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'unstructured_liable.csv', Body=data)
     os.remove(filename)
-          
-    print('\n========\nStep 7: Unstructured Database has been Created\n========\n')
                
     # ==============================================================================
     #      STEP 8 (Develop a Structured Asset and Liability & Equity Database)
     # ==============================================================================      
+    
+    print('\n========\nStep 8: Creating Structured Database\n========\n')
     
     # retrieving the old training-test sets for classification model
     s3_pointer.download_file(s3_bucket, asset_ttset, 'temp.csv')
@@ -370,6 +374,4 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     with open(filename, 'rb') as data:
         s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder + 'structured_liability.csv', Body=data)
     os.remove(filename)
-          
-    print('\n========\nStep 8: Structured Database has been Created\n========\n')
     

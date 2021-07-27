@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-Project is run on Python 3.7x
+Project is run on Python 3.6x
 
 PLEASE READ THE DOCUMENTATION FROM pdf2image provided at the GitHub
 link (https://github.com/Belval/pdf2image). You will need to install
@@ -37,7 +37,7 @@ subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'textract-trp'])
 subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'python-Levenshtein'])
 subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'fuzzywuzzy'])
 subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'joblib'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-U', 'scikit-learn'])
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'scikit-learn==0.24.1'])   # log-reg model stability verison
 
 
 ##################################
@@ -70,7 +70,7 @@ class Parameters:
     #                            we look back historically for broker dealers, 
     #                            default is an empty list 
     
-    # e.g. parse_years = [2019, 2020, 2021], default handled in main_p1.py
+    # e.g. parse_years = [2019, 2020, 2021], default handled in run_file_extraction.py
     parse_years = [2021]
         
         
@@ -78,8 +78,8 @@ class Parameters:
     #                          or retrieve all broker-information, default is 
     #                          an empty list
     
-    # e.g. broker_dealers_list = ['782124'], default handled in main_p1.py
-    broker_dealers_list = ['87634']
+    # e.g. broker_dealers_list = ['782124'], default handled in run_file_extraction.py
+    broker_dealers_list = ['782124']
     
     
     # FLAG for determing whether we want to re-run the entire job from
@@ -94,7 +94,7 @@ class Parameters:
 if __name__ == "__main__":
     
     start_time = time.time()    
-    print('\n\n\n')
+    print('\n\nFor details on repository refer to GitHub repo at https://github.com/raj-rao-rr/X17A5\n')
     
     # responsible for gathering FOCUS reports and building list of broker-dealers
     bk_list = main_p1(
@@ -123,5 +123,7 @@ if __name__ == "__main__":
            )   
    
     elapsed_time = time.time() - start_time
-    print('\n\nFOCUS REPORT SCRIPT COMPLETED - total time taken %.2f minutes' % (elapsed_time / 60))
+    print('\n===================================================================')
+    print('FOCUS REPORT SCRIPT COMPLETED - total time taken %.2f minutes' % (elapsed_time / 60))
+    print('===================================================================\n')
     

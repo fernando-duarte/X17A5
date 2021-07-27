@@ -32,6 +32,8 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
             out_folder_raw_pdf, out_folder_raw_png, textract_obj, out_folder_clean_pdf, 
             out_folder_clean_png, rerun_job, broker_dealers):
     
+    print('\n============\nStep 4 & 5: Peforming OCR via AWS Textract and Cleaning Operations\n============\n')
+    
     # ==============================================================================
     #               STEP 4 (Perform OCR via Textract on FOCUS Reports)
     # ==============================================================================
@@ -109,7 +111,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
         # WE LOOK TO AVOID RE-RUNNING OLD TEXTRACT PARSES TO SAVE TIME, but if 
         # rerun_job is True we re-run Textract again on 
         if (out_folder_raw_pdf + fileName in output_pdf_csvs) and (rerun_job == False):
-            print('%s has been downloaded' % fileName)
+            print('\t%s has been downloaded' % fileName)
                 
         else:
             # run Textract OCR job and extract the parsed data 
@@ -135,7 +137,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
                         s3_pointer.put_object(Bucket=bucket, Key=out_folder_raw_png + fileName, Body=data)
 
                 print('-----------------------------------------------------')
-                print('Saved %s file to s3 bucket' % fileName)
+                print('\tSaved %s file to s3 bucket' % fileName)
                 
                 # ==============================================================================
                 #               STEP 5 (Perform Cleaning Operations on Textract Table)
@@ -197,6 +199,4 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     with open('ERROR-TEXTRACT.json', 'rb') as data: 
         s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'ERROR-TEXTRACT.json')
     os.remove('ERROR-TEXTRACT.json')
-    
-    print('\n============\nStep 4 & 5: Peformed OCR via AWS Textract and Cleaned Data Tables\n============\n')
           

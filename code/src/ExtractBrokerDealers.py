@@ -109,7 +109,6 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
 
         else:
             searchURL = '%s/%s/form.idx' % (baseURL, coverage)
-            print('\nSearching for broker dealers at %s' % searchURL)
             
             # we try requesting the URL and break only if response object returns status of 200
             for _ in range(20):
@@ -118,7 +117,8 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
             
             # if reponse type is active we return object with status code 200 (else error)
             if response.status_code == 200:
-
+                print('\nSearching for broker dealers at %s' % searchURL)
+                
                 # append the coverage year for the cik in question
                 cik2brokers['years-covered'].append(coverage)
                 print('  Adding coverage for %s' % coverage)

@@ -36,6 +36,8 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
     #                 STEP 1 (Gathering updated broker-dealer list)
     # ==============================================================================
     
+    print('\n========\nStep 1: Gathering Broker-Dealer Data\n========\n')
+    
     # all s3 files corresponding within folders 
     temp_paths = s3_session.list_s3_files(s3_bucket, temp_folder)
     
@@ -68,11 +70,11 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
         s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'CIKandDealers.json')
     os.remove('CIKandDealers.json')
     
-    print('\n========\nStep 1: Gathering Broker-Dealer Data Completed\n========\n')
-    
     # ==============================================================================
     #                 STEP 2 (Gathering X-17A-5 Filings)
     # ==============================================================================
+    
+    print('\n========\nStep 2: Gathering X-17A-5 Filings\n========\n')
     
     input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
           
@@ -131,14 +133,13 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                     else: print('\tNo files found for %s on %s' % (companyName, date))
         
         # identify error in the event edgar parse (web-scrapping returns None)
-        else: print('ERROR: In downloading %s - CIK (%s)' % (companyName, cik_id))
-    
-    
-    print('\n========\nStep 2: Gathering X-17A-5 Filings Completed\n========\n')
+        else: print('WEB-SCRAPPING ERROR: Unable to download %s - CIK (%s), no filing' % (companyName, cik_id))
           
     # ==============================================================================
     #                 STEP 3 (Slice X-17A-5 Filings)
     # ==============================================================================
+    
+    print('\n========\nStep 3: Slicing X-17A-5 Filings\n========\n')
     
     pdf_paths = s3_session.list_s3_files(s3_bucket, export_pdf)
     png_paths = s3_session.list_s3_files(s3_bucket, export_png)
@@ -218,7 +219,5 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                 
             except PDFPageCountError:
                 print('\tEncountered PDFPageCounterError when trying to convert to png for -> %s' % base_file)
-     
-    print('\n========\nStep 3: Slicing X-17A-5 Filings Completed\n========\n')
     
     return broker_dealers_list      
