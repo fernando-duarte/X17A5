@@ -15,29 +15,6 @@ poppler on your machine to run this code.
 
 import sys
 import time
-import subprocess
-
-
-##################################
-# INSTALL LIBRARIES (subprocess)
-##################################
-
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 
-'--upgrade', 'pip'])
-
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'bs4'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'PyPDF2'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pdf2image'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'fitz'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pillow'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'PyMuPDF==1.16.14'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'smart_open'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'minecart'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'textract-trp'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'python-Levenshtein'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'fuzzywuzzy'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'joblib'])
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'scikit-learn==0.24.1'])   # log-reg model stability verison
 
 
 ##################################
