@@ -52,19 +52,22 @@ else           # EC2 instance terminal
     ####################################
     # INSTALL LIBRARIES (conda-install)
     ####################################
-    conda install bs4 -y
-    conda install PyPDF2 -y
-    conda install pdf2image -y
-    conda install fitz -y
-    conda install pillow -y
-    conda install PyMuPDF==1.16.14 -y
-    conda install smart_open -y
-    conda install minecart -y
-    conda install textract-trp -y
+    pip install --upgrade pip
+    pip install bs4
+    pip install boto3
+    pip install sagemaker
+    pip install PyPDF2
+    pip install pdf2image
+    pip install fitz
+    pip install pillow -y
+    pip install PyMuPDF==1.16.14
+    pip install smart_open
+    pip install minecart
+    pip install textract-trp
     conda install python-Levenshtein -y
-    conda install fuzzywuzzy -y
-    conda install joblib -y
-    conda install scikit-learn==0.24.1 -y    # log-reg model stability verison
+    pip install fuzzywuzzy
+    pip install joblib
+    pip install scikit-learn==0.24.1       # log-reg model stability verison
     
     # run the main-script for the X-17A-5 project (run_main_focus.py)
     python3 run_main.py
