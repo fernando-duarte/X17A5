@@ -121,7 +121,7 @@ if __name__ == "__main__":
         GlobVars.liable_ml_model, GlobVars.asset_ml_ttset, GlobVars.liable_ml_ttset,
         Parameters.job_rerun, bk_list
            )   
-   
+    
     elapsed_time = time.time() - start_time
     print('\n===================================================================')
     print('FOCUS REPORT SCRIPT COMPLETED - total time taken %.2f minutes' % (elapsed_time / 60))
