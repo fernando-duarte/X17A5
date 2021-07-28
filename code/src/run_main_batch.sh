@@ -39,7 +39,11 @@ else           # EC2 instance terminal
     # install conda for local use on the EC2 
     sudo yum install python3 -y
     sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
-    sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh --skip-keypress
+    
+    sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh 
+    \r (carriage return)  # press enter to move forward and accept value
+    yes                   # accept license for Anaconda3 distribution   
+    
     sh Anaconda3-2020.02-Linux-x86_64.sh -y
 
     # create a new anaconda environment and update envrionment
