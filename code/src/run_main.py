@@ -10,16 +10,11 @@ poppler on your machine to run this code.
 """
 
 ##################################
-# LIBRARY/PACKAGE IMPORTS (pip)
+# LIBRARY/PACKAGE IMPORTS
 ##################################
 
 import sys
 import time
-
-
-##################################
-# LIBRARY/PACKAGE IMPORTS (code)
-##################################
 
 from GLOBAL import GlobVars
 from run_file_extraction import main_p1
