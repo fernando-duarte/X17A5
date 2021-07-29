@@ -43,10 +43,20 @@ else
     
     echo -e '\nRunning shell-script on EC2 Terminal\n\n'
     
-    # install conda for local use on the EC2 
-    sudo yum install python3 -y
-    sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
-    sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh   
+    # check to see if the Anaconda distribution being requested is in directory
+    if [ ! -f "Anaconda3-2020.02-Linux-x86_64.sh" ]
+    then
+        echo -e "\nAnaconda3-2020.02-Linux-x86_64.sh not found in directory, downloading...\n" 
+        
+        # install conda for local use on the EC2 
+        sudo yum install python3 -y
+        sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
+        sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh   
+    else
+        echo -e "\nAnaconda3-2020.02-Linux-x86_64.sh was found\n"
+    fi
+    
+    # execute Anaconda batch distribution 
     sh Anaconda3-2020.02-Linux-x86_64.sh -y
     
     # create a new anaconda environment and update envrionment
