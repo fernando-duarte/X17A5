@@ -1,15 +1,20 @@
 #!/bin/bash
 
-# Batch file for running script on local SageMaker instance (0)
-# versus on remote EC2 instance (other than 0)
+# Batch file for running entire run_main.py script on both the
+# EC2 and SageMaker
 
-if [ $1 == 0 ]  # SageMaker instance terminal
+# user specified string for local storage of repo on SageMaker
+sagemaker_path="/home/ec2-user/SageMaker/SEC_X17A5/code/src"
+
+if [ $PWD == $sagemaker_path ]       
 
 then
-
+    
+    echo -e '\nRunning shell-script on SageMaker Terminal\n\n'
+    
     # update the conda environment 
     conda update -n base -c defaults conda -y 
-
+    
     # downloading poppler backend to support pdf2image package
     conda install -c conda-forge poppler -y
     
@@ -33,19 +38,21 @@ then
     
     # run the main-script for the X-17A-5 project (run_main_focus.py)
     ipython run_main.py
-
-else           # EC2 instance terminal
+    
+else
+    
+    echo -e '\nRunning shell-script on EC2 Terminal\n\n'
     
     # install conda for local use on the EC2 
     sudo yum install python3 -y
     sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
     sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh   
     sh Anaconda3-2020.02-Linux-x86_64.sh -y
-
+    
     # create a new anaconda environment and update envrionment
     export PATH=~/anaconda3/bin:$PATH
     conda update -n base -c defaults conda -y 
-
+    
     # downloading poppler backend to support pdf2image package
     conda install -c conda-forge poppler -y
     
