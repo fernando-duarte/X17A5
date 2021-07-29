@@ -46,21 +46,27 @@ else
     # check to see if the Anaconda distribution being requested is in directory
     if [ ! -f "Anaconda3-2020.02-Linux-x86_64.sh" ]
     then
-        echo -e "\nAnaconda3-2020.02-Linux-x86_64.sh not found in directory, downloading...\n" 
+        echo -e "Anaconda3-2020.02-Linux-x86_64.sh not found in directory, downloading...\n" 
         
         # install conda for local use on the EC2 
         sudo yum install python3 -y
         sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
         sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh   
     else
-        echo -e "\nAnaconda3-2020.02-Linux-x86_64.sh was found\n"
+        echo -e "Anaconda3-2020.02-Linux-x86_64.sh was found\n"
     fi
     
-    # execute Anaconda batch distribution 
-    sh Anaconda3-2020.02-Linux-x86_64.sh -y
+    # check to see if the Anaconda distribution being requested is in directory
+    if [ ! -f "/home/ec2-user/anaconda3" ]
+    then
+        # execute Anaconda batch distribution 
+        sh Anaconda3-2020.02-Linux-x86_64.sh -y
+        export PATH=~/anaconda3/bin:$PATH
+    else
+        echo -e "File or directory already exists: /home/ec2-user/anaconda3\n"
+    fi
     
-    # create a new anaconda environment and update envrionment
-    export PATH=~/anaconda3/bin:$PATH
+    # update the conda update envrionment
     conda update -n base -c defaults conda -y 
     
     # downloading poppler backend to support pdf2image package
