@@ -111,15 +111,29 @@ The code files are divided into three sub-groups that are responsible for execut
 
 ## 4	Running Code
 
-Our code file runs linearly in a SageMaker instance via batch. 
+Our code file runs linearly in a SageMaker or EC2 instance via batch on AWS. We allow for the user to provide specifications prior to runnign the code base, but enable defaults in the event the user is not pariticular. We assume that you are able to `clone` this repository to a local instance on AWS, either the EC2 or SageMaker, and will not discuss operations centered around this action. 
 
-1. TBD
+1. Open the run_main_batch.sh and modify the static variable `sagemaker_path` to the current working directory of your SageMaker instance (if using SageMaker). This should generally follow the form `/home/ec2-user/SageMaker/<LOCAL GIT-REPO NAME>/code/src"`, where the local git-repo name matches the naming convention on the machine. 
+
+   **To check your current working directory open a terminal and type `$ pwd`.** 
+
+2. Open the GLOBAL.py file, this stores all global variables under the `GlobVars` class. We will selectively modify these to match the corresponding folders on our s3 where we would like for our data files to be stored. 
+
+3. Open the run_main.py file, this executes all steps (parts) of our code base and accepts parameters under the `Parameters` class.
+   
+   1.    Modify the static variable `bucket` to the designated s3 bucket you intend to store data materials
+   2.    Modify the `parse_years` list with the numerical years look back historically for broker dealers (refer to inline doc)
+   3.    Modify the `broker_dealers_list` list with broker-dealer CIKs you'd like to operate on (refer to inline doc)
+   4.    Modify the `job_rerun` with a boolean flag to indicate a preference to ignore file depedencies (refer to inline doc) 
+
+4. On your terminal, whether on the EC2 or SageMaker, run the shell-script by evoking the `sh`.
+```
+$  sh run_main_batch.sh
+```
 
 ## 5	Possible Extensions
-* Streamline the runtime of each file via batch job on AWS
-* Apply parrell computing capabilites to Textract for running multiple jobs
 * Extend and modify idiosyncratic changes as deemed appropriate for when Textract fails
 
 ## 6	Contributors
-* [Rajesh Rao](https://github.com/Raj9898) (Sr. Research Analyst 22’)
+* [Rajesh Rao](https://github.com/Raj9898) (Sr. Research Analyst)
 * [Fernando Duarte](https://github.com/fernando-duarte) (Sr. Economist)
