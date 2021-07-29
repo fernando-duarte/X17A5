@@ -56,8 +56,8 @@ else
         echo -e "Anaconda3-2020.02-Linux-x86_64.sh was found\n"
     fi
     
-    # check to see if the Anaconda distribution being requested is in directory
-    if [ ! -f "/home/ec2-user/anaconda3" ]
+    # check to see if the Anaconda directory exists
+    if [ ! -d "/home/ec2-user/anaconda3" ]
     then
         # execute Anaconda batch distribution 
         sh Anaconda3-2020.02-Linux-x86_64.sh -y
