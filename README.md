@@ -40,12 +40,6 @@ pip install python-Levenshtein
 pip install fuzzywuzzy
 ```
 
-All Python installations are handled via a python `subprocess` from our `run_main.py` script, which executes each installation via the following:
-
-```
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'bs4'])
-```
-
 ## 3	File Structure
 
 ### 3.1 	Resource Files
