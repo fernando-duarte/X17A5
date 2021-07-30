@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Batch file for running entire run_main.py script on both the
-# EC2 and SageMaker
+# EC2 and SageMaker instances, adjusting based on system
 
 # user specified string for local storage of repo on SageMaker
 sagemaker_path="/home/ec2-user/SageMaker/SEC_X17A5/code/src"
