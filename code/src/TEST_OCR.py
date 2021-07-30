@@ -27,13 +27,15 @@ from OCRTextract import runJob, readTable, readForm, readText
 
 def practice_main(s3_bucket:str, single_file:str):
     
+    print('\nCurrently working on Textract extraction for %s\n================================\n' % single_file)
     
     # temporary data frame object for balance sheet information
     res = runJob(s3_bucket, single_file)
     
     # if Textract job did not fail we continue extraction
     if res[0]['JobStatus'] != 'FAILED':
-
+        
+        print('Calling Textract JOB from EC2')
         # perform OCR and return balance sheet with corresponding page object(s)
         tb_response = readTable(res)           
         
