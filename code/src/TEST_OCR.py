@@ -18,7 +18,7 @@ import os
 import json
 import numpy as np
 
-from OCRTextract import readTable, readForm, readText  
+from OCRTextract import runJob, readTable, readForm, readText  
 
 
 ##################################
