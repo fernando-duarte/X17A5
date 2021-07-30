@@ -10,7 +10,8 @@ if [ $PWD == $sagemaker_path ]
 
 then
     
-    echo -e '\nRunning shell-script on SageMaker Terminal\n\n'
+    echo -e '\nRunning shell-script on SageMaker Terminal'
+    echo -e '-------------------------------------------------\n\n'
     
     # update the conda environment 
     conda update -n base -c defaults conda -y 
@@ -42,18 +43,19 @@ then
 else
     
     echo -e '\nRunning shell-script on EC2 Terminal\n\n'
+    echo -e '-------------------------------------------------\n\n'
     
     # check to see if the Anaconda distribution being requested is in directory
     if [ ! -f "Anaconda3-2020.02-Linux-x86_64.sh" ]
     then
-        echo -e "Anaconda3-2020.02-Linux-x86_64.sh not found in directory, downloading...\n" 
+        echo -e "\tAnaconda3-2020.02-Linux-x86_64.sh not found in directory, downloading...\n" 
         
         # install conda for local use on the EC2 
         sudo yum install python3 -y
         sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
         sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh   
     else
-        echo -e "Anaconda3-2020.02-Linux-x86_64.sh was found\n"
+        echo -e "\tAnaconda3-2020.02-Linux-x86_64.sh was found\n"
     fi
     
     # check to see if the Anaconda directory exists
@@ -63,8 +65,10 @@ else
         sh Anaconda3-2020.02-Linux-x86_64.sh -y
         export PATH=~/anaconda3/bin:$PATH
     else
-        echo -e "File or directory already exists: /home/ec2-user/anaconda3\n"
+        echo -e "\tAnaconda directory already exists: /home/ec2-user/anaconda3\n"
     fi
+    
+    echo -e '-------------------------------------------------\n'
     
     # update the conda update envrionment
     conda update -n base -c defaults conda -y 
