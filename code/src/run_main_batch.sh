@@ -68,7 +68,7 @@ else
         echo -e "\tAnaconda directory already exists: /home/ec2-user/anaconda3\n"
     fi
     
-    echo -e '-------------------------------------------------\n'
+    echo -e '-------------------------------------------------\n\n'
     
     # update the conda update envrionment
     conda update -n base -c defaults conda -y 
