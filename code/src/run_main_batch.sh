@@ -42,7 +42,7 @@ then
     
 else
     
-    echo -e '\nRunning shell-script on EC2 Terminal\n\n'
+    echo -e '\nRunning shell-script on EC2 Terminal'
     echo -e '-------------------------------------------------\n\n'
     
     # check to see if the Anaconda distribution being requested is in directory
