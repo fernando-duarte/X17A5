@@ -134,7 +134,7 @@ def totals_check(df:pd.DataFrame) -> tuple:
         # check the value of line items at a given index (forward index)
         item1 = df.loc[i].values[1]
         name = df.loc[i].values[0]
-      
+        
         # ------------------------------------------------------------------
         # Perform regex search to determine "special" total rows
         # ------------------------------------------------------------------

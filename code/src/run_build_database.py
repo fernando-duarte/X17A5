@@ -78,7 +78,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         
         # check to see presence of split files 
         if (asset_name in pdf_asset_split) and (liability_name in pdf_liability_split) and (rerun_job == False):
-            print("\n\t\tWe've already performed split operation for %s" % fileName)
+            print("\t\tWe've already performed split operation for %s" % fileName)
         
         else: 
             s3_pointer.download_file(s3_bucket, file, 'temp.csv')
@@ -97,6 +97,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
 
                 # if response not None we decompose each
                 if response is not None:
+                    print('\t\tPerformed split operation for %s' % fileName)
                     
                     # unpack the response object to component parts
                     df_asset, df_liability = response
@@ -131,7 +132,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         
         # check to see presence of split files 
         if (asset_name in png_asset_split) and (liability_name in png_liability_split) and (rerun_job == False):              
-            print("\n\t\tWe've already performed split operation for %s" % fileName)
+            print("\t\tWe've already performed split operation for %s" % fileName)
         
         else: 
             s3_pointer.download_file(s3_bucket, file, 'temp.csv')
@@ -150,6 +151,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
 
                 # if response not None we decompose each
                 if response is not None:
+                    print('\t\tPerformed split operation for %s' % fileName)
                     
                     # unpack the response object to component parts
                     df_asset, df_liability = response

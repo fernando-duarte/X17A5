@@ -118,6 +118,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                     
                     # make sure we don't return empty lists
                     if len(pdf_files) > 0:
+                        print('\tExtracting FOCUS filing for %s' % date)
                         concatPdf = mergePdfs(pdf_files)
 
                         # open file and save to local instance
@@ -141,12 +142,15 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
     
     print('\n========\nStep 3: Slicing X-17A-5 Filings\n========\n')
     
+    # re-run input paths post file extraction to update directory
+    input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
+    
     pdf_paths = s3_session.list_s3_files(s3_bucket, export_pdf)
     png_paths = s3_session.list_s3_files(s3_bucket, export_png)
     
     # filter FOCUS reports from the s3 that correspond to list of broker-dealers 
     raw_broker_dealer_pdfs = filter(lambda x: brokerFilter(broker_dealers_list, x), input_paths)
-        
+     
     for path_name in raw_broker_dealer_pdfs:
         print('Slicing FOCUS report filing for %s' % path_name)
         
@@ -164,11 +168,11 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
 
         else: 
             # retrieving downloaded files from s3 bucket
-            s3_pointer.download_file(bucket, path_name, 'temp.pdf')
+            s3_pointer.download_file(s3_bucket, path_name, 'temp.pdf')
             
             # run the subset function to save a local subset file (void-function)
             export_name = base_file + '-subset.pdf'
-            extractSubset(np.arange(20), export_name)        # first twenty pages
+            extractSubset(range(20), export_name)        # first twenty pages
             
              # save contents to AWS S3 bucket as specified
             with open(export_name, 'rb') as data:
@@ -188,7 +192,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
             
         else: 
             # retrieving downloaded files from s3 bucket
-            s3_pointer.download_file(bucket, path_name, 'temp.pdf')
+            s3_pointer.download_file(s3_bucket, path_name, 'temp.pdf')
             
             try:
                 # document class for temporary pdf (correspond to X-17A-5 pages)  
@@ -208,7 +212,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                     
                     # save contents to AWS S3 bucket as specified
                     with open(export_file_name, 'rb') as data:
-                        s3_pointer.upload_fileobj(data, bucket, export_png + base_file + '/' + export_file_name)
+                        s3_pointer.upload_fileobj(data, s3_bucket, export_png + base_file + '/' + export_file_name)
                     
                     os.remove(export_file_name)
                     

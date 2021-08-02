@@ -102,6 +102,7 @@ def column_purge(df:pd.DataFrame) -> pd.DataFrame:
     # begin by filtering out the NaN rows present in the first column
     first_col = df.columns[0]
     new_df = df[np.isin(df[first_col], df[first_col].dropna())]    # select subset of rows 
+    new_df = df[~np.isin(df[first_col], '')]                       # remove blank rows
     
     # we reset the index of our new_df to recoup a consecutive index count
     new_df = new_df.reset_index()
@@ -314,10 +315,15 @@ def row_split(df:pd.DataFrame, text_file:dict) -> pd.DataFrame:
     selections = df[df[df.columns[1]].apply(lambda x: find_row_splits(x))]
     idxs = selections.index
     
+    # a row split exits in the dataframe
+    if len(idxs) > 0:
+        flag = 1
+    else: flag = 0
+    
     # iterate through each row that is determined to be conjoined
     for i in idxs:
         
-        # find the index location od merged row
+        # find the index location of merged row
         row_idx = np.argmax(df.index == i)
         
         # slice dataframe according to the idx selection (we search for all periods were a break occurs)
@@ -349,10 +355,10 @@ def row_split(df:pd.DataFrame, text_file:dict) -> pd.DataFrame:
             df = pd.concat([top, mid, bottom])
             
         else:
-            # no need for mid, since we have removed it from existence
+            # no need for mid, since we remove it (returned None)
             df = pd.concat([top, bottom])
         
-    return df
+    return df, flag
 
 
 """
@@ -705,18 +711,17 @@ def clean_wrapper(df: pd.DataFrame, textract_text: dict, key: str, file: str,
     # NOTE: By construction we never have more than 3 columns present, thanks to our Textract check 
     if df.columns.size > 2:
         df = merge(df)
-        print('\tWe merged the columns of %s' % file)
+        print('\t\tWe merged the columns of %s' % file)
 
     # --------------------------------------------------------------------------------------------------
     # ROW SPLIT FOR MERGED ROWS (IF NECESSARY)
     # --------------------------------------------------------------------------------------------------
 
     # check for presence of row splits and correct any if found 
-    tempDF = row_split(df, textract_text[key])
+    tempDF, ind = row_split(df, textract_text[key])
 
     # if difference is found in shape, then a transformation was done 
-    if tempDF.shape != df.shape:
-        print("\tFixed the merged rows for %s" % file)
+    if ind == 1: print("\t\tFixed the merged rows for %s" % file)
 
     # --------------------------------------------------------------------------------------------------
     # NUMERIC CONVERSION
@@ -731,8 +736,8 @@ def clean_wrapper(df: pd.DataFrame, textract_text: dict, key: str, file: str,
     # check for potential scaler multipler on cash flows (adjust multiplier if possible)
     scale = numeric_scaler(textract_text, key, old_cik, old_scaler)
     postDF[postDF.columns[1]] = postDF[postDF.columns[1]].apply(lambda x: x * scale)
-
-    print('\tWe converted to numeric figures for %s' % file)
+    
+    print('\t\tWe converted to numeric figures for %s' % file)
     
     # --------------------------------------------------------------------------------------------------
     # Idiosyncratic changes (specific balance sheet)
@@ -744,6 +749,5 @@ def clean_wrapper(df: pd.DataFrame, textract_text: dict, key: str, file: str,
     # --------------------------------------------------------------------------------------------------
     # BALANCE SHEET EXPORTATION
     # --------------------------------------------------------------------------------------------------
-    print(out_df)
     
     return out_df, scale, key.split('-')[0]

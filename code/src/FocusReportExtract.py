@@ -125,10 +125,10 @@ def fileExtract(archive:str) -> list:
     for _ in range(20):
         pdf_storage = requests.get(archive, allow_redirects=True)
         if pdf_storage.status_code == 200: break
-    
+        
     # last check to see if response object is "problamatic" e.g. 403
     if pdf_storage.status_code != 200: 
-        return None
+        return []
 
     # table from filing detail Edgar table 
     soup = BeautifulSoup(pdf_storage.text, 'html.parser') 
