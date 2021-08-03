@@ -236,7 +236,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
             if not pdf_df.empty:
                 temp_df, total_flag, total_amt = totals_check(pdf_df)
                 
-                export_df["Total asset"] = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
+                export_df = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
                 export_df["Total asset"] = total_amt
                 
                 asset_concat[idx] = export_df
@@ -244,7 +244,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
             else:
                 temp_df, total_flag, total_amt = totals_check(png_df)
                 
-                export_df["Total asset"] = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
+                export_df = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
                 export_df["Total asset"] = total_amt
                 
                 asset_concat[idx] = export_df  
@@ -297,7 +297,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
             if not pdf_df.empty:
                 temp_df, total_flag, total_amt = totals_check(pdf_df)
                 
-                export_df["Total liabilities & shareholder's equity"] = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
+                export_df = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
                 export_df["Total liabilities & shareholder's equity"] = total_amt
                 
                 liable_concat[idx] = export_df
@@ -305,7 +305,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
             else:
                 temp_df, total_flag, total_amt = totals_check(png_df)
                 
-                export_df["Total liabilities & shareholder's equity"] = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
+                export_df = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
                 export_df["Total liabilities & shareholder's equity"] = total_amt
                 
                 liable_concat[idx] = export_df  
