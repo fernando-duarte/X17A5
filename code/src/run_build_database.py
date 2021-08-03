@@ -25,7 +25,7 @@ from joblib import load
 from sklearn.feature_extraction.text import HashingVectorizer
 
 from DatabaseSplits import lineItems
-from DatabaseUnstructured import unstructured_wrapper, reorder_columns
+from DatabaseUnstructured import unstructured_wrapper, reorder_columns, extra_cols
 from DatabaseStructured import structured_wrapper
 
 from run_file_extraction import brokerFilter
