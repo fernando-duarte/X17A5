@@ -12,7 +12,6 @@ to be easily read by AWS Textract, due to file constraints
 
 import numpy as np 
 
-from pdf2image.exceptions import PDFPageCountError
 from PyPDF2 import PdfFileReader, PdfFileWriter, utils
 
 

@@ -51,7 +51,7 @@ class Parameters:
     #                          an empty list
     
     # e.g. broker_dealers_list = ['782124'], default handled in run_file_extraction.py
-    broker_dealers_list = ['1009953']
+    broker_dealers_list = ['17018']
     
     
     # FLAG for determing whether we want to re-run the entire job from

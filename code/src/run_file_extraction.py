@@ -24,6 +24,7 @@ from ExtractBrokerDealers import dealerData
 from FocusReportExtract import searchURL, edgarParse, fileExtract, mergePdfs
 from FocusReportSlicing import selectPages, extractSubset, brokerFilter
 
+from pdf2image.exceptions import PDFPageCountError, PDFInfoNotInstalledError
 
 ##################################
 # MAIN CODE EXECUTION
@@ -222,6 +223,9 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                 os.remove('temp.pdf')
                 
             except PDFPageCountError:
-                print('\tEncountered PDFPageCounterError when trying to convert to png for -> %s' % base_file)
+                print('\tEncountered PDFPageCounterError when trying to convert to PNG for -> %s' % base_file)
+                
+            except PDFInfoNotInstalledError:
+                print('\tUnable to get page count, may be a bug in the libpoppler library for PNG.')
     
     return broker_dealers_list      
