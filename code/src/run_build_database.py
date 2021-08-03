@@ -199,27 +199,56 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         
         # decompose csv name into filename
         filename = csv.split('/')[-1]
-    
-        # first load in both the PNG and PDF split balance sheets
-        # NOTE: All these balance sheets are cleaned numerical values
-        try:
+        
+        # determine whether we could download dataframe from s3 from PDF or PNG
+        data_flag = 0
+        pdf_df = pd.DataFrame()
+        png_df = pd.DataFrame()
+        
+        try: # try loading in the balance sheet extracted from PDF
             s3_pointer.download_file(s3_bucket, csv, 'temp.csv')
             pdf_df = pd.read_csv('temp.csv')
+            os.remove('temp.csv')
+
+        # in the event we can't download file from s3 (i.e. does not exist, we ignore)
+        except botocore.exceptions.ClientError: data_flag += 1
+        
+        try: # try loading in the balance sheet extracted from PNG
             s3_pointer.download_file(s3_bucket, png_asset_folder + filename, 'temp.csv')
             png_df = pd.read_csv('temp.csv')
             os.remove('temp.csv')
-            
-            # stores the reported data frame 
+        except botocore.exceptions.ClientError: data_flag += 1
+
+        # --------------------------------------------
+        if data_flag == 0:
+            # stores the reported data frame passing both PNG and PDF
             asset_concat[idx] = unstructured_wrapper(pdf_df, png_df, csv, cik2brokers, "Total asset")
-
-        # in the event we can't download file from s3 (i.e. does not exist, we ignore)
-        except botocore.exceptions.ClientError:
-
-            # assign an empty DataFrame and print out error
+        
+        elif data_flag == 2:
+            # assign an empty DataFrame in the event neither PDF or PNG is represented
             asset_concat[idx] = pd.DataFrame()
-
+            
             print('\tTextract Issue for %s\n\t\tRefer to OCR confluence page https://fernandoduarte.atlassian.net/wiki/spaces/NN/pages/1145929733/OCR\n' % filename)
-
+            
+        elif data_flag == 1:
+            fileName, filing_date, fiscal_year, cik = extra_cols(csv)
+            
+            if not pdf_df.empty:
+                temp_df, total_flag, total_amt = totals_check(pdf_df)
+                
+                export_df["Total asset"] = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
+                export_df["Total asset"] = total_amt
+                
+                asset_concat[idx] = export_df
+                
+            else:
+                temp_df, total_flag, total_amt = totals_check(png_df)
+                
+                export_df["Total asset"] = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
+                export_df["Total asset"] = total_amt
+                
+                asset_concat[idx] = export_df  
+        
         if (idx + 1) % 100 == 0:
             print('\tWe have integrated %d balance sheet(s) to the unstructured database\n' % (idx+1))
     
@@ -232,29 +261,58 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         # decompose csv name into filename
         filename = csv.split('/')[-1]
         
-        try:
-            # first load in both the PNG and PDF split balance sheets
-            # NOTE: All these balance sheets are cleaned numerical values
+        # determine whether we could download dataframe from s3 from PDF or PNG
+        data_flag = 0
+        pdf_df = pd.DataFrame()
+        png_df = pd.DataFrame()
+        
+        try: # try loading in the balance sheet extracted from PDF
             s3_pointer.download_file(s3_bucket, csv, 'temp.csv')
             pdf_df = pd.read_csv('temp.csv')
+            os.remove('temp.csv')
+
+        # in the event we can't download file from s3 (i.e. does not exist, we ignore)
+        except botocore.exceptions.ClientError: data_flag += 1
+        
+        try: # try loading in the balance sheet extracted from PNG
             s3_pointer.download_file(s3_bucket, png_liable_folder + filename, 'temp.csv')
             png_df = pd.read_csv('temp.csv')
             os.remove('temp.csv')
-            
-            # stores the reported data frame 
+        except botocore.exceptions.ClientError: data_flag += 1
+
+        # --------------------------------------------
+        if data_flag == 0:
+            # stores the reported data frame passing both PNG and PDF
             liable_concat[idx] = unstructured_wrapper(pdf_df, png_df, csv, cik2brokers, "Total liabilities & shareholder's equity")
-
-        # in the event we can't download file from s3 (i.e. does not exist, we ignore the )
-        except botocore.exceptions.ClientError:
-
-            # assign an empty DataFrame and print out error
+        
+        elif data_flag == 2:
+            # assign an empty DataFrame in the event neither PDF or PNG is represented
             liable_concat[idx] = pd.DataFrame()
             
             print('\tTextract Issue for %s\n\t\tRefer to OCR confluence page https://fernandoduarte.atlassian.net/wiki/spaces/NN/pages/1145929733/OCR\n' % filename)
-
+            
+        elif data_flag == 1:
+            fileName, filing_date, fiscal_year, cik = extra_cols(csv)
+            
+            if not pdf_df.empty:
+                temp_df, total_flag, total_amt = totals_check(pdf_df)
+                
+                export_df["Total liabilities & shareholder's equity"] = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
+                export_df["Total liabilities & shareholder's equity"] = total_amt
+                
+                liable_concat[idx] = export_df
+                
+            else:
+                temp_df, total_flag, total_amt = totals_check(png_df)
+                
+                export_df["Total liabilities & shareholder's equity"] = unstructured_data(temp_df, filing_date, fiscal_year, cik, cik2brokers)
+                export_df["Total liabilities & shareholder's equity"] = total_amt
+                
+                liable_concat[idx] = export_df  
+        
         if (idx + 1) % 100 == 0:
             print('\tWe have integrated %d balance sheet(s) to the unstructured database\n' % (idx+1))
-            
+    
     # --------------------------------------------
     # Database exportation
     # --------------------------------------------
