@@ -143,27 +143,30 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
                 #               STEP 5 (Perform Cleaning Operations on Textract Table)
                 # ==============================================================================
                 
-                print('\tWorking on PDF balance-sheet')
-                # perform cleaning operations on read balance sheets for PDF and PNGs
-                pdf_df_clean, prior_pdf_scaler, prior_pdf_cik = clean_wrapper(pdf_df, text_dictionary, basefile, fileName,
-                                                                              prior_pdf_scaler, prior_pdf_cik)
-                print('\tWorking on PNG balance-sheet')
-                png_df_clean, prior_png_scaler, prior_png_cik = clean_wrapper(png_df, text_dictionary, basefile, fileName,
-                                                                              prior_png_scaler, prior_png_cik)
-                
-                # export contents to the s3 directory
-                pdf_df_clean.to_csv(fileName, index=False)
-                with open(fileName, 'rb') as data:
-                    s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_pdf + fileName, Body=data)
+                if pdf_df is not None:
+                    print('\tWorking on PDF balance-sheet')
+                    # perform cleaning operations on read balance sheets for PDF and PNGs
+                    pdf_df_clean, prior_pdf_scaler, prior_pdf_cik = clean_wrapper(pdf_df, text_dictionary, basefile, fileName,
+                                                                                  prior_pdf_scaler, prior_pdf_cik)
                     
-                png_df_clean.to_csv(fileName, index=False)
-                with open(fileName, 'rb') as data:
-                    s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_png + fileName, Body=data)
-                
+                    # export contents to the s3 directory
+                    pdf_df_clean.to_csv(fileName, index=False)
+                    with open(fileName, 'rb') as data:
+                        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_pdf + fileName, Body=data)
+                    
+                if png_df is not None:
+                    print('\tWorking on PNG balance-sheet')
+                    png_df_clean, prior_png_scaler, prior_png_cik = clean_wrapper(png_df, text_dictionary, basefile, fileName,
+                                                                                  prior_png_scaler, prior_png_cik)
+                    
+                    png_df_clean.to_csv(fileName, index=False)
+                    with open(fileName, 'rb') as data:
+                        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_png + fileName, Body=data)
                 
                 # remove local file after it has been created
-                os.remove(fileName)
-                print('--------------------------------------------------------------------\n')
+                if os.path.isfile(fileName):
+                    os.remove(fileName)
+                    print('--------------------------------------------------------------------\n')
                 
             else:
                 error_dictionary[basefile] = error
