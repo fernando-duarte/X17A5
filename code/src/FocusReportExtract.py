@@ -13,6 +13,7 @@ from registered broker-dealers in the SEC's history
 # console and directory access
 import os
 import re
+import time
 import urllib
 import datetime
 
@@ -73,6 +74,7 @@ def edgarParse(url:str):
     # we try requesting the URL and break only if response object returns status of 200
     for _ in range(20): 
         response = requests.get(url, allow_redirects=True)
+        time.sleep(1)
         if response.status_code == 200: break
     
     # last check to see if response object is "problamatic" e.g. 403 after 10 tries
@@ -83,12 +85,12 @@ def edgarParse(url:str):
     
     # read in HTML tables from the url link provided 
     try:
-        # due to web-scrapping non-constant behavior (check against 10 tries)
+        # due to web-scrapping non-constant behavior (check against few tries)
         for _ in range(20):
             try: 
                 filings = pd.read_html(url) 
                 break
-            except urllib.error.HTTPError: pass
+            except urllib.error.HTTPError: print('HTTPError: Unable to read URL %s' % url)
         
         filing_table = filings[2]                           # select the filings (raises IndexError Flag)
         filing_dates = filing_table['Filing Date'].values   # select the filing dates columns
@@ -124,6 +126,7 @@ def fileExtract(archive:str) -> list:
     # we try requesting the URL and break only if response object returns status of 200
     for _ in range(20):
         pdf_storage = requests.get(archive, allow_redirects=True)
+        time.sleep(1)
         if pdf_storage.status_code == 200: break
         
     # last check to see if response object is "problamatic" e.g. 403
@@ -162,6 +165,7 @@ def mergePdfs(files:list) -> PdfFileWriter:
         # we try requesting the URL and break only if response object returns status of 200
         for _ in range(20):
             pdf_storage = requests.get(pdf_file, allow_redirects=True)
+            time.sleep(1)
             if pdf_storage.status_code == 200: break
 
         # last check to see if response object is "problamatic" e.g. 403

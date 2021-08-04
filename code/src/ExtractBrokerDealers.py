@@ -13,6 +13,7 @@ accompaning CIK code from archived dealer data dating back to 1993 in the SEC
 # console and directory access
 import os
 import re
+import time
 import datetime
 
 # structured data reading
@@ -46,12 +47,13 @@ def companyName(cik:str) -> str:
     # we try requesting the URL and break only if response object returns status of 200 (i.e. success)
     for _ in range(20):
         res = requests.get(url, allow_redirects=True)
+        time.sleep(1)
         if res.status_code == 200: 
             break
     
     # last check to see if response object is "problamatic" e.g. 403 after 10 tries
     if res.status_code != 200:
-        print('\t\tERROR: Unable to retrieve response from URL, response object %d' % res.status_code)
+        print('\t\tERROR: Unable to retrieve response from %s, response object %d' % (cik, res.status_code))
         return None
     
     # parse HTML through BeautifulSoup object
@@ -113,6 +115,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
             # we try requesting the URL and break only if response object returns status of 200
             for _ in range(20):
                 response = requests.get(searchURL, allow_redirects=True)
+                time.sleep(1)
                 if response.status_code == 200: break
             
             # if reponse type is active we return object with status code 200 (else error)
