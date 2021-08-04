@@ -18,6 +18,7 @@ from the SEC. We execute the following local scripts:
 import os
 import json
 import datetime
+import numpy as np
 
 from pdf2image import convert_from_path
 from ExtractBrokerDealers import dealerData
