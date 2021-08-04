@@ -32,7 +32,7 @@ class Parameters:
     # functional specifications file/folder locations
     # -------------------------------------------------
     
-    bucket = "ran-s3-systemic-risk"
+    bucket = "focus-report-x17a5-sample"
     
     # -------------------------------------------------
     # job specific parameters specified by the user
@@ -43,7 +43,7 @@ class Parameters:
     #                            default is an empty list 
     
     # e.g. parse_years = [2019, 2020, 2021], default handled in run_file_extraction.py
-    parse_years = [2021]
+    parse_years = []
         
         
     # FocusReportExtract.py -> extract broker-dealers from a subset of firms 
@@ -51,7 +51,7 @@ class Parameters:
     #                          an empty list
     
     # e.g. broker_dealers_list = ['782124'], default handled in run_file_extraction.py
-    broker_dealers_list = ['17018']
+    broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
     
     
     # FLAG for determing whether we want to re-run the entire job from

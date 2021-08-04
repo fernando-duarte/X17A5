@@ -219,13 +219,13 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                     
                 print('\tSaved png files for -> %s' % base_file)
                 
-                # remove local file after it has been created
-                os.remove('temp.pdf')
-                
             except PDFPageCountError:
                 print('\tEncountered PDFPageCounterError when trying to convert to PNG for -> %s' % base_file)
                 
             except PDFInfoNotInstalledError:
                 print('\tUnable to get page count, may be a bug in the libpoppler library for PNG.')
-    
+            
+            # remove local file after it has been created
+            os.remove('temp.pdf')
+            
     return broker_dealers_list      
