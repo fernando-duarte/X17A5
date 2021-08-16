@@ -125,5 +125,5 @@ $  sh run_main_batch.sh
 * Extend and modify idiosyncratic changes as deemed appropriate for when Textract fails
 
 ## 6	Contributors
-* [Rajesh Rao](https://github.com/Raj9898) (Sr. Research Analyst)
+* [Rajesh Rao](https://github.com/raj-rao-rr) (Sr. Research Analyst)
 * [Fernando Duarte](https://github.com/fernando-duarte) (Sr. Economist)
