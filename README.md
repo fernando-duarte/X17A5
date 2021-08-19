@@ -76,7 +76,7 @@ The code files are divided into three sub-groups that are responsible for execut
    
    * `run_build_database.py` runs all execution for Part 3 (see below 3.3b), responsible for developing structured and unstructured database
 
-#### 3.3b 	
+#### 3.4b 	
 
 ##### Part 1: Broker-Dealer and FOCUS Report Extraction
 
