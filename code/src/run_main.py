@@ -32,18 +32,25 @@ class Parameters:
     # functional specifications file/folder locations
     # -------------------------------------------------
     
-    bucket = "focus-report-x17a5-sample"
+    bucket = "x17-a5-mathias-version"
     
     # -------------------------------------------------
     # job specific parameters specified by the user
     # -------------------------------------------------
+    
+    # Due to changes in the SEC url pulls users must provide additional 
+    # webscrapping credentials to verify non-malicious actions to server (11/2021) 
+    
+    # e.g. requests.get(sec_url, headers={'User-Agent': 'Company Name mathias.andler@ny.frb.org'},
+    #                   stream=True, allow_redirects=True))
+    company_email = 'mathias.andler@ny.frb.org'
     
     # ExtractBrokerDealers.py -> help determine the interval range for which 
     #                            we look back historically for broker dealers, 
     #                            default is an empty list 
     
     # e.g. parse_years = [2019, 2020, 2021], default handled in run_file_extraction.py
-    parse_years = []
+    parse_years = [2020, 2021]
         
         
     # FocusReportExtract.py -> extract broker-dealers from a subset of firms 
@@ -51,7 +58,8 @@ class Parameters:
     #                          an empty list
     
     # e.g. broker_dealers_list = ['782124'], default handled in run_file_extraction.py
-    broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
+    #broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
+    broker_dealers_list = ['42352', '68136', '91154', '72267']
     
     
     # FLAG for determing whether we want to re-run the entire job from
