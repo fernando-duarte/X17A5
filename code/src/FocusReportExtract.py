@@ -28,6 +28,9 @@ from bs4 import BeautifulSoup
 # pdf manipulation
 from PyPDF2 import PdfFileReader, PdfFileWriter, utils
 
+# module that deals with encryption error
+from pikepdf import Pdf
+
 
 ##################################
 # USER DEFINED FUNCTIONS
@@ -57,7 +60,7 @@ def searchURL(cik:str, file_type:str='X-17A-5') -> str:
     
     return url
 
-def edgarParse(url:str):
+def edgarParse(url:str, company_email:str):
     """
     Parses the EDGAR webpage of a provided URL and returns 
     a tuple of filings dates and archived filings URLs
@@ -67,13 +70,17 @@ def edgarParse(url:str):
     url : str 
         URL is a string representing a SEC website URL 
         pointing to a CIK for X-17A-5 filings
+    company_email : str
+        The company email belonging to the user e.g. mathias.andler@ny.frb.org
     """
     
     response = requests.Response()
     
     # we try requesting the URL and break only if response object returns status of 200
     for _ in range(20): 
-        response = requests.get(url, allow_redirects=True)
+        response = requests.get(url, headers={'User-Agent': 'Company Name ' + company_email},
+                           stream=True, allow_redirects=True)
+        
         time.sleep(1)
         if response.status_code == 200: break
     
@@ -88,28 +95,35 @@ def edgarParse(url:str):
         # due to web-scrapping non-constant behavior (check against few tries)
         for _ in range(20):
             try: 
-                filings = pd.read_html(url) 
+                #filings = pd.read_html(url) 
+                r = requests.get(url, headers={'User-Agent': 'Company Name ' + company_email})
+                filings = pd.read_html(r.text)
+
                 break
             except urllib.error.HTTPError: print('HTTPError: Unable to read URL %s' % url)
         
-        filing_table = filings[2]                           # select the filings (raises IndexError Flag)
-        filing_dates = filing_table['Filing Date'].values   # select the filing dates columns
+        # case handle in the event we return nothing
+        try:
+            filing_table = filings[2]                           # select the filings (raises IndexError Flag)
+            filing_dates = filing_table['Filing Date'].values   # select the filing dates columns
 
-        # parse the html-doc string for all instance of < a href= > from the URL 
-        href = [link.get('href') for link in soup.find_all('a')]
+            # parse the html-doc string for all instance of < a href= > from the URL 
+            href = [link.get('href') for link in soup.find_all('a')]
 
-        # search for all links with Archive in handle, these are the search links for the X-17A-5 filings
-        archives = ['https://www.sec.gov' + link for link in href if str.find(link, 'Archives') > 0]
-        
-        # return a tuple of vectors, the filings dates and the corresponding urls
-        return filing_dates, archives
+            # search for all links with Archive in handle, these are the search links for the X-17A-5 filings
+            archives = ['https://www.sec.gov' + link for link in href if str.find(link, 'Archives') > 0]
+
+            # return a tuple of vectors, the filings dates and the corresponding urls
+            return filing_dates, archives
+        except UnboundedLocalError:
+            return None
         
     # if there exists no active reports for a given CIK, we flag the error
     except IndexError:
         print('Currently no filings are present for the firm\n')
         return None
 
-def fileExtract(archive:str) -> list:
+def fileExtract(archive:str, company_email:str) -> list:
     """
     Parses through the X-17A-5 filings links to  
     to be saved in an s3 bucket on AWS
@@ -119,13 +133,17 @@ def fileExtract(archive:str) -> list:
     archive : str
         A vector of strings for all sec.gov URL links 
         for each filings in chronological order
+        
+    company_email : str
+        The company email belonging to the user e.g. mathias.andler@ny.frb.org
     """
     
     pdf_storage = requests.Response()
     
     # we try requesting the URL and break only if response object returns status of 200
     for _ in range(20):
-        pdf_storage = requests.get(archive, allow_redirects=True)
+        pdf_storage = requests.get(archive, headers={'User-Agent': 'Company Name ' + company_email},
+                           stream=True, allow_redirects=True)
         time.sleep(1)
         if pdf_storage.status_code == 200: break
         
@@ -144,7 +162,7 @@ def fileExtract(archive:str) -> list:
 
     return pdf_files
 
-def mergePdfs(files:list) -> PdfFileWriter:
+def mergePdfs(files:list, company_email:str) -> PdfFileWriter:
     """
     Combines pdfs files iteratively by page for 
     each of the accompanying SEC filings 
@@ -154,6 +172,8 @@ def mergePdfs(files:list) -> PdfFileWriter:
     files : list
         A list of pdfs retrieved from filing details 
         for each broker-detal in Edgar's website
+    company_email : str
+        The company email belonging to the user e.g. mathias.andler@ny.frb.org
     """
     
     # initialize a pdf object to be store pdf pages
@@ -164,20 +184,27 @@ def mergePdfs(files:list) -> PdfFileWriter:
         
         # we try requesting the URL and break only if response object returns status of 200
         for _ in range(20):
-            pdf_storage = requests.get(pdf_file, allow_redirects=True)
+            pdf_storage = requests.get(pdf_file, headers={'User-Agent': 'Company Name ' + company_email},
+                           stream=True, allow_redirects=True)
             time.sleep(1)
             if pdf_storage.status_code == 200: break
 
         # last check to see if response object is "problamatic" e.g. 403
         if pdf_storage.status_code != 200: 
             continue
-        
+            
         # save PDF contents to local file location 
         open('temp.pdf', 'wb').write(pdf_storage.content)
-        
         # read pdf file as PyPDF2 object
         pdf = PdfFileReader('temp.pdf', strict=False) 
-        nPages = pdf.getNumPages()
+        try:
+            nPages = pdf.getNumPages()
+        except:
+            with Pdf.open('temp.pdf',allow_overwriting_input=True) as pdf:
+                pdf.save('temp.pdf')
+            
+            pdf = PdfFileReader('temp.pdf', strict=False) 
+            nPages = pdf.getNumPages()
         
         # add the pages from the document as specified 
         for page_num in np.arange(nPages):
@@ -186,3 +213,4 @@ def mergePdfs(files:list) -> PdfFileWriter:
     if os.path.isfile('./temp.pdf'): os.remove('temp.pdf')
     
     return pdfWriter
+

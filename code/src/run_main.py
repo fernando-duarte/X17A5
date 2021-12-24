@@ -49,23 +49,22 @@ class Parameters:
     #                            we look back historically for broker dealers, 
     #                            default is an empty list 
     
-    # e.g. parse_years = [2019, 2020, 2021], default handled in run_file_extraction.py
-    parse_years = [2020, 2021]
+    # e.g. parse_years = [2019, 2020, 2021], default (empty list) handled in run_file_extraction.py 
+    parse_years = []
         
         
     # FocusReportExtract.py -> extract broker-dealers from a subset of firms 
     #                          or retrieve all broker-information, default is 
     #                          an empty list
     
-    # e.g. broker_dealers_list = ['782124'], default handled in run_file_extraction.py
+    # e.g. broker_dealers_list = ['782124'], default (empty list = [] ) handled in run_file_extraction.py
     #broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
-    broker_dealers_list = ['42352', '68136', '91154', '72267']
-    
-    
+    broker_dealers_list = []
+
     # FLAG for determing whether we want to re-run the entire job from
     # start to finish - WITHOUT taking any existing files stored in the s3.
     # ONLY CHANGE TO 'True' if you would like to OVERWRITE pre-existing files. 
-    job_rerun = False
+    job_rerun = True
     
 ##################################
 # MAIN CODE EXECUTION
@@ -81,7 +80,7 @@ if __name__ == "__main__":
         Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, 
         GlobVars.temp_folder, GlobVars.input_folder_raw, GlobVars.temp_folder_pdf_slice, 
         GlobVars.temp_folder_png_slice, Parameters.parse_years, Parameters.broker_dealers_list,
-        Parameters.job_rerun
+        Parameters.job_rerun, Parameters.company_email
            )
      
     # responsible for extracting balance-sheet figures by OCR via AWS Textract

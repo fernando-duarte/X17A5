@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 # USER DEFINED FUNCTIONS
 ##################################
 
-def companyName(cik:str) -> str:
+def companyName(cik:str, company_email:str) -> str:
     """
     Returns the company name for a given CIK number from 
     the SEC by parsing the EDGAR site for the current name 
@@ -37,6 +37,8 @@ def companyName(cik:str) -> str:
     ----------
     cik : str
         The CIK number for a broker dealer e.g. 887767
+    company_email : str
+        The company email belonging to the user e.g. mathias.andler@ny.frb.org
     """
     
     # establishing base-url for company name search
@@ -46,12 +48,13 @@ def companyName(cik:str) -> str:
     
     # we try requesting the URL and break only if response object returns status of 200 (i.e. success)
     for _ in range(20):
-        res = requests.get(url, allow_redirects=True)
+        res = requests.get(url, headers={'User-Agent': 'Company Name ' + company_email},
+                           stream=True, allow_redirects=True)
         time.sleep(1)
         if res.status_code == 200: 
             break
     
-    # last check to see if response object is "problamatic" e.g. 403 after 10 tries
+    # last check to see if response object is "problematic" e.g. 403 after 10 tries
     if res.status_code != 200:
         print('\t\tERROR: Unable to retrieve response from %s, response object %d' % (cik, res.status_code))
         return None
@@ -68,8 +71,10 @@ def companyName(cik:str) -> str:
         
         return comp_name
 
-def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'], 
-               cik2brokers:dict={'years-covered':[], 'broker-dealers':{}}) -> dict:
+def dealerData(years:list, company_email:str,
+               quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'], 
+               cik2brokers:dict={'years-covered':[], 'broker-dealers':{}}
+               ) -> dict:
     """
     Retrieve dealer data from archived SEC directory, returns 
     a dictionary of CIK to Company Name mappings
@@ -80,6 +85,9 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
         A list of years to check for additional dealer data to be 
         pulled e.g. [1993, 1994, 2000]. NOTE, that only the years 
         specified are checked for dealer information. 
+        
+    company_email : str
+        The company email belonging to the user e.g. mathias.andler@ny.frb.org
         
     quarters : list
         A list of quarters to check for additional dealer data, 
@@ -92,6 +100,8 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
         template in the event no  
         e.g. {'years-reported':['2020/QTR1', '2020/QTR2'], 
         'broker-dealers':{782124: 'J.P. MORGAN SECURITIES LLC'}}. 
+        
+   
     """
     
     # archived data website for broker dealer data
@@ -102,7 +112,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
     years_covered = cik2brokers['years-covered']
     
     print('EXTRACTING BROKER-DEALER INFORMATION')
-    # itterate through years and quarters for archival search
+    # iterate through years and quarters for archival search
     for coverage in archiveDates:
         
         if coverage in years_covered:
@@ -111,10 +121,12 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
 
         else:
             searchURL = '%s/%s/form.idx' % (baseURL, coverage)
-            
+             
             # we try requesting the URL and break only if response object returns status of 200
             for _ in range(20):
-                response = requests.get(searchURL, allow_redirects=True)
+                response = requests.get(searchURL, headers={'User-Agent': 'Company Name ' + company_email},
+                       stream=True, allow_redirects=True)
+                 
                 time.sleep(1)
                 if response.status_code == 200: break
             
@@ -153,7 +165,7 @@ def dealerData(years:list, quarters:list=['QTR1', 'QTR2', 'QTR3', 'QTR4'],
                     cikNumbers = x17File[last_column].apply(lambda x: x.split('/')[2]).values
                     
                     # compute dictionary mapping for the CIK and company name for each broker-dealer    
-                    dictionary_update = dict(map(lambda x: (x, companyName(x)), 
+                    dictionary_update = dict(map(lambda x: (x, companyName(x,company_email)), 
                                                  cikNumbers))
                     cik2brokers['broker-dealers'].update(dictionary_update)
                 

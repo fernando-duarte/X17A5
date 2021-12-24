@@ -95,7 +95,7 @@ def getJobResults(jobId:str) -> list:
     
     # add first page response to list (length of pages will be arbitrary) 
     pages.append(response)      
-    print("Resultset page recieved: {}".format(len(pages)))
+    print("Resultset page received: {}".format(len(pages)))
     
     # if NextToken present we have a pointer to page (e.g. Response -> Page) 
     nextToken = None
@@ -106,7 +106,7 @@ def getJobResults(jobId:str) -> list:
     while(nextToken):
         response = client.get_document_analysis(JobId=jobId, NextToken=nextToken)
         pages.append(response)
-        print("Resultset page recieved: {}".format(len(pages)))
+        print("Resultset page received: {}".format(len(pages)))
         
         # move along linked-list for presence of NextToken response
         nextToken = None

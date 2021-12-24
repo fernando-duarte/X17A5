@@ -20,7 +20,7 @@ import json
 import datetime
 import numpy as np
 
-from pdf2image import convert_from_path
+from pdf2image import convert_from_path, pdfinfo_from_path
 from ExtractBrokerDealers import dealerData
 from FocusReportExtract import searchURL, edgarParse, fileExtract, mergePdfs
 from FocusReportSlicing import selectPages, extractSubset, brokerFilter
@@ -32,7 +32,7 @@ from pdf2image.exceptions import PDFPageCountError, PDFInfoNotInstalledError
 ##################################
 
 def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pdf, export_png,
-            parse_years, broker_dealers_list, rerun_job):
+            parse_years, broker_dealers_list, rerun_job, company_email):
     
     # ==============================================================================
     #                 STEP 1 (Gathering updated broker-dealer list)
@@ -55,12 +55,12 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
         with open('temp.json', 'r') as f: old_cik2brokers = json.loads(f.read())
         
         # re-assign contents with new additional information 
-        cik2brokers = dealerData(years=parse_years, cik2brokers=old_cik2brokers)   
+        cik2brokers = dealerData(years=parse_years,company_email=company_email, cik2brokers=old_cik2brokers)   
         os.remove('temp.json')
         
     else:
         # start from scratch to create cik-broker dealer list
-        cik2brokers = dealerData(years=parse_years)
+        cik2brokers = dealerData(years=parse_years,company_email=company_email)
         
     # write to a local JSON file with accompanying meta information 
     with open('CIKandDealers.json', 'w') as file:
@@ -89,7 +89,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
         
         # build lookup URLs to retrieve filing dates and archived url's
         url = searchURL(cik_id)
-        response = edgarParse(url)
+        response = edgarParse(url,company_email)
         
         if type(response) is not None:
             filing_dates, archives = response
@@ -98,7 +98,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
             print('Downloading X-17A-5 files for %s - CIK (%s)' % (companyName, cik_id))
             print('\t%s' % url)
 
-            # itterate through each of the pdf URLs corresponding to archived contents
+            # iterate through each of the pdf URLs corresponding to archived contents
             for i, pdf_url in enumerate(archives):
 
                 # filing date in full yyyy-MM-dd format
@@ -116,12 +116,12 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
 
                 else:
                     # extract all acompanying pdf files, merging all to one large pdf
-                    pdf_files = fileExtract(pdf_url)
+                    pdf_files = fileExtract(pdf_url,company_email)
                     
                     # make sure we don't return empty lists
                     if len(pdf_files) > 0:
                         print('\tExtracting FOCUS filing for %s' % date)
-                        concatPdf = mergePdfs(pdf_files)
+                        concatPdf = mergePdfs(pdf_files,company_email)
 
                         # open file and save to local instance
                         with open(file_name, 'wb') as f:
@@ -195,38 +195,43 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
         else: 
             # retrieving downloaded files from s3 bucket
             s3_pointer.download_file(s3_bucket, path_name, 'temp.pdf')
-            
+                               
             try:
-                # document class for temporary pdf (correspond to X-17A-5 pages)  
-                pages = convert_from_path('temp.pdf', 500)
-                
+                maxPages = pdfinfo_from_path('temp.pdf', userpw=None, poppler_path=None)["Pages"]
+
                 # determine the iterable size (number of page in document)
-                if len(pages) > 20:
-                    size = 20
-                else: size = len(pages)
-                
-                for idx in range(size):
-                    # write the png name for exportation
-                    export_file_name = "{}-p{}.png".format(base_file, idx)
-                    
-                    # storing PDF page as a PNG file locally (using pdf2image)
-                    pages[idx].save(export_file_name, 'PNG')
-                    
-                    # save contents to AWS S3 bucket as specified
-                    with open(export_file_name, 'rb') as data:
-                        s3_pointer.upload_fileobj(data, s3_bucket, export_png + base_file + '/' + export_file_name)
-                    
-                    os.remove(export_file_name)
-                    
+                size = min(maxPages,20)
+
+                # we process pages 10-by-10 to alleviate the memory load
+                for i in range(1, maxPages+1, 10):
+                    pages = convert_from_path('temp.pdf', dpi=500, first_page=i, last_page = min(i+10-1,maxPages))
+                    if i == 1:
+                        max_page = min(10,size)
+                    else:
+                        max_page = size
+
+                    for idx in range(i-1,max_page):                       
+                        # write the png name for exportation
+                        export_file_name = "{}-p{}.png".format(base_file, idx)
+
+                        # storing PDF page as a PNG file locally (using pdf2image)
+                        pages[idx-i+1].save(export_file_name, 'PNG')
+
+                        # save contents to AWS S3 bucket as specified
+                        with open(export_file_name, 'rb') as data:
+                            s3_pointer.upload_fileobj(data, s3_bucket, export_png + base_file + '/' + export_file_name)
+
+                        os.remove(export_file_name)
+
                 print('\tSaved png files for -> %s' % base_file)
-                
+
             except PDFPageCountError:
                 print('\tEncountered PDFPageCounterError when trying to convert to PNG for -> %s' % base_file)
-                
+
             except PDFInfoNotInstalledError:
                 print('\tUnable to get page count, may be a bug in the libpoppler library for PNG.')
-            
-            # remove local file after it has been created
+
+    
             os.remove('temp.pdf')
-            
+                
     return broker_dealers_list      

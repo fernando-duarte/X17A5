@@ -38,7 +38,7 @@ conda install -c conda-forge poppler -y
 
 pip3 install --upgrade pip
 pip3 install bs4
-pip3 install boto3
+pip3 install boto3==1.18.30 # more recent versions (now 1.20) won't work
 pip3 install sagemaker
 pip3 install PyPDF2
 pip3 install pdf2image
@@ -52,6 +52,7 @@ conda install python-Levenshtein -y
 pip3 install fuzzywuzzy
 pip3 install joblib
 pip3 install scikit-learn==0.24.1       # log-reg model stability verison
+pip3 install pikepdf 
 
 # #########################################################
 # EXECUTING PRIMARY SCRIPT
