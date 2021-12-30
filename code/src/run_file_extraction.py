@@ -47,8 +47,8 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
     if len(parse_years) == 0:
         parse_years = np.arange(1993, datetime.datetime.today().year+1)
     
-    # if rerun_job is True, we overwrite our current CIKandDealer information on s3
-    if (temp_folder + 'CIKandDealers.json' in temp_paths) and (rerun_job == False): 
+    # if rerun_job is 1 (previous True), we overwrite our current CIKandDealer information on s3
+    if (temp_folder + 'CIKandDealers.json' in temp_paths) and (rerun_job > 1): 
         
         # retrieve old information from CIK and Dealers JSON file
         s3_pointer.download_file(s3_bucket, temp_folder + 'CIKandDealers.json', 'temp.json')
@@ -77,7 +77,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
     # ==============================================================================
     
     print('\n========\nStep 2: Gathering X-17A-5 Filings\n========\n')
-    
+   
     input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
           
     # if no broker-dealers are provided by the user, we default to the full sample
@@ -108,9 +108,9 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                 file_name = str(cik_id) + '-' + date + '.pdf'        
                 pdf_name = input_raw + file_name
                 
-                # if rerun_job is true, we ignore the flag and extract focus reports
+                # if rerun_job is < 3 (=true), we ignore the flag and extract focus reports
                 # for every reported year in the reponse object for filings
-                if (pdf_name in input_paths) and (rerun_job == False): 
+                if (pdf_name in input_paths) and (rerun_job > 2): 
                     print('\tAll files for %s are downloaded' % companyName)
                     break
 
@@ -122,10 +122,14 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                     if len(pdf_files) > 0:
                         print('\tExtracting FOCUS filing for %s' % date)
                         concatPdf = mergePdfs(pdf_files,company_email)
-
+             
                         # open file and save to local instance
                         with open(file_name, 'wb') as f:
-                            concatPdf.write(f)
+                            try:
+                                concatPdf.write(f)
+                            except:
+                                concatPdf = mergePdfs(pdf_files,'mathias.andler@ny.frb.org', second_pass=True)
+                                concatPdf.write(f)
                             f.close()
 
                         # save contents to AWS S3 bucket
@@ -165,7 +169,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
         # PDF FILE DOWNLOAD
         # ---------------------------------------------------------------
         
-        if (pdf_look_up in pdf_paths) and (rerun_job == False):
+        if (pdf_look_up in pdf_paths) and (rerun_job > 3):
             print('\t%s already saved pdf' % base_file)
 
         else: 
@@ -189,7 +193,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
         # PNG FILE DOWNLOAD
         # ---------------------------------------------------------------
         
-        if (png_look_up in png_paths) and (rerun_job == False):
+        if (png_look_up in png_paths) and (rerun_job > 3):
             print('\t%s already saved png' % base_file)
             
         else: 

@@ -162,7 +162,7 @@ def fileExtract(archive:str, company_email:str) -> list:
 
     return pdf_files
 
-def mergePdfs(files:list, company_email:str) -> PdfFileWriter:
+def mergePdfs(files:list, company_email:str,second_pass=False) -> PdfFileWriter:
     """
     Combines pdfs files iteratively by page for 
     each of the accompanying SEC filings 
@@ -174,6 +174,9 @@ def mergePdfs(files:list, company_email:str) -> PdfFileWriter:
         for each broker-detal in Edgar's website
     company_email : str
         The company email belonging to the user e.g. mathias.andler@ny.frb.org
+    second_pass: Boolean
+        Some recent (2020) pdfs make the code break right after mergePdf is called (I believe it's some encryption issue)
+        If second_pass == True, we pass the pdf through pikepdf to solve this issue (in the except catch)
     """
     
     # initialize a pdf object to be store pdf pages
@@ -189,7 +192,7 @@ def mergePdfs(files:list, company_email:str) -> PdfFileWriter:
             time.sleep(1)
             if pdf_storage.status_code == 200: break
 
-        # last check to see if response object is "problamatic" e.g. 403
+        # last check to see if response object is "problematic" e.g. 403
         if pdf_storage.status_code != 200: 
             continue
             
@@ -199,8 +202,10 @@ def mergePdfs(files:list, company_email:str) -> PdfFileWriter:
         pdf = PdfFileReader('temp.pdf', strict=False) 
         try:
             nPages = pdf.getNumPages()
+            if second_pass:
+                raise
         except:
-            with Pdf.open('temp.pdf',allow_overwriting_input=True) as pdf:
+            with Pdf.open('temp.pdf', allow_overwriting_input=True) as pdf:
                 pdf.save('temp.pdf')
             
             pdf = PdfFileReader('temp.pdf', strict=False) 

@@ -11,14 +11,15 @@ We use [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) 
 pip install bs4
 ```
 
-We use [PyPDF2](https://pythonhosted.org/PyPDF2/), [PyMuPDF](https://github.com/pymupdf/PyMuPDF), [pdf2image](https://pypi.org/project/pdf2image/), [fitz](https://pypi.org/project/fitz/), and [pillow](https://pillow.readthedocs.io/en/stable/) as used in retrieval & slicing operations. 
+We use [PyPDF2](https://pythonhosted.org/PyPDF2/), [PyMuPDF](https://github.com/pymupdf/PyMuPDF), [pdf2image](https://pypi.org/project/pdf2image/), [fitz](https://pypi.org/project/fitz/), pikepdf (https://pypi.org/project/pikepdf/), [pillow](https://pillow.readthedocs.io/en/stable/) as used in retrieval & slicing operations. 
 ```
 pip install PyPDF2
 pip install PyMuPDF
 pip install pdf2image 
 pip install pillow
 pip install fitz 
-pip install cv2     
+pip install cv2  
+pip install pikepdf
 ```
 
 PLEASE READ THE DOCUMENTATION FROM pdf2image provided at the following [link](https://github.com/Belval/pdf2image). You will need to install poppler on your machine (e.g. Windows, Mac, Linux) to execute slicing operations. For additional details on poppler see [doc](https://poppler.freedesktop.org/) on use cases. 
@@ -106,6 +107,7 @@ The code files are divided into three sub-groups that are responsible for execut
 ## 4	Running Code
 
 Our code file runs linearly in a SageMaker or EC2 instance via batch on AWS. We allow for the user to provide specifications prior to runnign the code base, but enable defaults in the event the user is not pariticular. We assume that you are able to `clone` this repository to a local instance on AWS, either the EC2 or SageMaker, and will not discuss operations centered around this action. 
+If running the code for all broker_dealers it is necessary to do so on an EC2 instance as Sagemaker jobs are limited in time (approximately 30 hours before the code crashes). See EC2 specificity below.
 
 1. Open the GLOBAL.py file, this stores all global variables under the `GlobVars` class. We will selectively modify these to match the corresponding folders on our s3 where we would like for our data files to be stored. 
 
@@ -114,12 +116,20 @@ Our code file runs linearly in a SageMaker or EC2 instance via batch on AWS. We 
    1.    Modify the static variable `bucket` to the designated s3 bucket you intend to store data materials
    2.    Modify the `parse_years` list with the numerical years look back historically for broker dealers (refer to inline doc)
    3.    Modify the `broker_dealers_list` list with broker-dealer CIKs you'd like to operate on (refer to inline doc)
-   4.    Modify the `job_rerun` with a boolean flag to indicate a preference to ignore file depedencies (refer to inline doc) 
+   4.    Modify the `job_rerun` with an integer flag to indicate a preference to ignore existing files (refer to inline doc) 
 
 3. On your terminal, whether on the EC2 or SageMaker, run the shell-script by evoking the `sh`.
+
 ```
 $  sh run_main_batch.sh
 ```
+### If running on EC2
+Make sure that the EC2 instance's configuration are linked to the right region (e.g us-east-2 Ohio )
+For a new instance, you have to change configuration files by using this command:
+```
+$  aws configure
+```
+and changing the Default region
 
 ## 5	Possible Extensions
 * Extend and modify idiosyncratic changes as deemed appropriate for when Textract fails

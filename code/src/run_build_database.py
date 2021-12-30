@@ -77,7 +77,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         liability_name = out_folder_split_pdf + 'Liability & Equity/' + fileName   # export path to liability and equity
         
         # check to see presence of split files 
-        if (asset_name in pdf_asset_split) and (liability_name in pdf_liability_split) and (rerun_job == False):
+        if (asset_name in pdf_asset_split) and (liability_name in pdf_liability_split) and (rerun_job > 6):
             print("\t\tWe've already performed split operation for %s" % fileName)
         
         else: 
@@ -131,7 +131,7 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
         liability_name = out_folder_split_png + 'Liability & Equity/' + fileName   # export path to liability and equity
         
         # check to see presence of split files 
-        if (asset_name in png_asset_split) and (liability_name in png_liability_split) and (rerun_job == False):              
+        if (asset_name in png_asset_split) and (liability_name in png_liability_split) and (rerun_job > 6):              
             print("\t\tWe've already performed split operation for %s" % fileName)
         
         else: 

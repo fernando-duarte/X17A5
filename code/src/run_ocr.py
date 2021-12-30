@@ -32,7 +32,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
             out_folder_raw_pdf, out_folder_raw_png, textract_obj, out_folder_clean_pdf, 
             out_folder_clean_png, rerun_job, broker_dealers):
     
-    print('\n============\nStep 4 & 5: Peforming OCR via AWS Textract and Cleaning Operations\n============\n')
+    print('\n============\nStep 4 & 5: Performing OCR via AWS Textract and Cleaning Operations\n============\n')
     
     # ==============================================================================
     #               STEP 4 (Perform OCR via Textract on FOCUS Reports)
@@ -51,7 +51,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     # Load in Temp JSON files (FORM, TEXT, ERROR) if present from s3
     # ---------------------------------------------------------------------------
     
-    if (temp_folder + 'X17A5-FORMS.json' in temp) and (rerun_job == False):
+    if (temp_folder + 'X17A5-FORMS.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
         s3_pointer.download_file(s3_bucket, 'Temp/X17A5-FORMS.json', 'temp.json')
         
@@ -63,7 +63,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     else:
         forms_dictionary = {}
     
-    if (temp_folder + 'X17A5-TEXT.json' in temp) and (rerun_job == False):
+    if (temp_folder + 'X17A5-TEXT.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
         s3_pointer.download_file(s3_bucket, 'Temp/X17A5-TEXT.json', 'temp.json')
         
@@ -75,7 +75,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     else:
         text_dictionary = {}
     
-    if (temp_folder + 'ERROR-TEXTRACT.json' in temp) and (rerun_job == False):
+    if (temp_folder + 'ERROR-TEXTRACT.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
         s3_pointer.download_file(s3_bucket, 'Temp/ERROR-TEXTRACT.json', 'temp.json')
         
@@ -109,8 +109,8 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
         
         # if file is not found in output directory we extract the balance sheet
         # WE LOOK TO AVOID RE-RUNNING OLD TEXTRACT PARSES TO SAVE TIME, but if 
-        # rerun_job is True we re-run Textract again on 
-        if (out_folder_raw_pdf + fileName in output_pdf_csvs) and (rerun_job == False):
+        # rerun_job is < 5 (True) we re-run Textract again on 
+        if (out_folder_raw_pdf + fileName in output_pdf_csvs) and (rerun_job > 4):
             print('\t%s has been downloaded' % fileName)
                 
         else:

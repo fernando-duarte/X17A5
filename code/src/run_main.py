@@ -63,8 +63,14 @@ class Parameters:
 
     # FLAG for determing whether we want to re-run the entire job from
     # start to finish - WITHOUT taking any existing files stored in the s3.
-    # ONLY CHANGE TO 'True' if you would like to OVERWRITE pre-existing files. 
-    job_rerun = True
+    # ONLY CHANGE TO a number different from 9 if you would like to OVERWRITE pre-existing files. 
+    # for example: job_rerun = 1 : we are starting the whole job from step 1
+    #              job_rerun = 2 : assume step 1 was completed and start from step
+    #              job_rerun = 9 : assume all files were already downloaded and processed
+                   
+    
+    job_rerun = 2
+    
     
 ##################################
 # MAIN CODE EXECUTION
