@@ -199,8 +199,8 @@ def mergePdfs(files:list, company_email:str,second_pass=False) -> PdfFileWriter:
         # save PDF contents to local file location 
         open('temp.pdf', 'wb').write(pdf_storage.content)
         # read pdf file as PyPDF2 object
-        pdf = PdfFileReader('temp.pdf', strict=False) 
         try:
+            pdf = PdfFileReader('temp.pdf', strict=False) 
             nPages = pdf.getNumPages()
             if second_pass:
                 raise

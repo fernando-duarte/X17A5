@@ -15,7 +15,7 @@ poppler on your machine to run this code.
 
 import sys
 import time
-
+import numpy as np
 from GLOBAL import GlobVars
 from run_file_extraction import main_p1
 from run_ocr import main_p2
@@ -50,8 +50,7 @@ class Parameters:
     #                            default is an empty list 
     
     # e.g. parse_years = [2019, 2020, 2021], default (empty list) handled in run_file_extraction.py 
-    parse_years = []
-        
+    parse_years = np.arange(1993,2022)
         
     # FocusReportExtract.py -> extract broker-dealers from a subset of firms 
     #                          or retrieve all broker-information, default is 
@@ -64,8 +63,9 @@ class Parameters:
     # FLAG for determing whether we want to re-run the entire job from
     # start to finish - WITHOUT taking any existing files stored in the s3.
     # ONLY CHANGE TO a number different from 9 if you would like to OVERWRITE pre-existing files. 
-    # for example: job_rerun = 1 : we are starting the whole job from step 1
-    #              job_rerun = 2 : assume step 1 was completed and start from step
+    # for example: job_rerun = 1 : we are starting the whole job from step 1 (assume no files pre-exist)
+    #              job_rerun = 2 : assume step 1 was completed and start from step 2
+    
     #              job_rerun = 9 : assume all files were already downloaded and processed
                    
     
