@@ -84,7 +84,7 @@ def edgarParse(url:str, company_email:str):
         time.sleep(1)
         if response.status_code == 200: break
     
-    # last check to see if response object is "problamatic" e.g. 403 after 10 tries
+    # last check to see if response object is "problematic" e.g. 403 after 10 tries
     if response.status_code != 200: return None
     
     # parse the HTML doc string from the response object

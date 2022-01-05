@@ -60,16 +60,18 @@ class Parameters:
     #broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
     broker_dealers_list = []
 
-    # FLAG for determing whether we want to re-run the entire job from
-    # start to finish - WITHOUT taking any existing files stored in the s3.
+    # FLAG for determing whether we want to re-run parts (or the entire) job
+    # - WITHOUT taking existing files stored in the s3.
     # ONLY CHANGE TO a number different from 9 if you would like to OVERWRITE pre-existing files. 
-    # for example: job_rerun = 1 : we are starting the whole job from step 1 (assume no files pre-exist)
-    #              job_rerun = 2 : assume step 1 was completed and start from step 2
     
+    # for example: job_rerun = 1 : we are starting the whole job from step 1 (assume no files pre-exist)
+    #              job_rerun = 2 : assume step 1 was completed and start from step 2, which means we are downloading all X17-A files for       #                              all dates again
+    #              job_rerun = 3 : important option. If step 2 broke, then you should run with this option, as it will not download files       #                              that were just downloaded before the crash
+    #                             
     #              job_rerun = 9 : assume all files were already downloaded and processed
                    
     
-    job_rerun = 2
+    job_rerun = 3
     
     
 ##################################

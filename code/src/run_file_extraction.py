@@ -19,6 +19,7 @@ import os
 import json
 import datetime
 import numpy as np
+import time
 
 from pdf2image import convert_from_path, pdfinfo_from_path
 from ExtractBrokerDealers import dealerData
@@ -91,7 +92,14 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
         url = searchURL(cik_id)
         response = edgarParse(url,company_email)
         
-        if type(response) is not None:
+        if type(response) is type(None):
+            for tries in range(2):
+                time.sleep(10)
+                response = edgarParse(url,company_email)
+                if type(response) is not type(None):
+                    break
+        
+        if type(response) is not type(None):
             filing_dates, archives = response
 
             # logging info for when files are being downloaded
@@ -115,7 +123,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                     break
 
                 else:
-                    # extract all acompanying pdf files, merging all to one large pdf
+                    # extract all accompanying pdf files, merging all to one large pdf
                     pdf_files = fileExtract(pdf_url,company_email)
                     
                     # make sure we don't return empty lists
@@ -140,7 +148,10 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                     else: print('\tNo files found for %s on %s' % (companyName, date))
         
         # identify error in the event edgar parse (web-scrapping returns None)
-        else: print('WEB-SCRAPPING ERROR: Unable to download %s - CIK (%s), no filing' % (companyName, cik_id))
+        else:
+            print('WEB-SCRAPPING ERROR: Unable to download %s - CIK (%s), no filing' % (companyName, cik_id))
+            print('We tried %s times' %(tries+2))
+          
           
     # ==============================================================================
     #                 STEP 3 (Slice X-17A-5 Filings)
