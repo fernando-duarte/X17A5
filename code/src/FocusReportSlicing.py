@@ -22,7 +22,7 @@ from PyPDF2 import PdfFileReader, PdfFileWriter, utils
 def brokerFilter(select_list:list, directory_list:list):
     """
     Helps determine (filter) corresponding pdf strings from
-    a list of filings present on the s3
+    a list of filings present on the s3. 
     
     Parameters
     ----------
@@ -34,7 +34,7 @@ def brokerFilter(select_list:list, directory_list:list):
         to FOCUS report filings on the s3
     """
     
-    # itterate through broker-dealers CIK and flag string presence in list
+    # iterate through broker-dealers CIK and flag string presence in list
     for cik in select_list:
         if cik in directory_list:
             return True

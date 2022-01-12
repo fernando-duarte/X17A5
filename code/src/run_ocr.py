@@ -98,18 +98,19 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     prior_png_cik = np.nan
     
     # pdf directory where we store the broker-dealer information 
-    textract_files = filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files) 
+    textract_files = filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files)
+    number_files = len(list(filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files)))
     
-    for pdf_paths in textract_files:
+    for counter, pdf_paths in enumerate(textract_files):
         
         # baseFile name to name export .csv file e.g. 1224385-2004-03-01.csv
         basefile = pdf_paths.split('/')[-1].split('-subset')[0]
         fileName = basefile + '.csv'
-        print('\nPerforming OCR for %s' % fileName)
+        print('\nPerforming OCR for %s (%d out of %s)' % (fileName,counter,number_files))
         
         # if file is not found in output directory we extract the balance sheet
         # WE LOOK TO AVOID RE-RUNNING OLD TEXTRACT PARSES TO SAVE TIME, but if 
-        # rerun_job is < 5 (True) we re-run Textract again on 
+        # rerun_job is < 5 (True) we re-run Textract again
         if (out_folder_raw_pdf + fileName in output_pdf_csvs) and (rerun_job > 4):
             print('\t%s has been downloaded' % fileName)
                 
@@ -146,13 +147,19 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
                 if pdf_df is not None:
                     print('\tWorking on PDF balance-sheet')
                     # perform cleaning operations on read balance sheets for PDF and PNGs
-                    pdf_df_clean, prior_pdf_scaler, prior_pdf_cik = clean_wrapper(pdf_df, text_dictionary, basefile, fileName,
-                                                                                  prior_pdf_scaler, prior_pdf_cik)
                     
-                    # export contents to the s3 directory
-                    pdf_df_clean.to_csv(fileName, index=False)
-                    with open(fileName, 'rb') as data:
-                        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_pdf + fileName, Body=data)
+                    # adding following try structure. In rare cases clean_wrapper has an error due to invalid cleaning of pdf dataframe                               that raises an error (for dataframe '1139137-2006-02-28.csv')
+                    try:
+                        pdf_df_clean, prior_pdf_scaler, prior_pdf_cik = clean_wrapper(pdf_df, text_dictionary, basefile, fileName,
+                                                                                      prior_pdf_scaler, prior_pdf_cik)
+                        
+                        # export contents to the s3 directory
+                        pdf_df_clean.to_csv(fileName, index=False)
+                        with open(fileName, 'rb') as data:
+                            s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_pdf + fileName, Body=data)
+                        
+                    except Exception as e:
+                        error_dictionary[basefile] = str(e)
                     
                 if png_df is not None:
                     print('\tWorking on PNG balance-sheet')
