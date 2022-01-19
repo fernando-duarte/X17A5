@@ -612,7 +612,7 @@ returning a pandas DataFrame object that represents a balance-sheet
 
 def textractParse(pdf_path:str, png_path:str, bucket:str) -> dict:
     """
-    Function runs a Textract job and returns a DataFrane object
+    Function runs a Textract job and returns a DataFrame object
     that matches the conditions to determine a balance sheet 
     
     Parameters
