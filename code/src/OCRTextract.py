@@ -50,7 +50,8 @@ def startJob(s3BucketName:str, objectName:str) -> str:
             'S3Object': {
                 'Bucket': s3BucketName,     # location of data to be read from s3 bucket 
                 'Name': objectName}},       # file name to be read from Textract  
-        FeatureTypes=['FORMS', 'TABLES']    # selecting FORMS (key-values) and TABLES from the OCR
+        # FeatureTypes=['FORMS', 'TABLES']    # selecting FORMS (key-values) and TABLES from the OCR
+        FeatureTypes=['TABLES']    # Due to cost we only use the OCR option 'Tables'
     )
     
     # return response job ID for service
