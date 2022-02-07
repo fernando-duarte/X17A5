@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export https_proxy=http://p1proxy.frb.org:8080
+
 # Batch file for running entire run_main.py script on both the
 # EC2 and SageMaker instances, adjusting based on system
 
@@ -59,4 +61,4 @@ pip3 install pikepdf
 # #########################################################
 
 # run the main-script for the X-17A-5 project (run_main.py)
-python3 run_main.py
+# python3 run_main.py

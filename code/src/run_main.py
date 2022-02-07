@@ -32,7 +32,7 @@ class Parameters:
     # functional specifications file/folder locations
     # -------------------------------------------------
     
-    bucket = "x17-a5-mathias-version"
+    bucket = "x17a-mathias-test"
     
     # -------------------------------------------------
     # job specific parameters specified by the user
@@ -57,8 +57,8 @@ class Parameters:
     #                          an empty list
     
     # e.g. broker_dealers_list = ['782124'], default (empty list = [] ) handled in run_file_extraction.py
-    #broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
-    broker_dealers_list = []
+    broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
+    #broker_dealers_list = []
 
     # FLAG for determing whether we want to re-run parts (or the entire) job
     # - WITHOUT taking existing files stored in the s3.
@@ -71,7 +71,7 @@ class Parameters:
     #              job_rerun = 9 : assume all files were already downloaded and processed
                    
     
-    job_rerun = 5
+    job_rerun = 9
     
     
 ##################################
