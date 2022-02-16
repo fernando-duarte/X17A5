@@ -43,6 +43,9 @@ def bsSplit(array: np.ndarray) -> tuple:
     
     asset_idx = 0                 # asset and liability identifiers
     liable_idx = 0
+
+    val1 = None
+    val2 = None
     
     # iterate through the line items as provided by the array
     for i, item in enumerate(array):

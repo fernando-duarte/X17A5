@@ -55,7 +55,7 @@ pip3 install fuzzywuzzy
 pip3 install joblib
 pip3 install scikit-learn==0.24.1       # log-reg model stability verison
 pip3 install pikepdf 
-
+pip3 install aws
 # #########################################################
 # EXECUTING PRIMARY SCRIPT
 # #########################################################
