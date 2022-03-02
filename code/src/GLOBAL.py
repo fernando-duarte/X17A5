@@ -28,9 +28,9 @@ class GlobVars:
     textract = boto3.client('textract')
 
     # folder & directory information
-    temp_folder ='Temp/'
-    input_folder = 'Input/'
-    output_folder = 'Output/'                
+    temp_folder ='temp/'
+    input_folder = 'input/'
+    output_folder = 'output/'                
 
     input_folder_raw = input_folder + 'X-17A-5/'
 
