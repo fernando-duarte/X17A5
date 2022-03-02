@@ -17,9 +17,15 @@ import sys
 import time
 import numpy as np
 from GLOBAL import GlobVars
-from run_file_extraction import main_p1
-from run_ocr import main_p2
-from run_build_database import main_p3
+# from run_file_extraction import main_p1
+from run_file_extraction_fast import main_p1
+#from run_ocr import main_p2
+#from run_ocr_last_thousand import main_p2
+from run_ocr_blocks import main_p2
+
+#from run_build_database import main_p3
+#from run_build_database_paral import main_p3
+from run_build_database_blocks import main_p3
 
 
 ##################################
@@ -32,7 +38,7 @@ class Parameters:
     # functional specifications file/folder locations
     # -------------------------------------------------
     
-    bucket = "x17a-mathias-test"
+    bucket = "x17-a5-mathias-version-nit"
     
     # -------------------------------------------------
     # job specific parameters specified by the user
@@ -57,8 +63,8 @@ class Parameters:
     #                          an empty list
     
     # e.g. broker_dealers_list = ['782124'], default (empty list = [] ) handled in run_file_extraction.py
-    broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
-    #broker_dealers_list = []
+    #broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
+    broker_dealers_list = []
 
     # FLAG for determing whether we want to re-run parts (or the entire) job
     # - WITHOUT taking existing files stored in the s3.
@@ -80,6 +86,9 @@ class Parameters:
 
 if __name__ == "__main__":
     
+    import os
+    os.environ['http_proxy'] = "http://p1proxy.frb.org:8080"
+    os.environ['https_proxy'] = "http://p1proxy.frb.org:8080"    
     start_time = time.time()    
     print('\n\nFor details on repository refer to GitHub repo at https://github.com/raj-rao-rr/X17A5\n')
     
@@ -92,6 +101,7 @@ if __name__ == "__main__":
            )
      
     # responsible for extracting balance-sheet figures by OCR via AWS Textract
+    """
     main_p2(
         Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, 
         GlobVars.temp_folder, GlobVars.temp_folder_pdf_slice, GlobVars.temp_folder_png_slice, 
@@ -101,6 +111,7 @@ if __name__ == "__main__":
            ) 
     
     # responsible for developing structured and unstructured database
+    """
     main_p3(
         Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, GlobVars.temp_folder,
         GlobVars.temp_folder_clean_pdf, GlobVars.temp_folder_clean_png, GlobVars.temp_folder_split_pdf, 

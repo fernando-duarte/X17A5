@@ -668,3 +668,198 @@ def textractParse(pdf_path:str, png_path:str, bucket:str) -> dict:
     else:
         error = 'Could not parse, JOB FAILED'
         return (None, None, None, None, error)
+    
+    
+    
+
+def textractParse_pdfs_parallel(pdf_path:str, bucket:str, job_id:str) -> dict:
+    """
+    Function  Textract job and returns a DataFrame object
+    that matches the conditions to determine a balance sheet
+    Only for PDFs 
+    
+    Parameters
+    ----------
+    pdf_path : str
+        The path on the s3 that stores the PDF files corresponding
+        to a particular broker-dealer
+        
+    bucket : str
+        The s3 bucket where all data is stored   
+    job_id : str
+        Providing job_id that we already ran
+    """
+    errors = ''
+    
+    # temporary data frame object for balance sheet information
+    res = getJobResults(job_id)
+    
+    # if Textract job did not fail we continue extraction
+    if res[0]['JobStatus'] != 'FAILED':
+
+        # perform OCR and return balance sheet with corresponding page object(s)
+        try:
+            tb_response = readTable(res)  
+        except Exception as e:
+            return (None, None, None, None, str(e))
+
+        
+        # checks for type of return, if none then we log an error
+        if type(tb_response) == tuple:
+            
+            # deconstruct the table response tuple into dataframe and page object parts
+            df1, page_obj, page_num = tb_response
+            print('\nPage number(s) for extraction in PNG are {}\n'.format(page_num))
+            
+            # try to extract from a PNG (we can still return a None here)
+            df2 = None
+            
+            # provided balance sheet page number we select FORM and TEXT data
+            forms_data = {}     
+            text_data = readText(page_obj)        
+            
+            print('\nTextract-PDF dataframe')
+            print(df1)
+            
+            
+            return (df1, df2, forms_data, text_data, None)
+        
+        else:
+            error = 'No Balance Sheet found, or parsing error'
+            return (None, None, None, None, error)
+    else:
+        error = 'Could not parse, JOB FAILED'
+        return (None, None, None, None, error)
+    
+    
+    
+
+def readPNG_parallel(pages:list, li_jobids, bucket):
+    """
+    Function to transform AWS Textract object to a dataframe, 
+    by searching for tables
+    
+    Parameters
+    ----------
+    pages : list
+        A numeric list storing the pages where a balance sheet 
+        is most likley stored, according to our balance sheet 
+        assumptions found in our get_balance_sheet() function
+        
+    png_path : str
+        The path on the s3 that stores the PNG files corresponding
+        to a particular broker-dealer
+        
+    bucket : str
+        The s3 bucket where all data is stored   
+    """
+    
+    subfolder = png_path.split('/')[-2]      # subfolder where PNG files are stored
+    
+    # construct PNG directories with relevant pages            
+    catDF = []          
+    prior_c1 = True     
+    prior_c2 = True     
+    
+    # path iterates through each png image matching the page numbers found in PDFs
+    for idx in range(len(li_jobids)):
+        try:
+            # temporary data frame object for balance sheet information
+            #res = runJob(bucket, path)
+            res = getJobResults(li_jobids[idx])
+            # if Textract job did not fail we continue extraction
+            if res[0]['JobStatus'] != 'FAILED':
+
+                # format the Textract response type 
+                doc = trp.Document(res)
+
+                # iterate through document pages
+                for page in doc.pages:
+                    # iterate through page tables
+                    for table in page.tables: 
+                        
+                        # convert trp-table into dataframe object
+                        df = trp2df(table)
+                        
+                        # retrieve balance sheet from table
+                        balance_sheet = get_balance_sheet(df)
+                        
+                        if type(balance_sheet) is tuple:
+                
+                            bs, c1, c2 = balance_sheet      # unpack the return object
+                            
+                            # we append pages since asset and liablility tables are often seperate
+                            # there is no loss of generality if asset and liability terms are in one table
+                            catDF.append(bs)            
+                            
+                            ##############################
+                            # Flag for split tables 
+                            ##############################
+
+                            # indicates no asset or liability term was read
+                            # we are currenlty reading the asset term of the balance sheet
+                            if c2 == True and prior_c1 == True and prior_c2 == True and c1 == False:
+                                print('Balance sheet line items have been split across table\n')
+                                prior_c1 = False
+
+                            # indicates no asset term read, no previous asset term was read
+                            # we are currenlty reading the liability term of the balance sheet
+                            elif c1 == True and prior_c1 == True and c2 == False:
+                                print('Asset line items may be read after liability line items\n')
+                                prior_c2 = False
+
+                            ##############################
+                            # Balance Sheet Exportation 
+                            ##############################
+
+                            # 1) indicates both assets and liability terms were found in table
+                            if (c2 == False and c1 == False) or (c2 == False and prior_c1 == False):
+                                return pd.concat(catDF)
+
+                            # 2) indicates liability term read before assets 
+                            elif prior_c2 == False and c1 == False:
+                                catDF.reverse()
+                                return pd.concat(catDF)
+
+                            else: pass
+            
+        # broad exeption to catch Textract parsing errors
+        except:pass
+
+
+        
+"""
+def textractParse_pngs_parallel(png_path:str, bucket:str, job_id:str) -> dict:
+    Function  Textract job and returns a DataFrame object
+    that matches the conditions to determine a balance sheet
+    Only for PDFs 
+    
+    Parameters
+    ----------
+    pdf_path : str
+        The path on the s3 that stores the PDF files corresponding
+        to a particular broker-dealer
+        
+    bucket : str
+        The s3 bucket where all data is stored   
+    job_id : str
+        Providing job_id that we already ran
+    errors = ''
+           
+    # try to extract from a PNG (we can still return a None here)
+    df2 = readPNG(page_num, png_path, bucket)
+    print(df2)
+            
+            
+    return (df1, df2, forms_data, text_data, None)
+        
+        else:
+            error = 'No Balance Sheet found, or parsing error'
+            return (None, None, None, None, error)
+    else:
+        error = 'Could not parse, JOB FAILED'
+        return (None, None, None, None, error)
+
+"""
+
+        

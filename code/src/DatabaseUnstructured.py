@@ -322,7 +322,7 @@ def extra_cols(csv_name:str) -> tuple:
     fiscal_year = int(data_split[1]) - 1           # fiscal year are generally the previous year of filing
     cik = data_split[0]                            # extract the CIK number  
     
-    return (file_name, filing_date, fiscal_year, cik)   
+    return (file_name, filing_date, fiscal_year, cik)
 
 def reorder_columns(df:pd.DataFrame, col_preserve:list) -> pd.DataFrame:
     """

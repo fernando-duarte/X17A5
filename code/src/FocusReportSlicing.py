@@ -107,3 +107,24 @@ def extractSubset(pages:list, export_file:str):
 
     except utils.PdfReadError:
         print('EOF marker not found - reject %s' % export_file)
+        
+     
+    
+def to_png(pil_path,base_file,idx):
+    """
+    Takes a pil path to convert to PNGs
+    
+    Parameters
+    ----------
+    pil_path : str
+        
+    base_file : str   
+        Base name
+        
+    """
+    from PIL import Image
+    Image.MAX_IMAGE_PIXELS = 10000000000
+    export_file_name = "{}-p{}.png".format(base_file, idx)
+    with Image.open(pil_path[idx]) as im:
+        im.save(export_file_name, 'PNG')
+        

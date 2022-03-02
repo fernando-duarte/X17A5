@@ -69,9 +69,11 @@ def main_p3(s3_bucket, s3_pointer, s3_session, temp_folder, out_folder_clean_pdf
     # --------------------------------------------
     
     print('\nBalance Sheets derived from PDFS')
-    for file in pdf_clean_files:
+    for counter,file in enumerate(pdf_clean_files):
         
         print('\n\t%s' % file)
+        if counter%40 == 0:
+            print(counter)
         fileName = file.split('/')[-1]                                             # file-name for a given path
         asset_name = out_folder_split_pdf + 'Assets/' + fileName                   # export path to assets
         liability_name = out_folder_split_pdf + 'Liability & Equity/' + fileName   # export path to liability and equity

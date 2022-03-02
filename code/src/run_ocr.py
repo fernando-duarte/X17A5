@@ -17,8 +17,9 @@ Textract errors and converting the read strings as numeric values
 import os
 import json
 import numpy as np
-
-from OCRTextract import textractParse  
+import pandas as pd
+import time
+from OCRTextract import textractParse, textractParse_pdfs_parallel, startJob
 from OCRClean import clean_wrapper
 
 from run_file_extraction import brokerFilter
@@ -53,7 +54,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     if (temp_folder + 'X17A5-FORMS.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'Temp/X17A5-FORMS.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, 'temp/X17A5-FORMS.json', 'temp.json')
         
         # read data on KEY-VALUE dictionary (i.e Textract FORMS) 
         with open('temp.json', 'r') as f: forms_dictionary = json.loads(f.read())
@@ -65,7 +66,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     if (temp_folder + 'X17A5-TEXT.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'Temp/X17A5-TEXT.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, 'temp/X17A5-TEXT.json', 'temp.json')
         
         # read data on TEXT-Confidence dictionary
         with open('temp.json', 'r') as f: text_dictionary = json.loads(f.read())  
@@ -77,7 +78,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     if (temp_folder + 'ERROR-TEXTRACT.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'Temp/ERROR-TEXTRACT.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, 'temp/ERROR-TEXTRACT.json', 'temp.json')
         
         # read data on errors derived from Textract
         with open('temp.json', 'r') as f: error_dictionary = json.loads(f.read()) 
@@ -98,86 +99,160 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     prior_png_cik = np.nan
     
     # pdf directory where we store the broker-dealer information 
-    textract_files = filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files)
+    textract_files = list(filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files))
     number_files = len(list(filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files)))
     
-    for counter, pdf_paths in enumerate(textract_files):
+    for c_min in range(81960,len(textract_files),100):
+        jobids = len(textract_files)*[0]
+        print('Running Textract for ' + str(c_min))
+
+        for counter, pdf_paths in enumerate(textract_files):
+            if counter < c_min:
+                continue
+            if counter > c_min + 100:
+                continue
+
+            basefile = pdf_paths.split('/')[-1].split('-subset')[0]
+            fileName = basefile + '.csv'
+            
+            jobids[counter] = str(counter)
+
+            if counter%40 == 0:
+                print(counter)
+
+            while True:
+                try:
+                    jobids[counter] = startJob(s3_bucket, pdf_paths)
+                    break
+                except Exception as e:
+                    print(e)
+                    time.sleep(10)
         
-        # baseFile name to name export .csv file e.g. 1224385-2004-03-01.csv
-        basefile = pdf_paths.split('/')[-1].split('-subset')[0]
-        fileName = basefile + '.csv'
-        print('\nPerforming OCR for %s (%d out of %s)' % (fileName,counter,number_files))
+            jobids_csv = pd.DataFrame(jobids)
+
+            jobids_csv.to_csv('job_ids/textract_jobids_cmin_' + str(c_min) + '.csv')
         
-        # if file is not found in output directory we extract the balance sheet
-        # WE LOOK TO AVOID RE-RUNNING OLD TEXTRACT PARSES TO SAVE TIME, but if 
-        # rerun_job is < 5 (True) we re-run Textract again
-        if (out_folder_raw_pdf + fileName in output_pdf_csvs) and (rerun_job > 4):
-            print('\t%s has been downloaded' % fileName)
-                
-        else:
-            # run Textract OCR job and extract the parsed data 
-            png_paths = input_png + basefile + '/'
-            pdf_df, png_df, forms_data, text_data, error = textractParse(pdf_paths, png_paths, s3_bucket)
+        for counter, pdf_paths in enumerate(textract_files):
+            if counter < c_min:
+                continue
+            if counter > c_min + 100:
+                continue
+            # baseFile name to name export .csv file e.g. 1224385-2004-03-01.csv
+            basefile = pdf_paths.split('/')[-1].split('-subset')[0]
+            fileName = basefile + '.csv'
+            print('\nPerforming OCR for %s (%d out of %s)' % (fileName,counter,number_files))
 
-            # if no error is reported we save FORMS, TEXT, DataFrame
-            if error is None:
+            # if file is not found in output directory we extract the balance sheet
+            # WE LOOK TO AVOID RE-RUNNING OLD TEXTRACT PARSES TO SAVE TIME, but if 
+            # rerun_job is < 5 (True) we re-run Textract again
+            if (out_folder_raw_pdf + fileName in output_pdf_csvs) and (rerun_job > 4):
+                print('\t%s has been downloaded' % fileName)
 
-                # store accompanying information for JSONs
-                forms_dictionary[basefile] = forms_data
-                text_dictionary[basefile]  = text_data
-                
-                # writing data table to .csv file
-                pdf_df.to_csv(fileName, index=False)
-                with open(fileName, 'rb') as data:
-                    s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_raw_pdf + fileName, Body=data)
-                
-                # writing data frame to .csv file extracted from PNG
-                if png_df is not None:
-                    png_df.to_csv(fileName, index=False)
-                    with open(fileName, 'rb') as data:
-                        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_raw_png + fileName, Body=data)
-
-                print('--------------------------------------------------------------------')
-                print('\tSaved %s file to s3 bucket' % fileName)
-                
-                # ==============================================================================
-                #               STEP 5 (Perform Cleaning Operations on Textract Table)
-                # ==============================================================================
-                
-                if pdf_df is not None:
-                    print('\tWorking on PDF balance-sheet')
-                    # perform cleaning operations on read balance sheets for PDF and PNGs
-                    
-                    # adding following try structure. In rare cases clean_wrapper has an error due to invalid cleaning of pdf dataframe                               that raises an error (for dataframe '1139137-2006-02-28.csv')
-                    try:
-                        pdf_df_clean, prior_pdf_scaler, prior_pdf_cik = clean_wrapper(pdf_df, text_dictionary, basefile, fileName,
-                                                                                      prior_pdf_scaler, prior_pdf_cik)
-                        
-                        # export contents to the s3 directory
-                        pdf_df_clean.to_csv(fileName, index=False)
-                        with open(fileName, 'rb') as data:
-                            s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_pdf + fileName, Body=data)
-                        
-                    except Exception as e:
-                        error_dictionary[basefile] = str(e)
-                    
-                if png_df is not None:
-                    print('\tWorking on PNG balance-sheet')
-                    png_df_clean, prior_png_scaler, prior_png_cik = clean_wrapper(png_df, text_dictionary, basefile, fileName,
-                                                                                  prior_png_scaler, prior_png_cik)
-                    
-                    png_df_clean.to_csv(fileName, index=False)
-                    with open(fileName, 'rb') as data:
-                        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_png + fileName, Body=data)
-                
-                # remove local file after it has been created
-                if os.path.isfile(fileName):
-                    os.remove(fileName)
-                    print('--------------------------------------------------------------------\n')
-                
             else:
-                error_dictionary[basefile] = error
-    
+                # run Textract OCR job and extract the parsed data 
+
+                png_paths = input_png + basefile + '/'
+
+                # pdf_df, png_df, forms_data, text_data, error = textractParse(pdf_paths, png_paths, s3_bucket)
+
+                pdf_df, png_df, forms_data, text_data, error = textractParse_pdfs_parallel(pdf_paths, s3_bucket, jobids[counter])
+                if error is not(None):
+                    if 'Block' in error:
+                        print('Going too fast, waiting 20s')
+                        time.sleep(20)
+                        pdf_df, png_df, forms_data, text_data, error = textractParse_pdfs_parallel(pdf_paths, s3_bucket, jobids[counter])
+
+                # if no error is reported we save FORMS, TEXT, DataFrame
+                if error is None:
+
+                    # store accompanying information for JSONs
+                    forms_dictionary[basefile] = forms_data
+                    text_dictionary[basefile]  = text_data
+
+                    # writing data table to .csv file
+                    pdf_df.to_csv(fileName, index=False)
+                    with open(fileName, 'rb') as data:
+                        s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_raw_pdf + fileName, Body=data)
+
+                    # writing data frame to .csv file extracted from PNG
+                    if png_df is not None:
+                        png_df.to_csv(fileName, index=False)
+                        with open(fileName, 'rb') as data:
+                            s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_raw_png + fileName, Body=data)
+
+                    print('--------------------------------------------------------------------')
+                    print('\tSaved %s file to s3 bucket' % fileName)
+
+                    # ==============================================================================
+                    #               STEP 5 (Perform Cleaning Operations on Textract Table)
+                    # ==============================================================================
+
+                    if pdf_df is not None:
+                        print('\tWorking on PDF balance-sheet')
+                        # perform cleaning operations on read balance sheets for PDF and PNGs
+
+                        # adding following try structure. In rare cases clean_wrapper has an error due to invalid cleaning of pdf dataframe                               that raises an error (for dataframe '1139137-2006-02-28.csv')
+                        try:
+                            pdf_df_clean, prior_pdf_scaler, prior_pdf_cik = clean_wrapper(pdf_df, text_dictionary, basefile, fileName,
+                                                                                          prior_pdf_scaler, prior_pdf_cik)
+
+                            # export contents to the s3 directory
+                            pdf_df_clean.to_csv(fileName, index=False)
+                            with open(fileName, 'rb') as data:
+                                s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_pdf + fileName, Body=data)
+
+                        except Exception as e:
+                            error_dictionary[basefile] = str(e)
+
+                    if png_df is not None:
+                        print('\tWorking on PNG balance-sheet')
+                        png_df_clean, prior_png_scaler, prior_png_cik = clean_wrapper(png_df, text_dictionary, basefile, fileName,
+                                                                                      prior_png_scaler, prior_png_cik)
+
+                        png_df_clean.to_csv(fileName, index=False)
+                        with open(fileName, 'rb') as data:
+                            s3_pointer.put_object(Bucket=s3_bucket, Key=out_folder_clean_png + fileName, Body=data)
+
+                    # remove local file after it has been created
+                    if os.path.isfile(fileName):
+                        os.remove(fileName)
+                        print('--------------------------------------------------------------------\n')
+
+                else:
+                    print('\tError with Textract : '+ error)
+                    error_dictionary[basefile] = error
+                    
+                if counter%200 == 0:
+                    print('Intermediate saving of errors ')
+                    with open('X17A5-FORMS.json', 'w') as file: 
+                        json.dump(forms_dictionary, file)
+                        file.close()
+
+                    # save contents to AWS S3 bucket
+                    with open('X17A5-FORMS.json', 'rb') as data: 
+                        s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'X17A5-FORMS.json')
+                    os.remove('X17A5-FORMS.json')
+
+                    # write to a JSON file for TEXT 
+                    with open('X17A5-TEXT.json', 'w') as file: 
+                        json.dump(text_dictionary, file)
+                        file.close()
+
+                    # save contents to AWS S3 bucket
+                    with open('X17A5-TEXT.json', 'rb') as data: 
+                        s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'X17A5-TEXT.json')
+                    os.remove('X17A5-TEXT.json')
+
+                    # write to a JSON file for FORMS 
+                    with open('ERROR-TEXTRACT.json', 'w') as file: 
+                        json.dump(error_dictionary, file)
+                        file.close()
+
+                    # save contents to AWS S3 bucket
+                    with open('ERROR-TEXTRACT.json', 'rb') as data: 
+                        s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'ERROR-TEXTRACT.json')
+                    os.remove('ERROR-TEXTRACT.json')
+          
     # ---------------------------------------------------------------------------
     # Save JSON files for updated figures (FORM, TEXT, ERROR)
     # ---------------------------------------------------------------------------

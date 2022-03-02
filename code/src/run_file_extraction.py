@@ -20,6 +20,7 @@ import json
 import datetime
 import numpy as np
 import time
+from joblib import Parallel, delayed
 
 from pdf2image import convert_from_path, pdfinfo_from_path
 from ExtractBrokerDealers import dealerData
@@ -49,6 +50,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
         parse_years = np.arange(1993, datetime.datetime.today().year+1)
     
     # if rerun_job is 1 (previous True), we overwrite our current CIKandDealer information on s3
+    
     if (temp_folder + 'CIKandDealers.json' in temp_paths) and (rerun_job > 1): 
         
         # retrieve old information from CIK and Dealers JSON file
@@ -79,13 +81,14 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
     
     print('\n========\nStep 2: Gathering X-17A-5 Filings\n========\n')
    
-    input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
+    #input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
           
     # if no broker-dealers are provided by the user, we default to the full sample
     if len(broker_dealers_list) == 0:
         broker_dealers_list = cik2brokers['broker-dealers'].keys()
 
     for cik_id in broker_dealers_list:
+        continue
         companyName = cik2brokers['broker-dealers'][cik_id]
         
         # build lookup URLs to retrieve filing dates and archived url's
@@ -161,15 +164,15 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
     
     # re-run input paths post file extraction to update directory
     input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
-    
     pdf_paths = s3_session.list_s3_files(s3_bucket, export_pdf)
     png_paths = s3_session.list_s3_files(s3_bucket, export_png)
     
     # filter FOCUS reports from the s3 that correspond to list of broker-dealers 
-    raw_broker_dealer_pdfs = filter(lambda x: brokerFilter(broker_dealers_list, x), input_paths)
-     
-    for path_name in raw_broker_dealer_pdfs:
+    raw_broker_dealer_pdfs = list(filter(lambda x: brokerFilter(broker_dealers_list, x), input_paths))
+   
+    for counter, path_name in enumerate(raw_broker_dealer_pdfs):
         print('Slicing FOCUS report filing for %s' % path_name)
+        print(counter)
         
         # check to see if values are downloaded to s3 sub-bin
         base_file = path_name.split('/')[-1].split('.')[0]
@@ -217,26 +220,23 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                 # determine the iterable size (number of page in document)
                 size = min(maxPages,20)
 
-                # we process pages 10-by-10 to alleviate the memory load
-                for i in range(1, maxPages+1, 10):
-                    pages = convert_from_path('temp.pdf', dpi=500, first_page=i, last_page = min(i+10-1,maxPages))
-                    if i == 1:
-                        max_page = min(10,size)
-                    else:
-                        max_page = size
+                # to be improved to a relative path for output folder
+                li = convert_from_path('temp.pdf', dpi = 500, first_page=0, last_page = size,
+                  output_folder='/home/ec2-user/SageMaker/X17A5/code/src/joblib_pngs', thread_count=4,
+                 paths_only = True)
+                
+                Parallel(n_jobs=-1)(delayed(to_png)(li, "joblib_pngs/"+base_file,idx) for idx in range(size))
+                    
+                for idx in range(0,size):                       
+                    # write the png name for exportation
+                    export_file_name_local = "joblib_pngs/{}-p{}.png".format(base_file, idx)
+                    export_file_name_s3 = "{}-p{}.png".format(base_file, idx)
 
-                    for idx in range(i-1,max_page):                       
-                        # write the png name for exportation
-                        export_file_name = "{}-p{}.png".format(base_file, idx)
+                    with open(export_file_name_local, 'rb') as data:
+                        s3_pointer.upload_fileobj(data, s3_bucket, export_png + base_file + '/' + export_file_name_s3)
+                    os.remove(export_file_name_local)
+                    os.remove(li[idx])
 
-                        # storing PDF page as a PNG file locally (using pdf2image)
-                        pages[idx-i+1].save(export_file_name, 'PNG')
-
-                        # save contents to AWS S3 bucket as specified
-                        with open(export_file_name, 'rb') as data:
-                            s3_pointer.upload_fileobj(data, s3_bucket, export_png + base_file + '/' + export_file_name)
-
-                        os.remove(export_file_name)
 
                 print('\tSaved png files for -> %s' % base_file)
 
@@ -248,5 +248,5 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
 
     
             os.remove('temp.pdf')
-                
+  
     return broker_dealers_list      

@@ -9,15 +9,19 @@ export https_proxy=http://p1proxy.frb.org:8080
 if [ ! -f "Anaconda3-2020.02-Linux-x86_64.sh" ]
 then
     echo -e "Anaconda3-2020.02-Linux-x86_64.sh not found in directory, downloading...\n" 
+    sudo bash
+    export https_proxy=http://p1proxy.frb.org:8080
 
     # install conda for local use on the EC2 
-    sudo yum install python3 -y
-    sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
-    sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh   
+    yum install python3 -y
+    yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
+    wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh  
+    exit
 else
     echo -e "Anaconda3-2020.02-Linux-x86_64.sh was found\n"
 fi
 
+export https_proxy=http://p1proxy.frb.org:8080
 # check to see if the Anaconda directory exists in working home directory
 if [ ! -d "/home/ec2-user/anaconda3" ]
 then
@@ -55,7 +59,7 @@ pip3 install fuzzywuzzy
 pip3 install joblib
 pip3 install scikit-learn==0.24.1       # log-reg model stability verison
 pip3 install pikepdf 
-
+pip3 install aws
 # #########################################################
 # EXECUTING PRIMARY SCRIPT
 # #########################################################
