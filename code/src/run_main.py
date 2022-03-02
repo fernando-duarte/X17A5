@@ -63,8 +63,15 @@ class Parameters:
     #                          an empty list
     
     # e.g. broker_dealers_list = ['782124'], default (empty list = [] ) handled in run_file_extraction.py
+<<<<<<< HEAD
     #broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
     broker_dealers_list = []
+=======
+    # broker_dealers_list = ['782124', '42352', '68136', '91154', '72267']
+    broker_dealers_list = []
+	
+    # broker_dealers_list =  ['318336','230611','87634','853784','851376','782124','42352','68136','230611','895502','48966','860220','808379','58056','754542','200565','753835','65106','874362','91154','703004','1101180','318336','276523','1675365']
+>>>>>>> dfd8abe91f5895aa11bf736a0ae0940fd6ff55de
 
     # FLAG for determing whether we want to re-run parts (or the entire) job
     # - WITHOUT taking existing files stored in the s3.
@@ -91,7 +98,9 @@ if __name__ == "__main__":
     os.environ['https_proxy'] = "http://p1proxy.frb.org:8080"    
     start_time = time.time()    
     print('\n\nFor details on repository refer to GitHub repo at https://github.com/raj-rao-rr/X17A5\n')
-    
+    import os
+    os.environ['http_proxy'] = "http://p1proxy.frb.org:8080"
+    os.environ['https_proxy'] = "http://p1proxy.frb.org:8080" 
     # responsible for gathering FOCUS reports and building list of broker-dealers
     bk_list = main_p1(
         Parameters.bucket, GlobVars.s3_pointer, GlobVars.s3_session, 
@@ -119,9 +128,4 @@ if __name__ == "__main__":
         GlobVars.liable_ml_model, GlobVars.asset_ml_ttset, GlobVars.liable_ml_ttset,
         Parameters.job_rerun, bk_list
            )   
-    
-    elapsed_time = time.time() - start_time
-    print('\n===================================================================')
-    print('FOCUS REPORT SCRIPT COMPLETED - total time taken %.2f minutes' % (elapsed_time / 60))
-    print('===================================================================\n')
     
