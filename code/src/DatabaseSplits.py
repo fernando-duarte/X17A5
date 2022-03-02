@@ -45,8 +45,9 @@ def bsSplit(array: np.ndarray) -> tuple:
     liable_idx = 0
     
     # iterate through the line items as provided by the array
+    val1 = None
+    val2 = None
     for i, item in enumerate(array):
-        
         # search string for presence of word 'assets' and 'liability/liabilites'
         val1 = re.search('assets', item, flags=re.I)
         val2 = re.search('liability|liabilities', item, flags=re.I)
