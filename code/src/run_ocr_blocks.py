@@ -2,10 +2,8 @@
 # coding: utf-8
 
 """
-run_ocr.py: Script responsible for performing OCR via AWS Textract, 
-and then "cleaning" the reported dataframes by handling special 
-Textract errors and converting the read strings as numeric values
-
+run_ocr_blocks.py: Script responsible for cleaning up AWS Textract errors (when we call Textract too fast).
+Besides that it runs very much the same as run_ocr.py.
     1) OCRTextract.py
     2) OCRClean.py
 """
@@ -29,11 +27,11 @@ from run_file_extraction import brokerFilter
 # MAIN CODE EXECUTION
 ##################################
 
-def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png, 
+def main_p2_blocks(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png, 
             out_folder_raw_pdf, out_folder_raw_png, textract_obj, out_folder_clean_pdf, 
             out_folder_clean_png, rerun_job, broker_dealers):
     
-    print('\n============\nStep 4 & 5: Performing OCR via AWS Textract and Cleaning Operations\n============\n')
+    print('\n============\nStep 4 & 5 BIS: Fixing Block Error\n============\n')
     
     # ==============================================================================
     #               STEP 4 (Perform OCR via Textract on FOCUS Reports)
@@ -54,7 +52,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     if (temp_folder + 'X17A5-FORMS.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'temp/X17A5-FORMS.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, temp_folder + 'X17A5-FORMS.json', 'temp.json')
         
         # read data on KEY-VALUE dictionary (i.e Textract FORMS) 
         with open('temp.json', 'r') as f: forms_dictionary = json.loads(f.read())
@@ -66,7 +64,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     if (temp_folder + 'X17A5-TEXT.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'temp/X17A5-TEXT.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, temp_folder + 'X17A5-TEXT.json', 'temp.json')
         
         # read data on TEXT-Confidence dictionary
         with open('temp.json', 'r') as f: text_dictionary = json.loads(f.read())  
@@ -78,7 +76,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     if (temp_folder + 'ERROR-TEXTRACT.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'temp/ERROR-TEXTRACT.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, temp_folder + 'ERROR-TEXTRACT.json', 'temp.json')
         
         # read data on errors derived from Textract
         with open('temp.json', 'r') as f: error_dictionary = json.loads(f.read()) 
@@ -100,24 +98,24 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     # pdf directory where we store the broker-dealer information 
     textract_files = list(filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files))
-    number_files = len(list(filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files)))
+    number_files = len(textract_files)
     
-    
-    jobids = [0]*93583
-    for c_min in range(47660,93583,100):
-        c_max = min(c_min + 100,93583)
-        a = pd.read_csv('job_ids/textract_jobids_cmin_' + str(c_min) + '.csv').values.T[1]
-        jobids[c_min:c_max] = a[c_min:c_max]
+    if "job_ids.json" in os.listdir():
+        with open("job_ids.json", 'r') as f: job_ids = json.loads(f.read())
+    else:
+        job_ids = {}
+ 
 
     for counter, pdf_paths in enumerate(textract_files):
-        if counter < 47660:
-            continue
-     
         # baseFile name to name export .csv file e.g. 1224385-2004-03-01.csv
         basefile = pdf_paths.split('/')[-1].split('-subset')[0]
         fileName = basefile + '.csv'
         print('\nPerforming OCR for %s (%d out of %s)' % (fileName,counter,number_files))
         
+        # this try structure parses through the error dictionnary looking for 'Block' errors.
+        # if basefile isn't a key (ie no errors in error_dictionary) then the try fails and we continue to the following pdf_path
+        # if basefile is a key but the error is not block the code goes to the else clause and we countinue to the following pdf_path
+        # this guarantees that the block after runs only for files with the block error
         try:
             if error_dictionary[basefile] == "'Blocks'":
                 print(counter)
@@ -138,7 +136,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
 
             png_paths = input_png + basefile + '/'
 
-            pdf_df, png_df, forms_data, text_data, error = textractParse_pdfs_parallel(pdf_paths, s3_bucket, jobids[counter])
+            pdf_df, png_df, forms_data, text_data, error = textractParse_pdfs_parallel(pdf_paths, s3_bucket, job_ids[basefile])
 
             # if no error is reported we save FORMS, TEXT, DataFrame
             if error is None:
@@ -146,7 +144,8 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
                 # store accompanying information for JSONs
                 forms_dictionary[basefile] = forms_data
                 text_dictionary[basefile]  = text_data
-
+                error_dictionary.pop(basefile)
+                
                 # writing data table to .csv file
                 pdf_df.to_csv(fileName, index=False)
                 with open(fileName, 'rb') as data:

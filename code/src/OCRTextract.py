@@ -607,8 +607,10 @@ def readText(doc_pages:list) -> dict:
 """
 OCR Primary Function
 
-This function is responsbile for running a Textract job and
+This function is responsible for running a Textract job and
 returning a pandas DataFrame object that represents a balance-sheet
+We do not use this function anymore as the code doesn't run for PNGs anymore.
+
 """
 
 def textractParse(pdf_path:str, png_path:str, bucket:str) -> dict:
@@ -676,7 +678,7 @@ def textractParse_pdfs_parallel(pdf_path:str, bucket:str, job_id:str) -> dict:
     """
     Function  Textract job and returns a DataFrame object
     that matches the conditions to determine a balance sheet
-    Only for PDFs 
+    Only for PDFs.
     
     Parameters
     ----------
@@ -829,6 +831,8 @@ def readPNG_parallel(pages:list, li_jobids, bucket):
 
         
 """
+Heritage code to implement png parallel processing. I didn't go that far.
+
 def textractParse_pngs_parallel(png_path:str, bucket:str, job_id:str) -> dict:
     Function  Textract job and returns a DataFrame object
     that matches the conditions to determine a balance sheet

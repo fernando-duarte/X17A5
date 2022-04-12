@@ -40,7 +40,7 @@ fi
 conda update -n base -c defaults conda -y 
 
 # downloading poppler backend to support pdf2image package
-conda install -c conda-forge poppler -y
+# conda install -c conda-forge poppler -y
 
 pip3 install --upgrade pip
 pip3 install bs4
@@ -54,7 +54,8 @@ pip3 install PyMuPDF==1.16.14
 pip3 install smart_open
 pip3 install minecart
 pip3 install textract-trp
-conda install python-Levenshtein -y
+#conda install python-Levenshtein -y
+pip3 install python-Levenshtein
 pip3 install fuzzywuzzy
 pip3 install joblib
 pip3 install scikit-learn==0.24.1       # log-reg model stability verison
@@ -65,4 +66,4 @@ pip3 install aws
 # #########################################################
 
 # run the main-script for the X-17A-5 project (run_main.py)
-# python3 run_main.py
+python3 run_main.py

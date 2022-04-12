@@ -164,10 +164,19 @@ def dealerData(years:list, company_email:str,
                     last_column = x17File.columns[-1]
                     cikNumbers = x17File[last_column].apply(lambda x: x.split('/')[2]).values
                     
-                    # compute dictionary mapping for the CIK and company name for each broker-dealer    
-                    dictionary_update = dict(map(lambda x: (x, companyName(x,company_email)), 
-                                                 cikNumbers))
-                    cik2brokers['broker-dealers'].update(dictionary_update)
+                    # compute dictionary mapping for the CIK and company name for each broker-dealer
+                    try:
+                        dictionary_update = dict(map(lambda x: (x, companyName(x,company_email)), 
+                                                     cikNumbers))
+                        cik2brokers['broker-dealers'].update(dictionary_update)
+                        
+                    except Exception as e:
+                        print(e)
+                        time.sleep(600)
+                        dictionary_update = dict(map(lambda x: (x, companyName(x,company_email)), 
+                                                     cikNumbers))
+                        
+                        cik2brokers['broker-dealers'].update(dictionary_update)
                 
                 os.remove('main.txt')
                 

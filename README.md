@@ -4,7 +4,7 @@
 The project scrapes the SEC for X-17A-5 filings published by registered broker-dealers historically, and constructs a database for asset, liability and equity line items. The project runs on Amazon Web Services (AWS) in a SageMaker instance and stores the scraped information into an s3 bucket. 
 
 ## 2	Software Dependencies
-**All code is executed using Python 3.6 as of current release. We make no claim for stability on other version of Python.**
+**All code is executed using Python 3.7.12 as of current release. We make no claim for stability on other version of Python.**
 
 We use [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) to interact with the SEC website and EDGAR archive, to extract data files (e.g. X-17A-5). 
 ```
@@ -40,6 +40,10 @@ We use [python-Levenshtein](https://pypi.org/project/python-Levenshtein/), and [
 pip install python-Levenshtein
 pip install fuzzywuzzy
 ```
+### 2.1 	Pip freeze
+
+The file "frozen-requirements.txt" is a list of packages installed on the last instance used to commit the present version of this code. In particular it has version numbers for all the packages discussed above.
+
 
 ## 3	File Structure
 
@@ -56,6 +60,8 @@ pip install fuzzywuzzy
 * `ERROR-TEXTRACT.json` JSON file storing CIK numbers with accompanying year that were unable to be read via Textract. There are two types of errors that are raised:
     * *No Balance Sheet found, or parsing error*, where there may be an issue with Textract reading the page
     * *Could not parse, JOB FAILED*, where there may be an issue with Textract parsing the pdf file   
+    * *Blocks*, Textract didn't complete the job and threw a Blocks Error. If the code ran properly this error should not be present.   
+
     
 ### 3.3 	Input Files
 
@@ -73,7 +79,7 @@ The code files are divided into three sub-groups that are responsible for execut
 
    * `run_file_extraction.py` runs all execution for Part 1 (see below 3.3b), responsible for gathering FOCUS reports and building list of broker-dealers 
 
-   * `run_ocr.py` runs all execution for Part 2 (see below 3.3b), responsible for extracting balance-sheet figures by OCR via AWS Textract
+   * `run_ocr.py` runs all execution for Part 2 (see below 3.3b), responsible for extracting balance-sheet figures by OCR via AWS Textract (`run_ocr_blocks.py` does the same thing)
    
    * `run_build_database.py` runs all execution for Part 3 (see below 3.3b), responsible for developing structured and unstructured database
 
@@ -98,9 +104,9 @@ The code files are divided into three sub-groups that are responsible for execut
 
 ### 3.5 	Output Files
 
-   * `unstructured_assets.csv` & `unstructured_liable.csv` represent the asset and liability & equity balance sheets respectively, non-aggregated by line items for each broker-dealers per filing year - where our values correspond to parsed FOCUS reports.   
-
-   * `asset_name_map.csv` & `liability_name_map.csv` represent the asset and liability & equity line item mappings, as detrmined by our logistic regression classifier model - mapping balance-sheet line items to one of our pre-defined accounting groups.   
+   * `asset_name_map.csv` & `liability_name_map.csv` represent the asset and liability & equity line item mappings, as determined by our logistic regression classifier model - mapping balance-sheet line items to one of our pre-defined accounting groups.   
+   
+   * `unstructured_assets` & `unstructured_liable` folders: represent the asset and liability & equity balance sheets respectively, non-aggregated by line items for each broker-dealers per filing year - where our values correspond to parsed FOCUS reports. This is done for chunks ('cuts') of 1 000 balance sheets at a time
 
    * `structured_assets.csv` & `structured_liability.csv` represent the asset and liability & equity balance sheets respectively, aggregating by line items for each broker-dealers per filing year - where aggregation is determined by a logistic regression classifier model and values correspond to parsed FOCUS reports.  
 
@@ -116,13 +122,22 @@ If running the code for all broker_dealers it is necessary to do so on an EC2 in
    1.    Modify the static variable `bucket` to the designated s3 bucket you intend to store data materials
    2.    Modify the `parse_years` list with the numerical years look back historically for broker dealers (refer to inline doc)
    3.    Modify the `broker_dealers_list` list with broker-dealer CIKs you'd like to operate on (refer to inline doc)
-   4.    Modify the `job_rerun` with an integer flag to indicate a preference to ignore existing files (refer to inline doc) 
+   4.    Modify the `job_rerun` with an integer flag to indicate a preference to ignore existing files (refer to inline doc)
+   5.    Modify the `fed_proxy` with the adequate proxy address if working on the NIT (refer to inline doc, empty string "" if no proxy) 
 
-3. On your terminal, whether on the EC2 or SageMaker, run the shell-script by evoking the `sh`.
+
+3. On your terminal, whether on the EC2 or SageMaker, run the shell-script by evoking the `sh`. If running without a proxy, remove all "export https_proxy=http://p1proxy.frb.org:8080" lines from run_main_batch.sh
 
 ```
 $  sh run_main_batch.sh
 ```
+To save outputs in a file called "SaveOutput.txt", run:
+
+```
+$  sh run_main_batch.sh 2>&1 | tee SaveOutput.txt
+
+```
+
 ### If running on EC2
 Make sure that the EC2 instance's configuration are linked to the right region (e.g us-east-2 Ohio )
 For a new instance, you have to change configuration files by using this command:
@@ -131,9 +146,23 @@ $  aws configure
 ```
 and changing the Default region
 
-## 5	Possible Extensions
-* Extend and modify idiosyncratic changes as deemed appropriate for when Textract fails
+## 5	Hardware
+The code takes advantage of having multiple processors. For maximum speed it is recommended to use at least 8 cores (this was especially true when processing the PNGs, less true without that step). In addition having a decent amount of RAM (16GB) guarantees that there are no memory crashes. 
 
-## 6	Contributors
+For those reasons, we recommend using a "ml.t3.2xlarge" or equivalent, with 25GB of memory.
+
+Note: the PNG processing (heritage code) benefitted massively from running with a "ml.m5.4xlarge" instance. The speed increase made up for more then the difference in price.
+
+
+## 5	Possible Extensions
+* Extend and modify idiosyncratic changes as deemed appropriate for when Textract fails. This could be selective processing with Tables + Forms, or with PNGs.
+
+* Re-code Textract for PNGs by taking advantage of asynchronous Textract to greatly increase speed as was done for PDFs
+
+* run_ocr_block.py is almost identical to run_ocr.py. Having a way of passing a to do list to run_ocr.py would be a way of solving that (the list would then be all 'block' errors for the second pass)
+
+
+## 7	Contributors
+* [Mathias Andler](https://github.com/mathias-andler) (Sr. Research Analyst)
 * [Rajesh Rao](https://github.com/raj-rao-rr) (Sr. Research Analyst)
 * [Fernando Duarte](https://github.com/fernando-duarte) (Sr. Economist)

@@ -51,10 +51,9 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     # ---------------------------------------------------------------------------
     # Load in Temp JSON files (FORM, TEXT, ERROR) if present from s3
     # ---------------------------------------------------------------------------
-    
     if (temp_folder + 'X17A5-FORMS.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'temp/X17A5-FORMS.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, temp_folder + 'X17A5-FORMS.json', 'temp.json')
         
         # read data on KEY-VALUE dictionary (i.e Textract FORMS) 
         with open('temp.json', 'r') as f: forms_dictionary = json.loads(f.read())
@@ -66,7 +65,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     if (temp_folder + 'X17A5-TEXT.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'temp/X17A5-TEXT.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, temp_folder + 'X17A5-TEXT.json', 'temp.json')
         
         # read data on TEXT-Confidence dictionary
         with open('temp.json', 'r') as f: text_dictionary = json.loads(f.read())  
@@ -78,7 +77,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     if (temp_folder + 'ERROR-TEXTRACT.json' in temp) and (rerun_job > 4):
         # retrieving downloaded files from s3 bucket
-        s3_pointer.download_file(s3_bucket, 'temp/ERROR-TEXTRACT.json', 'temp.json')
+        s3_pointer.download_file(s3_bucket, temp_folder + 'ERROR-TEXTRACT.json', 'temp.json')
         
         # read data on errors derived from Textract
         with open('temp.json', 'r') as f: error_dictionary = json.loads(f.read()) 
@@ -98,45 +97,64 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     prior_pdf_cik = np.nan
     prior_png_cik = np.nan
     
+    
     # pdf directory where we store the broker-dealer information 
     textract_files = list(filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files))
-    number_files = len(list(filter(lambda x: brokerFilter(broker_dealers, x), raw_pdf_files)))
+    number_files = len(textract_files)
     
-    for c_min in range(81960,len(textract_files),100):
-        jobids = len(textract_files)*[0]
-        print('Running Textract for ' + str(c_min))
-
-        for counter, pdf_paths in enumerate(textract_files):
-            if counter < c_min:
-                continue
-            if counter > c_min + 100:
-                continue
+    
+    if "job_ids.json" in os.listdir():
+        with open("job_ids.json", 'r') as f: job_ids = json.loads(f.read())
+    else:
+        job_ids = {}
+    
+    # number of concurrent jobs sent to Textract services. 
+    # Base on us-east-2 is 100, but our limit has been increased to 300 by asking AWS help desk
+    num_concurr_jobs = 300
+    
+    # if retry_errors is True, the code will try running Textract on X17A files where it failed before
+    retry_errors = False
+    
+    for c_min in range(0,len(textract_files), num_concurr_jobs):
+        print('Running Textract from: ' + str(c_min) + ' -' + str(c_min + num_concurr_jobs))
+        
+        c_max = min(len(textract_files),c_min + num_concurr_jobs )
+        for counter in range(c_min, c_max):
+            pdf_paths = textract_files[counter]
 
             basefile = pdf_paths.split('/')[-1].split('-subset')[0]
             fileName = basefile + '.csv'
             
-            jobids[counter] = str(counter)
-
+            #job_ids[basefile] = str(counter)
+            
             if counter%40 == 0:
                 print(counter)
-
-            while True:
-                try:
-                    jobids[counter] = startJob(s3_bucket, pdf_paths)
-                    break
-                except Exception as e:
-                    print(e)
-                    time.sleep(10)
-        
-            jobids_csv = pd.DataFrame(jobids)
-
-            jobids_csv.to_csv('job_ids/textract_jobids_cmin_' + str(c_min) + '.csv')
-        
-        for counter, pdf_paths in enumerate(textract_files):
-            if counter < c_min:
-                continue
-            if counter > c_min + 100:
-                continue
+               
+            # determines if Textract has already been run for this file
+            if retry_errors:
+                already_done = out_folder_raw_pdf + fileName in output_pdf_csvs
+            else:
+                already_done = (out_folder_raw_pdf + fileName in output_pdf_csvs) or (basefile in error_dictionary.keys())
+                                                
+            if (already_done) and (rerun_job > 4):
+                print('\t%s has already been Textracted, we pass ' % fileName)
+            else:
+                # while True structure is to wait until we're able to send a new textract job
+                while True:
+                    try:
+                        job_ids[basefile] = startJob(s3_bucket, pdf_paths)
+                        break
+                    except Exception as e:
+                        print(e)
+                        time.sleep(10)
+       
+        with open('job_ids.json', 'w') as file: 
+            json.dump(job_ids,file)
+            file.close()
+            
+        for counter in range(c_min,c_max):
+            pdf_paths = textract_files[counter]
+            
             # baseFile name to name export .csv file e.g. 1224385-2004-03-01.csv
             basefile = pdf_paths.split('/')[-1].split('-subset')[0]
             fileName = basefile + '.csv'
@@ -145,22 +163,25 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
             # if file is not found in output directory we extract the balance sheet
             # WE LOOK TO AVOID RE-RUNNING OLD TEXTRACT PARSES TO SAVE TIME, but if 
             # rerun_job is < 5 (True) we re-run Textract again
-            if (out_folder_raw_pdf + fileName in output_pdf_csvs) and (rerun_job > 4):
-                print('\t%s has been downloaded' % fileName)
+            if retry_errors:
+                already_done = out_folder_raw_pdf + fileName in output_pdf_csvs
+            else:
+                already_done = (out_folder_raw_pdf + fileName in output_pdf_csvs) or (basefile in error_dictionary.keys())
 
+            if (already_done) and (rerun_job > 4):
+                print('\t%s has been downloaded' % fileName)
+       
             else:
                 # run Textract OCR job and extract the parsed data 
 
                 png_paths = input_png + basefile + '/'
-
-                # pdf_df, png_df, forms_data, text_data, error = textractParse(pdf_paths, png_paths, s3_bucket)
-
-                pdf_df, png_df, forms_data, text_data, error = textractParse_pdfs_parallel(pdf_paths, s3_bucket, jobids[counter])
+                pdf_df, png_df, forms_data, text_data, error = textractParse_pdfs_parallel(pdf_paths, s3_bucket, job_ids[basefile])
+            
                 if error is not(None):
                     if 'Block' in error:
                         print('Going too fast, waiting 20s')
                         time.sleep(20)
-                        pdf_df, png_df, forms_data, text_data, error = textractParse_pdfs_parallel(pdf_paths, s3_bucket, jobids[counter])
+                        pdf_df, png_df, forms_data, text_data, error = textractParse_pdfs_parallel(pdf_paths, s3_bucket, job_ids[basefile])
 
                 # if no error is reported we save FORMS, TEXT, DataFrame
                 if error is None:
@@ -287,3 +308,4 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
         s3_pointer.upload_fileobj(data, s3_bucket, temp_folder + 'ERROR-TEXTRACT.json')
     os.remove('ERROR-TEXTRACT.json')
           
+

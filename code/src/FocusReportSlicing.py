@@ -117,10 +117,9 @@ def to_png(pil_path,base_file,idx):
     Parameters
     ----------
     pil_path : str
-        
+        path for the PIL image
     base_file : str   
-        Base name
-        
+        Base name for the file    
     """
     from PIL import Image
     Image.MAX_IMAGE_PIXELS = 10000000000

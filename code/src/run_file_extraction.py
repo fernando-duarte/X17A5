@@ -25,7 +25,7 @@ from joblib import Parallel, delayed
 from pdf2image import convert_from_path, pdfinfo_from_path
 from ExtractBrokerDealers import dealerData
 from FocusReportExtract import searchURL, edgarParse, fileExtract, mergePdfs
-from FocusReportSlicing import selectPages, extractSubset, brokerFilter
+from FocusReportSlicing import selectPages, extractSubset, brokerFilter,  to_png
 
 from pdf2image.exceptions import PDFPageCountError, PDFInfoNotInstalledError
 
@@ -81,14 +81,13 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
     
     print('\n========\nStep 2: Gathering X-17A-5 Filings\n========\n')
    
-    #input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
+    input_paths = s3_session.list_s3_files(s3_bucket, input_raw)
           
     # if no broker-dealers are provided by the user, we default to the full sample
     if len(broker_dealers_list) == 0:
         broker_dealers_list = cik2brokers['broker-dealers'].keys()
 
     for cik_id in broker_dealers_list:
-        continue
         companyName = cik2brokers['broker-dealers'][cik_id]
         
         # build lookup URLs to retrieve filing dates and archived url's
@@ -139,7 +138,7 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
                             try:
                                 concatPdf.write(f)
                             except:
-                                concatPdf = mergePdfs(pdf_files,'mathias.andler@ny.frb.org', second_pass=True)
+                                concatPdf = mergePdfs(pdf_files,company_email, second_pass=True)
                                 concatPdf.write(f)
                             f.close()
 
@@ -169,10 +168,11 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
     
     # filter FOCUS reports from the s3 that correspond to list of broker-dealers 
     raw_broker_dealer_pdfs = list(filter(lambda x: brokerFilter(broker_dealers_list, x), input_paths))
+    number_files = len(raw_broker_dealer_pdfs)
    
     for counter, path_name in enumerate(raw_broker_dealer_pdfs):
         print('Slicing FOCUS report filing for %s' % path_name)
-        print(counter)
+        print('(%d out of %s)' % (counter,number_files))
         
         # check to see if values are downloaded to s3 sub-bin
         base_file = path_name.split('/')[-1].split('.')[0]
@@ -211,6 +211,10 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
             print('\t%s already saved png' % base_file)
             
         else: 
+            # the newest version of this code does not use PNGs. For that reason we do not need to run the time-consuming step of 
+            # converting PDFs to PNGs that is done below
+            continue
+             
             # retrieving downloaded files from s3 bucket
             s3_pointer.download_file(s3_bucket, path_name, 'temp.pdf')
                                
@@ -219,11 +223,13 @@ def main_p1(s3_bucket, s3_pointer, s3_session, temp_folder, input_raw, export_pd
 
                 # determine the iterable size (number of page in document)
                 size = min(maxPages,20)
-
-                # to be improved to a relative path for output folder
+                
+                # we temporarily save png files (as .ppm) in the folder: "joblib_pngs". This saves memory and allows multiprocess
+                # convert_from_path is a multiprocess function, but there are no improvements for thread_count > 4
+                
                 li = convert_from_path('temp.pdf', dpi = 500, first_page=0, last_page = size,
-                  output_folder='/home/ec2-user/SageMaker/X17A5/code/src/joblib_pngs', thread_count=4,
-                 paths_only = True)
+                                        output_folder='joblib_pngs', thread_count=4,
+                                        paths_only = True)
                 
                 Parallel(n_jobs=-1)(delayed(to_png)(li, "joblib_pngs/"+base_file,idx) for idx in range(size))
                     
