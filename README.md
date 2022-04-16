@@ -22,7 +22,7 @@ pip install cv2
 pip install pikepdf
 ```
 
-PLEASE READ THE DOCUMENTATION FROM pdf2image provided at the following [link](https://github.com/Belval/pdf2image). You will need to install poppler on your machine (e.g. Windows, Mac, Linux) to execute slicing operations. For additional details on poppler see [doc](https://poppler.freedesktop.org/) on use cases. 
+PLEASE READ THE DOCUMENTATION FROM pdf2image provided at the following [link](https://github.com/Belval/pdf2image). You will need to install poppler on your machine (e.g. Windows, Mac, Linux) to execute slicing operations. For additional details on poppler see [doc](https://poppler.freedesktop.org/) on use cases.
 ```
 # to install poppler PDF backend for analysis on Jupyter environment  
 conda install -c conda-forge poppler  -y
@@ -126,7 +126,7 @@ If running the code for all broker_dealers it is necessary to do so on an EC2 in
    5.    Modify the `fed_proxy` with the adequate proxy address if working on the NIT (refer to inline doc, empty string "" if no proxy) 
 
 
-3. On your terminal, whether on the EC2 or SageMaker, run the shell-script by evoking the `sh`. If running without a proxy, remove all "export https_proxy=http://p1proxy.frb.org:8080" lines from run_main_batch.sh
+3. On your terminal, whether on the EC2 or SageMaker, run the shell-script by evoking the `sh`. If running without a proxy, use run_main_batch_fernando.sh instead.
 
 ```
 $  sh run_main_batch.sh
@@ -154,7 +154,11 @@ For those reasons, we recommend using a "ml.t3.2xlarge" or equivalent, with 25GB
 Note: the PNG processing (heritage code) benefitted massively from running with a "ml.m5.4xlarge" instance. The speed increase made up for more then the difference in price.
 
 
-## 5	Possible Extensions
+### EC2 settings
+The run_main_batch.sh file is coded for a Red Hat Linux 7 AMI (RHEL AMI)
+
+
+## 6	Possible Extensions
 * Extend and modify idiosyncratic changes as deemed appropriate for when Textract fails. This could be selective processing with Tables + Forms, or with PNGs.
 
 * Re-code Textract for PNGs by taking advantage of asynchronous Textract to greatly increase speed as was done for PDFs
