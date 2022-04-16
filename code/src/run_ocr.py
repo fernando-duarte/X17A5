@@ -110,7 +110,7 @@ def main_p2(s3_bucket, s3_pointer, s3_session, temp_folder, input_pdf, input_png
     
     # number of concurrent jobs sent to Textract services. 
     # Base on us-east-2 is 100, but our limit has been increased to 300 by asking AWS help desk
-    num_concurr_jobs = 300
+    num_concurr_jobs = 100
     
     # if retry_errors is True, the code will try running Textract on X17A files where it failed before
     retry_errors = False

@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-Project is run on Python 3.6x
+Project is run on Python 3.7x
 
 PLEASE READ THE DOCUMENTATION FROM pdf2image provided at the GitHub
 link (https://github.com/Belval/pdf2image). You will need to install
@@ -19,7 +19,7 @@ import numpy as np
 from GLOBAL import GlobVars
 import os
 
-from run_file_extraction import main_p1
+from run_file_extraction_fast import main_p1
 from run_ocr import main_p2
 from run_ocr_blocks import main_p2_blocks
 from run_build_database import main_p3
@@ -34,8 +34,7 @@ class Parameters:
     # functional specifications file/folder locations
     # -------------------------------------------------
     
-    #bucket = "x17-a5-mathias-version-nit"
-    bucket = "x17a-mathias-ter"
+    bucket = "x17-a5-mathias-version-nit"
     
     # -------------------------------------------------
     # job specific parameters specified by the user
@@ -62,7 +61,7 @@ class Parameters:
     # e.g. broker_dealers_list = ['782124', '42352', '68136', '91154', '72267'], default (empty list = [] ) handled in 
     # run_file_extraction.py
 
-    broker_dealers_list = ['782124', '42352','68136','91154']
+    broker_dealers_list = []
 
     # FLAG for determing whether we want to re-run parts (or the entire) job
     # - WITHOUT taking existing files stored in the s3.
@@ -70,10 +69,8 @@ class Parameters:
 
     # for example: job_rerun = 1 : we are starting the whole job from step 1 (assume no files pre-exist)
     #              job_rerun = 2 : assume step 1 was completed and start from step 2, which means we are downloading all X17-A files for       #                              all dates again
-    #              job_rerun > 5: 
-    #              job_rerun = 9 : assume all files were already downloaded and processed
-                   
-    
+    #              job_rerun > 5: if broker dealer list and parse years are unchanged, this will NOT run Textract again
+                      
     job_rerun = 6
 
     # define proxy for external connections. If working on the NIT use:
@@ -89,7 +86,18 @@ class Parameters:
 if __name__ == "__main__":
     
     os.environ['http_proxy'] = Parameters.fed_proxy
-    os.environ['https_proxy'] = Parameters.fed_proxy   
+    os.environ['https_proxy'] = Parameters.fed_proxy
+    
+    
+    # creating empty folders for local storage. This could also be done with gitignore files
+    li_dir = ['joblib_pngs','unstructured_asset', 'structured_liable','unstructured_liable',
+          'split_assets', 'structured_asset', 'split_liabilities']
+
+    for dir_name in li_dir:
+        try:
+            os.mkdir(dir_name)
+        except:
+            pass
     
     start_time = time.time()    
     print('\n\nFor details on repository refer to GitHub repo at https://github.com/fernando-duarte/X17A5\n')
