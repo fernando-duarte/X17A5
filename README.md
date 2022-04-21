@@ -115,6 +115,17 @@ The code files are divided into three sub-groups that are responsible for execut
 Our code file runs linearly in a SageMaker or EC2 instance via batch on AWS. We allow for the user to provide specifications prior to runnign the code base, but enable defaults in the event the user is not pariticular. We assume that you are able to `clone` this repository to a local instance on AWS, either the EC2 or SageMaker, and will not discuss operations centered around this action. 
 If running the code for all broker_dealers it is necessary to do so on an EC2 instance as Sagemaker jobs are limited in time (approximately 30 hours before the code crashes). See EC2 specificity below.
 
+### If running on EC2
+Make sure that the EC2 instance's configuration are linked to the right region (e.g us-east-2 )
+For a new instance, you have to change configuration files by using this command:
+```
+$  aws configure
+```
+and changing the Default region
+
+If aws is not installed (aws: command not found) follow these instructions: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html. These are to be run at the root of the project and require unzip (sudo yum install unzip).
+
+### For all
 1. Open the GLOBAL.py file, this stores all global variables under the `GlobVars` class. We will selectively modify these to match the corresponding folders on our s3 where we would like for our data files to be stored. 
 
 2. Open the run_main.py file, this executes all steps (parts) of our code base and accepts parameters under the `Parameters` class.
@@ -126,7 +137,7 @@ If running the code for all broker_dealers it is necessary to do so on an EC2 in
    5.    Modify the `fed_proxy` with the adequate proxy address if working on the NIT (refer to inline doc, empty string "" if no proxy) 
 
 
-3. On your terminal, whether on the EC2 or SageMaker, run the shell-script by evoking the `sh`. If running without a proxy, use run_main_batch_fernando.sh instead.
+3. On your terminal, whether on the EC2 or SageMaker, run the shell-script by evoking the `sh`. If running with a proxy, use run_main_batch_proxy.sh instead.
 
 ```
 $  sh run_main_batch.sh
@@ -138,13 +149,6 @@ $  sh run_main_batch.sh 2>&1 | tee SaveOutput.txt
 
 ```
 
-### If running on EC2
-Make sure that the EC2 instance's configuration are linked to the right region (e.g us-east-2 Ohio )
-For a new instance, you have to change configuration files by using this command:
-```
-$  aws configure
-```
-and changing the Default region
 
 ## 5	Hardware
 The code takes advantage of having multiple processors. For maximum speed it is recommended to use at least 8 cores (this was especially true when processing the PNGs, less true without that step). In addition having a decent amount of RAM (16GB) guarantees that there are no memory crashes. 
@@ -155,8 +159,8 @@ Note: the PNG processing (heritage code) benefitted massively from running with 
 
 
 ### EC2 settings
-The run_main_batch.sh file is coded for a Red Hat Linux 7 AMI (RHEL AMI)
-
+The run_main_batch.sh file is coded for a Red Hat Linux AMI. Specifically it has been tested for: "AMI ID
+RHEL-8.4.0_HVM-20210504-x86_64-2-Hourly2-GP2 (ami-0ba62214afa52bec7)".
 
 ## 6	Possible Extensions
 * Extend and modify idiosyncratic changes as deemed appropriate for when Textract fails. This could be selective processing with Tables + Forms, or with PNGs.
