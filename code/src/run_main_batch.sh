@@ -10,6 +10,7 @@ then
     # install conda for local use on the EC2 
     sudo yum install python3 -y
     sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver -y  
+    sudo yum install wget -y
     wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh  
 else
     echo -e "Anaconda3-2020.02-Linux-x86_64.sh was found\n"
@@ -35,7 +36,7 @@ conda update -n base -c defaults conda -y
 # downloading poppler backend to support pdf2image package
 # conda install -c conda-forge poppler -y
 
-pip3 install --upgrade pip
+pip install --upgrade pip
 pip3 install bs4
 pip3 install boto3==1.18.30 # more recent versions (now 1.20) won't work
 pip3 install sagemaker
