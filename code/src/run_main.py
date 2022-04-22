@@ -19,7 +19,7 @@ import numpy as np
 from GLOBAL import GlobVars
 import os
 
-from run_file_extraction_fast import main_p1
+from run_file_extraction import main_p1
 from run_ocr import main_p2
 from run_ocr_blocks import main_p2_blocks
 from run_build_database import main_p3
@@ -71,7 +71,7 @@ class Parameters:
     #              job_rerun = 2 : assume step 1 was completed and start from step 2, which means we are downloading all X17-A files for       #                              all dates again
     #              job_rerun > 5: if broker dealer list and parse years are unchanged, this will NOT run Textract again
                       
-    job_rerun = 6
+    job_rerun = 1
 
     # define proxy for external connections. If working on the NIT use:
     # fed_proxy = "http://p1proxy.frb.org:8080"
