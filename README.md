@@ -37,7 +37,7 @@ pip install textract-trp
 
 We use [python-Levenshtein](https://pypi.org/project/python-Levenshtein/), and [fuzzywuzzy](https://pypi.org/project/fuzzywuzzy/) for performing "fuzzy" string matching for particular strings
 ```
-pip install python-Levenshtein
+conda install python-Levenshtein -y
 pip install fuzzywuzzy
 ```
 ### 2.1 	Pip freeze
@@ -123,7 +123,7 @@ $  aws configure
 ```
 and changing the Default region
 
-If aws is not installed (aws: command not found) follow these instructions: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html. These are to be run at the root of the project and require unzip (sudo yum install unzip).
+If aws is not installed (aws: command not found) follow these instructions: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html. These are to be run at the root of the project and requires unzip (sudo yum install unzip).
 
 ### For all
 1. Open the GLOBAL.py file, this stores all global variables under the `GlobVars` class. We will selectively modify these to match the corresponding folders on our s3 where we would like for our data files to be stored. 
@@ -148,6 +148,8 @@ To save outputs in a file called "SaveOutput.txt", run:
 $  sh run_main_batch.sh 2>&1 | tee SaveOutput.txt
 
 ```
+
+4. (Optionnal) Disconnect and reconnect to the instance for the $PATH variables to update
 
 
 ## 5	Hardware
