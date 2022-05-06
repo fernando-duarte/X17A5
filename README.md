@@ -60,7 +60,7 @@ The file "frozen-requirements.txt" is a list of packages installed on the last i
 * `ERROR-TEXTRACT.json` JSON file storing CIK numbers with accompanying year that were unable to be read via Textract. There are two types of errors that are raised:
     * *No Balance Sheet found, or parsing error*, where there may be an issue with Textract reading the page
     * *Could not parse, JOB FAILED*, where there may be an issue with Textract parsing the pdf file   
-    * *Blocks*, Textract didn't complete the job and threw a Blocks Error. If the code ran properly this error should not be present.   
+    * *Blocks*, Textract didn't complete the job and threw a Blocks Error. If the code ran properly this error should not be present since they get cleaned by run_ocr blocks  
 
     
 ### 3.3 	Input Files
