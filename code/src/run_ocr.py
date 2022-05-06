@@ -2,6 +2,7 @@
 # coding: utf-8
 
 """
+
 run_ocr.py: Script responsible for performing OCR via AWS Textract, 
 and then "cleaning" the reported dataframes by handling special 
 Textract errors and converting the read strings as numeric values
