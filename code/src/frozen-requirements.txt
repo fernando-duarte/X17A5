@@ -58,7 +58,7 @@ ipywidgets @ file:///home/conda/feedstock_root/build_artifacts/ipywidgets_163159
 jedi @ file:///home/conda/feedstock_root/build_artifacts/jedi_1637175076767/work
 Jinja2 @ file:///home/conda/feedstock_root/build_artifacts/jinja2_1636510082894/work
 jmespath @ file:///home/conda/feedstock_root/build_artifacts/jmespath_1589369830981/work
-joblib==1.1.0
+joblib==1.1.1
 json5==0.9.6
 jsonschema @ file:///home/conda/feedstock_root/build_artifacts/jsonschema-meta_1642000296051/work
 jupyter @ file:///home/conda/feedstock_root/build_artifacts/jupyter_1637233125178/work
