@@ -153,7 +153,7 @@ sagemaker-experiments==0.1.35
 sagemaker-nbi-agent @ file:///tmp/sagemaker_nbi_agent
 sagemaker-pyspark==1.4.2
 scikit-learn==0.24.1
-scipy==1.7.3
+scipy==1.10.0
 Send2Trash @ file:///home/conda/feedstock_root/build_artifacts/send2trash_1628511208346/work
 six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
 smart-open==5.2.1
